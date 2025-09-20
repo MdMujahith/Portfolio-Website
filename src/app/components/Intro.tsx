@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from 'react';
+import { motion } from 'framer-motion';
 
 const keywords: string[] = [
   'performance',
@@ -44,7 +45,7 @@ const Intro: React.FC = () => {
       if (!isDragging) return;
       let newX = e.clientX - offsetX;
       let newY = e.clientY - offsetY;
-      terminal.style.position = 'absolute'; // Ensure position is absolute for dragging
+      terminal.style.position = 'absolute';
       terminal.style.left = `${newX}px`;
       terminal.style.top = `${newY}px`;
     };
@@ -67,7 +68,13 @@ const Intro: React.FC = () => {
 
   return (
     <section id="intro" className="w-full flex flex-col items-center gap-16 px-6 py-20 text-center relative">
-      <div className="max-w-4xl fade-in-element">
+      <motion.div 
+        className="max-w-4xl"
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.5 }}
+        transition={{ duration: 0.6, ease: "easeOut" }}
+      >
         <p className="text-lg sm:text-xl md:text-2xl text-zinc-500">👋 Hey, I'm Mohamed Mujahith, I code and craft products, and I'm a...</p>
         <p className="text-4xl sm:text-5xl md:text-6xl font-bold text-zinc-800 py-4">Front-end focused Software Developer,</p>
         <p className="text-xl sm:text-2xl md:text-3xl font-medium text-zinc-700">
@@ -92,8 +99,16 @@ const Intro: React.FC = () => {
             </span>
           </span>
         </p>
-      </div>
-      <div ref={terminalRef} id="terminal-draggable-container" className="w-full max-w-2xl fade-in-element">
+      </motion.div>
+      <motion.div 
+        ref={terminalRef} 
+        id="terminal-draggable-container" 
+        className="w-full max-w-2xl"
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.5 }}
+        transition={{ duration: 0.6, ease: "easeOut", delay: 0.2 }}
+      >
         <div className="terminal-window rounded-lg border border-zinc-200 font-mono">
           <div className="handle cursor-move bg-gray-200 px-4 py-2 flex items-center justify-between border-b border-gray-300">
             <div className="flex space-x-2">
@@ -110,7 +125,7 @@ const Intro: React.FC = () => {
             <p><span className="text-green-400">itsvg@portfolio</span>:<span className="text-blue-400">~</span>$ </p>
           </div>
         </div>
-      </div>
+      </motion.div>
     </section>
   );
 };

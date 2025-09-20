@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 // Type definitions
 interface Language {
@@ -8,41 +9,42 @@ interface Language {
   lang: string;
 }
 
+// Corrected and reduced language list
 const languages: Language[] = [
-  { name: 'Mujahith', lang: 'en' }, { name: 'முஜாஹித்', lang: 'ta' },
-  { name: 'ムジャヒス', lang: 'ja' }, { name: 'مجاهد', lang: 'ar' },
-  { name: 'Mujahid', lang: 'es' }, { name: 'Moudjahid', lang: 'fr' },
-  { name: 'Mudschahed', lang: 'de' }, { name: 'Муджахид', lang: 'ru' },
-  { name: '穆贾希德', lang: 'zh' }, { name: 'मुजाहिद', lang: 'hi' },
-  { name: '무자히드', lang: 'ko' }, { name: 'Mujahid', lang: 'pt' },
+    { name: 'Mujahith', lang: 'en' }, // English
+    { name: 'முஜாஹித்', lang: 'ta' }, // Tamil
+    { name: 'مجاهد', lang: 'ar' },      // Arabic
+    { name: 'ムジャヒス', lang: 'ja' }, // Japanese
+    { name: '무자히드', lang: 'ko' },      // Korean
+    { name: '穆贾希德', lang: 'zh' }, // Chinese
 ];
 
 const name = "Mohamed";
 const nameLetters = name.split('');
 
-// Define an array of color classes for the letters
 const letterColors = [
   "hover:text-red-500", "hover:text-blue-500", "hover:text-green-500", "hover:text-purple-500",
   "hover:text-yellow-500", "hover:text-pink-500", "hover:text-indigo-500", "hover:text-teal-500",
 ];
 
+// A "fade and scale" animation for the letter swap
+const letterSwapVariants = {
+    initial: { opacity: 0, scale: 0.5 },
+    animate: { opacity: 1, scale: 1 },
+    exit: { opacity: 0, scale: 0.5 },
+};
+
 const Hero: React.FC = () => {
   const [time, setTime] = useState<string>('');
   const [currentLanguageIndex, setCurrentLanguageIndex] = useState<number>(0);
-  const [crossedOut, setCrossedOut] = useState<Record<number, boolean>>({});
-  
-  // This state tracks the animation class for each letter
-  const [animationClass, setAnimationClass] = useState<Record<number, string>>({});
+  const [crossedOut, setCrossedOut] = useState<Record<string, boolean>>({});
 
-  const handleLetterClick = (index: number) => {
-    const isCrossed = crossedOut[index];
-    // Apply the correct animation class
-    setAnimationClass(prev => ({ ...prev, [index]: isCrossed ? 'animate-swap-out' : 'animate-swap-in' }));
-    // Toggle the state
-    setCrossedOut(prev => ({ ...prev, [index]: !isCrossed }));
+  const handleLetterClick = (letterKey: string) => {
+    setCrossedOut(prev => ({ ...prev, [letterKey]: !prev[letterKey] }));
   };
   
   useEffect(() => {
+    // Clock logic
     const updateTime = () => {
       const now = new Date();
       const optionsTime: Intl.DateTimeFormatOptions = { timeZone: 'Asia/Kolkata', hour: '2-digit', minute: '2-digit', hour12: true };
@@ -67,15 +69,23 @@ const Hero: React.FC = () => {
   }, []);
 
   useEffect(() => {
+    // Language cycling logic
     const intervalId = setInterval(() => {
       setCurrentLanguageIndex((prevIndex) => (prevIndex + 1) % languages.length);
     }, 2000);
     return () => clearInterval(intervalId);
   }, []);
 
+  const currentLanguageName = languages[currentLanguageIndex].name;
+
   return (
     <section id="home" className="w-full min-h-screen flex flex-col items-center relative">
-        <div className="absolute inset-0 -z-10 grid-bg animate-custom-pulse"></div>
+        <motion.div 
+          className="absolute inset-0 -z-10 grid-bg"
+          initial={{ scale: 1 }}
+          animate={{ scale: 1.05 }}
+          transition={{ duration: 4, repeat: Infinity, repeatType: "reverse", ease: "easeInOut" }}
+        />
         <nav className="flex justify-between p-4 items-center sm:px-16 sm:py-12 w-full">
             <div className="flex items-baseline group cursor-default gap-2 relative">
                 <p className="text-3xl sm:text-5xl group-hover:scale-90 transition-all ease-in-out duration-300 group-hover:rotate-12">👋</p>
@@ -83,7 +93,7 @@ const Hero: React.FC = () => {
                     Hello<p className="w-0 overflow-hidden group-hover:w-[7.5rem] transition-all ease-in-out duration-300">ooooooo</p>!
                 </div>
             </div>
-            <div className="hidden sm-flex items-center gap-8">
+            <div className="hidden sm:flex items-center gap-8">
                 <div className="flex items-center gap-6">
                     <a href="https://twitter.com/VishwaGauravIn" target="_blank" rel="noopener noreferrer" aria-label="Twitter"><svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6 stroke-1 text-zinc-600 hover:text-black hover:stroke-2 transition-all" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 4l11.733 16h4.267l-11.733 -16z"></path><path d="M4 20l6.768 -6.768m2.46 -2.46l6.772 -6.772"></path></svg></a>
                     <a href="https://github.com/VishwaGauravIn" target="_blank" rel="noopener noreferrer" aria-label="GitHub"><svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6 stroke-1 text-zinc-600 hover:text-black hover:stroke-2 transition-all" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5"></path></svg></a>
@@ -95,46 +105,50 @@ const Hero: React.FC = () => {
         
         <div className="flex-grow w-full flex flex-col justify-start items-center text-center px-4 relative pt-20">
             <h1 className="font-extrabold tracking-tight uppercase select-none cursor-default">
-                <span className="flex text-7xl md:text-9xl text-black transition-all duration-300 hover:tracking-widest">
-                  {nameLetters.map((letter, index) => (
-                    <span 
-                      key={index}
-                      onClick={() => handleLetterClick(index)}
-                      // By re-assigning the key, we force React to re-mount the span and re-trigger the animation
-                      // We use the animationClass state to ensure the correct animation is played
-                      className={`relative transition-all duration-300 ease-in-out hover:-translate-y-3 ${letterColors[index % letterColors.length]}`}
-                    >
-                      <span 
-                        key={`${crossedOut[index]}`} // This key changes when the state changes, triggering re-animation
-                        className={`inline-block ${animationClass[index]}`}
-                      >
-                        {crossedOut[index] ? 'X' : letter}
-                      </span>
-                    </span>
-                  ))}
-                </span>
-                <span className="block text-6xl md:text-8xl text-zinc-500 relative h-32 transition-all duration-300 hover:tracking-widest">
-                    <span className="lang-name-fade">
-                        {languages[currentLanguageIndex].name}
-                    </span>
-                </span>
-            </h1>
-        </div>
+                <div className="flex text-7xl md:text-9xl text-black transition-all duration-300 hover:tracking-widest">
+                  {nameLetters.map((letter, index) => {
+                    const letterKey = `mohamed-${index}`;
+                    return (
+                        <motion.div 
+                          key={letterKey}
+                          onClick={() => handleLetterClick(letterKey)}
+                          className={`relative cursor-pointer ${letterColors[index % letterColors.length]}`}
+                          whileHover={{ y: -12 }}
+                          transition={{ duration: 0.3, ease: "easeOut" }}
+                        >
+                          <AnimatePresence mode="wait">
+                            <motion.span
+                              key={crossedOut[letterKey] ? 'X' : letter}
+                              className="inline-block"
+                              variants={letterSwapVariants}
+                              initial="initial"
+                              animate="animate"
+                              exit="exit"
+                              transition={{ duration: 0.2, ease: "easeInOut" }}
+                            >
+                              {crossedOut[letterKey] ? 'X' : letter}
+                            </motion.span>
+                          </AnimatePresence>
+                        </motion.div>
+                    )
+                  })}
+                </div>
 
-        <div className="w-[100vw] h-full sm:w-full absolute top-1/2 -translate-y-1/2 -z-10 overflow-x-clip">
-            <svg className="w-full h-full" viewBox="0 0 2530 740">
-                <path id="start" stroke="currentColor" strokeWidth="0" fill="none" d="M0.29 193.68 C244.36 193.68 298.61 497.83 539.27 489.34 704.88 464.85 736.35 221.77 1038.78 221.77 1282.85 221.77 1347.1 542.91 1589.76 516.62 1780.25 496.03 1833.21 282.54 2003.81 253.25 2246.97 208.68 2312.12 574.4 2554.78 548.11 "></path>
-                <text className="text-2xl font-semibold opacity-20" fill="currentColor">
-                    <textPath xlinkHref="#start" className="animate-slide-in-left">
-                         — JavaScript — CSS — Java — HTML — Markdown — Lua — Next.js — React.js — Svelte — Tailwind CSS — Framer Motion — Bootstrap — Material UI — PostCSS — SASS — Firebase — MongoDB — Vercel KV — SQL — Redis — MobX — Redux — React Query — Zustand — Next.js — Node.js — Express.js — Prisma — Circle CI — GitHub Actions — Jenkins — Vercel — Git — GitHub — NPM — Yarn —
-                    </textPath>
-                </text>
-                 <text className="text-2xl font-semibold opacity-20" fill="currentColor">
-                    <textPath xlinkHref="#start" className="animate-slide-in-right">
-                         — JavaScript — CSS — Java — HTML — Markdown — Lua — Next.js — React.js — Svelte — Tailwind CSS — Framer Motion — Bootstrap — Material UI — PostCSS — SASS — Firebase — MongoDB — Vercel KV — SQL — Redis — MobX — Redux — React Query — Zustand — Next.js — Node.js — Express.js — Prisma — Circle CI — GitHub Actions — Jenkins — Vercel — Git — GitHub — NPM — Yarn —
-                    </textPath>
-                </text>
-            </svg>
+                <div className="text-6xl md:text-8xl text-zinc-500 h-32 relative flex justify-center items-center transition-all duration-300 hover:tracking-widest">
+                    <AnimatePresence mode="wait">
+                        <motion.span
+                            key={currentLanguageIndex}
+                            className="absolute"
+                            initial={{ opacity: 0, filter: "blur(5px)" }}
+                            animate={{ opacity: 1, filter: "blur(0px)" }}
+                            exit={{ opacity: 0, filter: "blur(5px)" }}
+                            transition={{ duration: 0.5 }}
+                        >
+                          {currentLanguageName}
+                        </motion.span>
+                    </AnimatePresence>
+                </div>
+            </h1>
         </div>
     </section>
   );
