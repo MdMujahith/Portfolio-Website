@@ -1,130 +1,201 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from 'react';
-import { motion } from 'framer-motion';
+import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 
-const keywords: string[] = [
-  'performance',
-  'accessibility',
-  'trends',
-  'ui/ux'
+// --- Data for Animated Tags ---
+interface DynamicTag {
+  id: string;
+  text: string;
+  emoji: string;
+  color: string;
+  bgColor: string;
+  borderColor: string;
+  rotation: number;
+  initialY: number;
+  hoverY: number;
+}
+
+const dynamicTags: DynamicTag[] = [
+  { id: 'performance', text: 'performance', emoji: '🚀', color: 'text-purple-700', bgColor: 'bg-purple-100', borderColor: 'border-purple-200', rotation: 8, initialY: -10, hoverY: -20 },
+  { id: 'accessibility', text: 'accessibility', emoji: '♿', color: 'text-amber-700', bgColor: 'bg-amber-100', borderColor: 'border-amber-200', rotation: -12, initialY: 0, hoverY: -15 },
+  { id: 'uiux', text: 'UI/UX', emoji: '✨', color: 'text-pink-700', bgColor: 'bg-pink-100', borderColor: 'border-pink-200', rotation: 10, initialY: 5, hoverY: -10 },
+  { id: 'trends', text: 'trends', emoji: '📈', color: 'text-emerald-700', bgColor: 'bg-emerald-100', borderColor: 'border-emerald-200', rotation: -8, initialY: 10, hoverY: -5 },
 ];
 
+// --- Framer Motion Variants ---
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1,
+    },
+  },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      type: "spring",
+      stiffness: 100,
+      damping: 10,
+      duration: 0.5,
+    },
+  },
+};
+
+const tagVariants = {
+  hidden: { opacity: 0, scale: 0.5, rotate: 0 },
+  visible: (i: number) => ({
+    opacity: 1,
+    scale: 1,
+    rotate: dynamicTags[i].rotation,
+    y: dynamicTags[i].initialY,
+    transition: {
+      delay: 0.8 + (i * 0.1),
+      type: "spring",
+      stiffness: 200,
+      damping: 15,
+    },
+  }),
+  hover: (i: number) => ({
+    y: dynamicTags[i].hoverY,
+    scale: 1.05,
+    rotate: dynamicTags[i].rotation + (dynamicTags[i].rotation > 0 ? 3 : -3),
+    transition: {
+        type: "spring",
+        stiffness: 300,
+        damping: 10,
+    }
+  })
+};
+
+
 const Intro: React.FC = () => {
-  const [currentKeywordIndex, setCurrentKeywordIndex] = useState<number>(0);
-  const terminalRef = useRef<HTMLDivElement | null>(null);
-
-  // Effect for cycling through the keywords
-  useEffect(() => {
-    const intervalId = setInterval(() => {
-      setCurrentKeywordIndex((prevIndex) => (prevIndex + 1) % keywords.length);
-    }, 2000);
-    return () => clearInterval(intervalId);
-  }, []);
-
-  // Effect for making the terminal draggable
-  useEffect(() => {
-    const terminal = terminalRef.current;
-    if (!terminal) return;
-
-    const handle = terminal.querySelector('.handle') as HTMLElement;
-    if (!handle) return;
-    
-    let isDragging = false;
-    let offsetX: number, offsetY: number;
-
-    const onMouseDown = (e: MouseEvent) => {
-      isDragging = true;
-      const rect = terminal.getBoundingClientRect();
-      offsetX = e.clientX - rect.left;
-      offsetY = e.clientY - rect.top;
-      document.body.style.userSelect = 'none';
-    };
-
-    const onMouseMove = (e: MouseEvent) => {
-      if (!isDragging) return;
-      let newX = e.clientX - offsetX;
-      let newY = e.clientY - offsetY;
-      terminal.style.position = 'absolute';
-      terminal.style.left = `${newX}px`;
-      terminal.style.top = `${newY}px`;
-    };
-
-    const onMouseUp = () => {
-      isDragging = false;
-      document.body.style.userSelect = 'auto';
-    };
-
-    handle.addEventListener('mousedown', onMouseDown);
-    document.addEventListener('mousemove', onMouseMove);
-    document.addEventListener('mouseup', onMouseUp);
-
-    return () => {
-      handle.removeEventListener('mousedown', onMouseDown);
-      document.removeEventListener('mousemove', onMouseMove);
-      document.removeEventListener('mouseup', onMouseUp);
-    };
-  }, []);
-
   return (
-    <section id="intro" className="w-full flex flex-col items-center gap-16 px-6 py-20 text-center relative">
-      <motion.div 
-        className="max-w-4xl"
-        initial={{ opacity: 0, y: 30 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, amount: 0.5 }}
-        transition={{ duration: 0.6, ease: "easeOut" }}
+    <section id="intro" className="w-full relative py-24 flex justify-center items-center min-h-[60vh]">
+      {/* Background Texture */}
+      <div className="grid-bg"></div>
+
+      <motion.div
+        className="relative z-10 max-w-5xl mx-auto px-6 text-center flex flex-col items-center"
+        variants={containerVariants}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.3 }}
       >
-        <p className="text-lg sm:text-xl md:text-2xl text-zinc-500">👋 Hey, I'm Mohamed Mujahith, I code and craft products, and I'm a...</p>
-        <p className="text-4xl sm:text-5xl md:text-6xl font-bold text-zinc-800 py-4">Front-end focused Software Developer,</p>
-        <p className="text-xl sm:text-2xl md:text-3xl font-medium text-zinc-700">
-          specialized in building scalable, user-centric web apps that prioritizes
-          <span className="intro-keywords-container ml-2">
-            requirements.
-            <span className={`keyword-tag bg-fuchsia-100 text-fuchsia-700 ring-2 ring-fuchsia-700 ${currentKeywordIndex === 0 ? 'active' : 'inactive'}`}>
-                <svg className="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" /></svg>
-                performance
-            </span>
-            <span className={`keyword-tag bg-yellow-100 text-yellow-700 ring-2 ring-yellow-700 ${currentKeywordIndex === 1 ? 'active' : 'inactive'}`}>
-               <svg className="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M15.042 21.672L13.684 16.6m0 0l-2.51 2.225.569-9.47 5.227 7.917-3.286-.672zM12 2.25a.75.75 0 01.75.75v.01a.75.75 0 01-1.5 0V3a.75.75 0 01.75-.75z" /></svg>
-                accessibility
-            </span>
-            <span className={`keyword-tag bg-lime-100 text-lime-700 ring-2 ring-lime-700 ${currentKeywordIndex === 2 ? 'active' : 'inactive'}`}>
-                <svg className="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M15.362 5.214A8.252 8.252 0 0112 21 8.25 8.25 0 016.038 7.048 8.287 8.287 0 009 9.6a8.983 8.983 0 013.361-6.867 8.21 8.21 0 00-4.425 0" /></svg>
-                trends
-            </span>
-            <span className={`keyword-tag bg-pink-100 text-pink-700 ring-2 ring-pink-700 ${currentKeywordIndex === 3 ? 'active' : 'inactive'}`}>
-                <svg className="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456zM18 12.75a2.25 2.25 0 110 4.5 2.25 2.25 0 010-4.5z" /></svg>
-                UI / UX
-            </span>
+        {/* Animated Greeting */}
+        <motion.div
+          className="flex items-center justify-center gap-3 text-lg md:text-xl text-slate-600 mb-6"
+          variants={itemVariants}
+        >
+          <motion.span
+            className="text-3xl"
+            animate={{ rotate: [0, 14, -8, 14, 0] }}
+            transition={{ duration: 2, repeat: Infinity, repeatDelay: 3 }}
+          >
+            👋
+          </motion.span>
+          Hey, I'm Mohamed Mujahith, coding and crafting products and I'm a...
+        </motion.div>
+
+        {/* Main Heading with Embedded Tags */}
+        <motion.h1
+          className="text-6xl md:text-8xl lg:text-9xl font-extrabold text-slate-900 leading-tight tracking-tighter relative"
+          variants={itemVariants}
+        >
+          <span className="relative inline-block">
+            <span className="z-10 relative">Front-end</span>
+            {dynamicTags.map((tag, index) => (
+              tag.id === 'performance' && (
+                <motion.div
+                  key={tag.id}
+                  className={`absolute left-[-10%] top-[-15%] md:left-[25%] md:top-[-30%] px-4 py-2 rounded-xl text-base md:text-xl font-semibold border-2 shadow-md whitespace-nowrap ${tag.color} ${tag.bgColor} ${tag.borderColor}`}
+                  custom={index}
+                  variants={tagVariants}
+                  whileHover="hover"
+                >
+                  {tag.emoji} {tag.text}
+                </motion.div>
+              )
+            ))}
+          </span>{' '}
+          <span className="relative inline-block">
+            <span className="z-10 relative">focused</span>
+             {dynamicTags.map((tag, index) => (
+              tag.id === 'accessibility' && (
+                <motion.div
+                  key={tag.id}
+                  className={`absolute right-[-10%] top-[20%] md:right-[-20%] md:top-[-5%] px-4 py-2 rounded-xl text-base md:text-xl font-semibold border-2 shadow-md whitespace-nowrap ${tag.color} ${tag.bgColor} ${tag.borderColor}`}
+                  custom={index}
+                  variants={tagVariants}
+                  whileHover="hover"
+                >
+                  {tag.emoji} {tag.text}
+                </motion.div>
+              )
+            ))}
+          </span>{' '}
+          Software Developer,
+        </motion.h1>
+
+        {/* Subtitle / Description */}
+        <motion.p
+          className="mt-8 text-2xl md:text-3xl text-slate-700 max-w-4xl leading-relaxed"
+          variants={itemVariants}
+        >
+          specialized in building{' '}
+          <span className="relative inline-block font-semibold">
+            <span className="relative z-10">scalable</span>
+             {dynamicTags.map((tag, index) => (
+              tag.id === 'trends' && (
+                <motion.div
+                  key={tag.id}
+                  className={`absolute left-[-15%] bottom-[-5%] md:left-[-25%] md:bottom-[-20%] px-4 py-2 rounded-xl text-base md:text-xl font-semibold border-2 shadow-md whitespace-nowrap ${tag.color} ${tag.bgColor} ${tag.borderColor}`}
+                  custom={index}
+                  variants={tagVariants}
+                  whileHover="hover"
+                >
+                  {tag.emoji} {tag.text}
+                </motion.div>
+              )
+            ))}
           </span>
-        </p>
-      </motion.div>
-      <motion.div 
-        ref={terminalRef} 
-        id="terminal-draggable-container" 
-        className="w-full max-w-2xl"
-        initial={{ opacity: 0, y: 30 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, amount: 0.5 }}
-        transition={{ duration: 0.6, ease: "easeOut", delay: 0.2 }}
-      >
-        <div className="terminal-window rounded-lg border border-zinc-200 font-mono">
-          <div className="handle cursor-move bg-gray-200 px-4 py-2 flex items-center justify-between border-b border-gray-300">
-            <div className="flex space-x-2">
-              <div className="w-3 h-3 rounded-full bg-red-500"></div>
-              <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
-              <div className="w-3 h-3 rounded-full bg-green-500"></div>
-            </div>
-            <div className="text-sm font-medium text-gray-600">Terminal</div>
-            <div className="w-4"></div>
-          </div>
-          <div className="p-4 bg-zinc-800 text-white text-sm text-left">
-            <p><span className="text-green-400">itsvg@portfolio</span>:<span className="text-blue-400">~</span>$ whoami</p>
-            <p className="text-gray-300">&gt; Mohamed Mujahith // Software Developer</p>
-            <p><span className="text-green-400">itsvg@portfolio</span>:<span className="text-blue-400">~</span>$ </p>
-          </div>
-        </div>
+          {' '}user-centric web apps that prioritize{' '}
+           <span className="relative inline-block font-semibold">
+            <span className="relative z-10">great design</span>
+             {dynamicTags.map((tag, index) => (
+              tag.id === 'uiux' && (
+                <motion.div
+                  key={tag.id}
+                  className={`absolute right-[-10%] top-[-10%] md:right-[-20%] md:top-[-20%] px-4 py-2 rounded-xl text-base md:text-xl font-semibold border-2 shadow-md whitespace-nowrap ${tag.color} ${tag.bgColor} ${tag.borderColor}`}
+                  custom={index}
+                  variants={tagVariants}
+                  whileHover="hover"
+                >
+                  {tag.emoji} {tag.text}
+                </motion.div>
+              )
+            ))}
+          </span>.
+        </motion.p>
+
+        {/* Optional: Add your "sticker" profile image here if it's meant to float independently */}
+        {/* <motion.img
+          src="/your-profile-image.jpg" // Replace with your image
+          alt="Mohamed Mujahith"
+          className="absolute w-24 h-24 rounded-full object-cover shadow-lg border-4 border-white"
+          style={{ top: '10%', right: '5%' }} // Adjust position as needed
+          initial={{ opacity: 0, scale: 0.5, rotate: 20 }}
+          whileInView={{ opacity: 1, scale: 1, rotate: 0 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.6, type: "spring", stiffness: 200, damping: 15 }}
+        /> */}
+
       </motion.div>
     </section>
   );
