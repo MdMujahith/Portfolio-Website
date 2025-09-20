@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Download } from 'lucide-react';
 
 // Type definitions
 interface Language {
@@ -9,14 +10,10 @@ interface Language {
   lang: string;
 }
 
-// Corrected and reduced language list
 const languages: Language[] = [
-    { name: 'Mujahith', lang: 'en' }, // English
-    { name: 'முஜாஹித்', lang: 'ta' }, // Tamil
-    { name: 'مجاهد', lang: 'ar' },      // Arabic
-    { name: 'ムジャヒス', lang: 'ja' }, // Japanese
-    { name: '무자히드', lang: 'ko' },      // Korean
-    { name: '穆贾希德', lang: 'zh' }, // Chinese
+    { name: 'Mujahith', lang: 'en' }, { name: 'முஜாஹித்', lang: 'ta' },
+    { name: 'مجاهد', lang: 'ar' }, { name: 'ムジャヒス', lang: 'ja' },
+    { name: '무자히드', lang: 'ko' }, { name: '穆贾希德', lang: 'zh' },
 ];
 
 const name = "Mohamed";
@@ -27,24 +24,27 @@ const letterColors = [
   "hover:text-yellow-500", "hover:text-pink-500", "hover:text-indigo-500", "hover:text-teal-500",
 ];
 
-// A "fade and scale" animation for the letter swap
 const letterSwapVariants = {
     initial: { opacity: 0, scale: 0.5 },
     animate: { opacity: 1, scale: 1 },
     exit: { opacity: 0, scale: 0.5 },
 };
 
+const typingPhrases = ["Python Developer", "Open Source Enthusiast"];
+
 const Hero: React.FC = () => {
   const [time, setTime] = useState<string>('');
   const [currentLanguageIndex, setCurrentLanguageIndex] = useState<number>(0);
   const [crossedOut, setCrossedOut] = useState<Record<string, boolean>>({});
+  const [typedText, setTypedText] = useState("");
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [phraseIndex, setPhraseIndex] = useState(0);
 
   const handleLetterClick = (letterKey: string) => {
     setCrossedOut(prev => ({ ...prev, [letterKey]: !prev[letterKey] }));
   };
   
   useEffect(() => {
-    // Clock logic
     const updateTime = () => {
       const now = new Date();
       const optionsTime: Intl.DateTimeFormatOptions = { timeZone: 'Asia/Kolkata', hour: '2-digit', minute: '2-digit', hour12: true };
@@ -69,12 +69,32 @@ const Hero: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    // Language cycling logic
     const intervalId = setInterval(() => {
       setCurrentLanguageIndex((prevIndex) => (prevIndex + 1) % languages.length);
     }, 2000);
     return () => clearInterval(intervalId);
   }, []);
+
+  useEffect(() => {
+    const handleTyping = () => {
+      const currentPhrase = typingPhrases[phraseIndex];
+      if (isDeleting) {
+        setTypedText(currentPhrase.substring(0, typedText.length - 1));
+      } else {
+        setTypedText(currentPhrase.substring(0, typedText.length + 1));
+      }
+
+      if (!isDeleting && typedText === currentPhrase) {
+        setTimeout(() => setIsDeleting(true), 2000);
+      } else if (isDeleting && typedText === "") {
+        setIsDeleting(false);
+        setPhraseIndex((prevIndex) => (prevIndex + 1) % typingPhrases.length);
+      }
+    };
+    const typingSpeed = isDeleting ? 100 : 150;
+    const timeout = setTimeout(handleTyping, typingSpeed);
+    return () => clearTimeout(timeout);
+  }, [typedText, isDeleting, phraseIndex]);
 
   const currentLanguageName = languages[currentLanguageIndex].name;
 
@@ -96,59 +116,101 @@ const Hero: React.FC = () => {
             <div className="hidden sm:flex items-center gap-8">
                 <div className="flex items-center gap-6">
                     <a href="https://twitter.com/VishwaGauravIn" target="_blank" rel="noopener noreferrer" aria-label="Twitter"><svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6 stroke-1 text-zinc-600 hover:text-black hover:stroke-2 transition-all" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 4l11.733 16h4.267l-11.733 -16z"></path><path d="M4 20l6.768 -6.768m2.46 -2.46l6.772 -6.772"></path></svg></a>
-                    <a href="https://github.com/VishwaGauravIn" target="_blank" rel="noopener noreferrer" aria-label="GitHub"><svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6 stroke-1 text-zinc-600 hover:text-black hover:stroke-2 transition-all" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5"></path></svg></a>
-                    <a href="https://linkedin.com/in/VishwaGauravIn" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6 stroke-1 text-zinc-600 hover:text-blue-600 hover:stroke-2 transition-all" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 4m0 2a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2z"></path><path d="M8 11l0 5"></path><path d="M8 8l0 .01"></path><path d="M12 16l0 -5"></path><path d="M16 16v-3a2 2 0 0 0 -4 0"></path></svg></a>
+                    <a href="https://github.com/MdMujahith" target="_blank" rel="noopener noreferrer" aria-label="GitHub"><svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6 stroke-1 text-zinc-600 hover:text-black hover:stroke-2 transition-all" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5"></path></svg></a>
+                    <a href="https://linkedin.com/in/mohamedmujahith03" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6 stroke-1 text-zinc-600 hover:text-blue-600 hover:stroke-2 transition-all" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 4m0 2a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2z"></path><path d="M8 11l0 5"></path><path d="M8 8l0 .01"></path><path d="M12 16l0 -5"></path><path d="M16 16v-3a2 2 0 0 0 -4 0"></path></svg></a>
                 </div>
                 <div id="time-container-desktop" dangerouslySetInnerHTML={{ __html: time }}></div>
             </div>
         </nav>
         
-        <div className="flex-grow w-full flex flex-col justify-start items-center text-center px-4 relative pt-20">
-            <h1 className="font-extrabold tracking-tight uppercase select-none cursor-default">
-                <div className="flex text-7xl md:text-9xl text-black transition-all duration-300 hover:tracking-widest">
-                  {nameLetters.map((letter, index) => {
-                    const letterKey = `mohamed-${index}`;
-                    return (
-                        <motion.div 
-                          key={letterKey}
-                          onClick={() => handleLetterClick(letterKey)}
-                          className={`relative cursor-pointer ${letterColors[index % letterColors.length]}`}
-                          whileHover={{ y: -12 }}
-                          transition={{ duration: 0.3, ease: "easeOut" }}
-                        >
-                          <AnimatePresence mode="wait">
-                            <motion.span
-                              key={crossedOut[letterKey] ? 'X' : letter}
-                              className="inline-block"
-                              variants={letterSwapVariants}
-                              initial="initial"
-                              animate="animate"
-                              exit="exit"
-                              transition={{ duration: 0.2, ease: "easeInOut" }}
+        <div className="flex-grow w-full grid grid-cols-1 md:grid-cols-2 items-center px-4 sm:px-16 -mt-16">
+            <div className="flex flex-col items-center md:items-start text-center md:text-left">
+                <h1 className="font-extrabold tracking-tight uppercase select-none cursor-default">
+                    <div className="flex text-7xl md:text-8xl lg:text-9xl text-black transition-all duration-300 hover:tracking-widest">
+                      {nameLetters.map((letter, index) => {
+                        const letterKey = `mohamed-${index}`;
+                        return (
+                            <motion.div 
+                              key={letterKey}
+                              onClick={() => handleLetterClick(letterKey)}
+                              className={`relative cursor-pointer ${letterColors[index % letterColors.length]}`}
+                              whileHover={{ y: -12 }}
+                              transition={{ duration: 0.3, ease: "easeOut" }}
                             >
-                              {crossedOut[letterKey] ? 'X' : letter}
-                            </motion.span>
-                          </AnimatePresence>
-                        </motion.div>
-                    )
-                  })}
-                </div>
+                              <AnimatePresence mode="wait">
+                                <motion.span
+                                  key={crossedOut[letterKey] ? 'X' : letter}
+                                  className="inline-block"
+                                  variants={letterSwapVariants}
+                                  initial="initial"
+                                  animate="animate"
+                                  exit="exit"
+                                  transition={{ duration: 0.2, ease: "easeInOut" }}
+                                >
+                                  {crossedOut[letterKey] ? 'X' : letter}
+                                </motion.span>
+                              </AnimatePresence>
+                            </motion.div>
+                        )
+                      })}
+                    </div>
 
-                <div className="text-6xl md:text-8xl text-zinc-500 h-32 relative flex justify-center items-center transition-all duration-300 hover:tracking-widest">
-                    <AnimatePresence mode="wait">
-                        <motion.span
-                            key={currentLanguageIndex}
-                            className="absolute"
-                            initial={{ opacity: 0, filter: "blur(5px)" }}
-                            animate={{ opacity: 1, filter: "blur(0px)" }}
-                            exit={{ opacity: 0, filter: "blur(5px)" }}
-                            transition={{ duration: 0.5 }}
-                        >
-                          {currentLanguageName}
-                        </motion.span>
-                    </AnimatePresence>
-                </div>
-            </h1>
+                    <div className="text-6xl md:text-7xl lg:text-8xl text-zinc-500 h-32 relative flex justify-center md:justify-start items-center transition-all duration-300 hover:tracking-widest">
+                        <AnimatePresence mode="wait">
+                            <motion.span
+                                key={currentLanguageIndex}
+                                className="absolute"
+                                initial={{ opacity: 0, filter: "blur(5px)" }}
+                                animate={{ opacity: 1, filter: "blur(0px)" }}
+                                exit={{ opacity: 0, filter: "blur(5px)" }}
+                                transition={{ duration: 0.5 }}
+                            >
+                              {currentLanguageName}
+                            </motion.span>
+                        </AnimatePresence>
+                    </div>
+                </h1>
+                <p className="text-xl md:text-2xl text-slate-700 mt-4 h-8">
+                  I am a <span className="font-semibold text-indigo-600">{typedText}</span>
+                  <span className="animate-ping">|</span>
+                </p>
+                <a 
+                  href="/pdf/Mujahith_Resume.pdf"
+                  download
+                  className="mt-8 flex items-center gap-2 px-6 py-3 bg-zinc-800 text-white rounded-full font-semibold text-md hover:bg-zinc-700 transition-colors shadow-lg"
+                >
+                  <Download size={18} />
+                  Download CV
+                </a>
+            </div>
+            
+            <div className="hidden md:flex justify-center items-center">
+                {/* UPDATED: Added -translate-y-12 to lift the image up */}
+                <motion.div 
+                    className="p-1.5 bg-white rounded-full shadow-2xl -translate-y-12"
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }}
+                >
+                    <img 
+                        src="/images/Profile_Pic.png"
+                        alt="Mohamed Mujahith"
+                        className="w-80 h-80 lg:w-96 lg:h-96 rounded-full object-cover border-4 border-slate-200"
+                    />
+                </motion.div>
+            </div>
+        </div>
+
+        <div className="w-full absolute top-1/2 -translate-y-1/2 -z-10 overflow-x-clip">
+            <svg className="w-full h-full" viewBox="0 0 2530 740">
+                <path id="start" stroke="currentColor" strokeWidth="0" fill="none" d="M0.29 193.68 C244.36 193.68 298.61 497.83 539.27 489.34 704.88 464.85 736.35 221.77 1038.78 221.77 1282.85 221.77 1347.1 542.91 1589.76 516.62 1780.25 496.03 1833.21 282.54 2003.81 253.25 2246.97 208.68 2312.12 574.4 2554.78 548.11 "></path>
+                <text className="text-xl font-semibold opacity-10 marquee">
+                    <textPath xlinkHref="#start">
+                         — JavaScript — CSS — Java — HTML — Markdown — Lua — Next.js — React.js — Svelte — Tailwind CSS — Framer Motion — Bootstrap — Material UI — PostCSS — SASS — Firebase — MongoDB — Vercel KV — SQL — Redis — MobX — Redux — React Query — Zustand — Next.js — Node.js — Express.js — Prisma — Circle CI — GitHub Actions — Jenkins — Vercel — Git — GitHub — NPM — Yarn —
+                         — JavaScript — CSS — Java — HTML — Markdown — Lua — Next.js — React.js — Svelte — Tailwind CSS — Framer Motion — Bootstrap — Material UI — PostCSS — SASS — Firebase — MongoDB — Vercel KV — SQL — Redis — MobX — Redux — React Query — Zustand — Next.js — Node.js — Express.js — Prisma — Circle CI — GitHub Actions — Jenkins — Vercel — Git — GitHub — NPM — Yarn —
+                    </textPath>
+                </text>
+            </svg>
         </div>
     </section>
   );
