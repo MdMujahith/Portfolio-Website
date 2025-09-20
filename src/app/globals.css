@@ -19,15 +19,14 @@
   --font-mono: var(--font-geist-mono);
 }
 
-/* ADD THIS TO HIDE THE SCROLLBAR */
+/* Hide the scrollbar */
 html, body {
-  scrollbar-width: none; /* For Firefox */
-  -ms-overflow-style: none;  /* For Internet Explorer and Edge */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
 body::-webkit-scrollbar {
-  display: none; /* For Chrome, Safari, and Opera */
+  display: none;
 }
-
 
 body {
   background: var(--background);
@@ -35,7 +34,54 @@ body {
   font-family: 'MyCustomFont', Arial, Helvetica, sans-serif;
 }
 
-/* Bottom navigation bar with dotted pattern */
+/* Keyframes for the letter -> X swap animation */
+@keyframes swap-in {
+  from {
+    transform: rotateY(-90deg);
+    opacity: 0;
+  }
+  to {
+    transform: rotateY(0deg);
+    opacity: 1;
+  }
+}
+
+/* Keyframes for the X -> letter swap animation */
+@keyframes swap-out {
+  from {
+    transform: rotateY(-90deg);
+    opacity: 0;
+  }
+  to {
+    transform: rotateY(0deg);
+    opacity: 1;
+  }
+}
+
+.animate-swap-in {
+  animation: swap-in 0.3s ease-out forwards;
+}
+
+.animate-swap-out {
+  animation: swap-out 0.3s ease-out forwards;
+}
+
+/* Language name fade animation */
+@keyframes lang-fade {
+  0%, 100% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+.lang-name-fade {
+  animation: lang-fade 2s ease-in-out infinite;
+}
+
+
+/* --- Other Styles --- */
 .bottom-nav {
     background-color: rgba(34, 34, 34, 0.8);
     background-image: radial-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 0);
@@ -43,7 +89,6 @@ body {
     backdrop-filter: blur(4px);
 }
 
-/* Background grid pattern */
 .grid-bg {
     background-image:
         linear-gradient(to right, rgba(0,0,0,0.05) 1px, transparent 1px),
@@ -51,7 +96,6 @@ body {
     background-size: 40px 40px;
 }
 
-/* Custom "stretch and contract" Pulse Animation */
 @keyframes custom-pulse {
   50% {
     transform: scale(1.05);
@@ -62,21 +106,6 @@ body {
   animation: custom-pulse 4s ease-in-out infinite;
 }
 
-/* Language name cycling animation styles */
-.lang-name {
-  opacity: 0;
-  transition: opacity 0.5s ease-in-out;
-  position: absolute;
-  width: 100%;
-  left: 0;
-}
-
-.lang-name.active {
-  opacity: 1;
-  position: relative;
-}
-
-/* "Meet in the Center" animations */
 @keyframes slide-in-from-left {
   from {
     startOffset: -30%;
