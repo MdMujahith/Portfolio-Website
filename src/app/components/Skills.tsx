@@ -8,7 +8,7 @@ import {
   SiGit, SiPython, SiPostgresql
 } from 'react-icons/si';
 import { IconType } from 'react-icons';
-import { ChevronDown } from 'lucide-react';
+import { BadgePlus } from 'lucide-react';
 
 interface Skill {
   name: string;
@@ -33,7 +33,7 @@ const skillsData: Skill[] = [
 
 const cardVariants = {
     hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } },
 };
 
 const Skills: React.FC = () => {
@@ -44,37 +44,36 @@ const Skills: React.FC = () => {
     };
 
     return (
-        <section id="skills" className="w-full flex flex-col items-center py-20 pattern-bg-project">
+        <section id="skills" className="w-full flex flex-col items-center py-20 pattern-bg-project relative z-10">
             <h2 className="text-5xl sm:text-7xl font-bold text-center animate-gradient-text mb-16">
                 Skills & Expertise
             </h2>
-            <motion.div 
-                className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 xl:gap-16 max-w-7xl px-4"
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true, amount: 0.1 }}
-                transition={{ staggerChildren: 0.1 }}
-            >
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 xl:gap-16 max-w-7xl px-4">
                 {skillsData.slice(0, skillsToShow).map((skill) => (
-                    <motion.div key={skill.name} variants={cardVariants}>
+                    <motion.div 
+                        key={skill.name} 
+                        variants={cardVariants}
+                        initial="hidden"
+                        animate="visible" // Each card animates itself
+                    >
                         <div className="project-card-wrapper relative group">
                             <div className="card-main flex items-center gap-4 py-6 px-8 rounded-3xl h-32 bg-white ring-1 ring-black/10 shadow-sm relative top-0 left-0 z-10 group-hover:border-2 group-hover:border-black">
                                 <skill.icon size={48} style={{ color: skill.color }} />
                                 <p className="text-xl font-semibold text-zinc-800">{skill.name}</p>
                             </div>
                             <div className="card-shadow-1 absolute h-full w-full left-0 top-0 bg-white ring-1 ring-black/10 -z-0 rounded-3xl transition-all ease-in-out"></div>
-                            <div className="card-shadow-2 absolute h-full w-full left-1.5 top-1.5 bg-zinc-400 ring-1 ring-zinc-400/20 -z-10 rounded-3xl transition-all ease-in-out"></div>
+                            <div className="card-shadow-2 absolute h-full w-full left-1.5 top-1.5 bg-zinc-400 -z-10 rounded-3xl transition-all ease-in-out"></div>
                         </div>
                     </motion.div>
                 ))}
-            </motion.div>
+            </div>
             {skillsToShow < skillsData.length && (
                 <button 
                     onClick={handleLoadMore} 
                     className="mt-12 flex items-center gap-2 bg-zinc-800 text-white font-semibold py-3 px-8 rounded-full shadow-lg hover:bg-zinc-700 transition-all"
                 >
+                    <BadgePlus size={20} />
                     Load More
-                    <ChevronDown size={20} />
                 </button>
             )}
         </section>

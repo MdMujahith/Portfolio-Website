@@ -38,6 +38,12 @@ const BottomNavReplica = () => {
       {/* Center Links */}
       <div className="flex items-center gap-2 font-medium text-white text-sm">
         <a 
+          href="#skills" 
+          className="px-4 py-2 rounded-full hover:bg-white/10 transition-colors duration-200"
+        >
+          Skills
+        </a>
+        <a 
           href="#projects" 
           className="px-4 py-2 rounded-full hover:bg-white/10 transition-colors duration-200"
         >

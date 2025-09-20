@@ -69,7 +69,7 @@ const Intro: React.FC = () => {
             >
               {/* Card 1: Developer */}
               <div className="flex items-start gap-6 p-6 bg-white/60 rounded-xl border border-black/5 shadow-sm">
-                <Code size={36} className="text-blue-600 mt-1" />
+                <Code size={80} className="text-blue-600 mt-1" />
                 <div>
                   <h3 className="text-xl font-bold text-[#1d1d1f]">Technical Skills</h3>
                   <p className="text-[#6e6e73] mt-1">Equipped with a strong foundation in modern web development, including hands-on experience with React, Next.js, and TypeScript to build responsive and efficient applications.</p>
@@ -77,7 +77,7 @@ const Intro: React.FC = () => {
               </div>
               {/* Card 2: Strategist */}
               <div className="flex items-start gap-6 p-6 bg-white/60 rounded-xl border border-black/5 shadow-sm">
-                <Briefcase size={36} className="text-blue-600 mt-1" />
+                <Briefcase size={80} className="text-blue-600 mb-1" />
                 <div>
                   <h3 className="text-xl font-bold text-[#1d1d1f]">Strategic Mindset</h3>
                   <p className="text-[#6e6e73] mt-1">My MBA studies are providing me with a robust framework for market analysis, product management, and strategic decision-making, ensuring technology aligns with business goals.</p>
@@ -85,7 +85,7 @@ const Intro: React.FC = () => {
               </div>
                {/* Card 3: Innovator */}
               <div className="flex items-start gap-6 p-6 bg-white/60 rounded-xl border border-black/5 shadow-sm">
-                <Zap size={36} className="text-blue-600 mt-1" />
+                <Zap size={80} className="text-blue-600 mt-1" />
                 <div>
                   <h3 className="text-xl font-bold text-[#1d1d1f]">Eager to Innovate</h3>
                   <p className="text-[#6e6e73] mt-1">I am driven to apply my combined skills to create innovative products. I am actively seeking opportunities to contribute to challenging projects and grow within a forward-thinking team.</p>
