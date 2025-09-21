@@ -90,7 +90,7 @@ const Footer: React.FC = () => {
             </motion.div>
             
             {/* FIXED: This spacer is now hidden by default and only appears on medium screens and up, matching the BottomNav */}
-            <div className="h-16 hidden md:block"></div>
+            <div className="h-20 hidden md:block"></div>
         </footer>
     );
 };
