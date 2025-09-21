@@ -66,7 +66,7 @@ const Projects: React.FC = () => {
         description: "A markdown-based blogging site.",
         longDescription:
           "A blogging platform with markdown support, syntax highlighting, SEO optimization, and a fast static rendering system.",
-        imageUrl: "/image/project4.png",
+        imageUrl: "/image/blogweb.png",
         projectUrl: "#",
         githubUrl: "#",
         tags: ["Next.js", "Markdown", "SEO"],
@@ -112,7 +112,7 @@ const Projects: React.FC = () => {
               viewport={{ once: true, amount: 0.3 }}
               transition={{ duration: 0.8, ease: "easeOut" }}
             >
-              <h2 className="text-4xl sm:text-5xl md:text-7xl font-extrabold text-[#1d1d1f] tracking-tighter text-center">
+              <h2 className="text-4xl sm:text-5xl lg:text-7xl font-bold text-center animate-gradient-text mb-12 sm:mb-16">
                 Featured Projects
               </h2>
               <p className="mt-4 max-w-2xl mx-auto text-base sm:text-lg text-slate-600 text-center">

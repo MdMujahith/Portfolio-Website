@@ -1,7 +1,7 @@
 import React from 'react';
 import Hero from './components/Hero';
 import Intro from './components/Intro';
-import Projects from './components/Projects'; // 1. Import
+import Projects from './components/Projects';
 import Skills from './components/Skills';
 import Testimonials from './components/Testimonials';
 import Footer from './components/Footer';

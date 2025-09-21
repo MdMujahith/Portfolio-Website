@@ -45,7 +45,7 @@ const Skills: React.FC = () => {
 
     return (
         <section id="skills" className="w-full flex flex-col items-center py-20 pattern-bg-project relative z-10">
-            <h2 className="text-5xl sm:text-7xl font-bold text-center animate-gradient-text mb-16">
+            <h2 className="text-4xl sm:text-5xl lg:text-7xl font-bold text-center animate-gradient-text mb-12 sm:mb-16">
                 Skills & Expertise
             </h2>
             {/* The parent grid no longer controls the animation */}

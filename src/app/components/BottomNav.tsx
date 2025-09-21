@@ -54,6 +54,7 @@ const BottomNav: React.FC = () => {
                     <a href="#about" className="h-full rounded-full px-4 flex items-center hover:bg-white/10 transition">About</a>
                     <a href="#projects" className="h-full rounded-full px-4 flex items-center hover:bg-white/10 transition">Projects</a>
                     <a href="#skills" className="h-full rounded-full px-4 flex items-center hover:bg-white/10 transition">Skills</a>
+                    <a href="#experience" className="h-full rounded-full px-4 flex items-center hover:bg-white/10 transition">Experience</a>
                     <a href="#testimonials" className="h-full rounded-full px-4 flex items-center hover:bg-white/10 transition">Testimonials</a>
                 </div>
 
@@ -92,6 +93,7 @@ const BottomNav: React.FC = () => {
                             <motion.a href="#about" onClick={toggleMenu} variants={linkItemVariants}>About</motion.a>
                             <motion.a href="#projects" onClick={toggleMenu} variants={linkItemVariants}>Projects</motion.a>
                             <motion.a href="#skills" onClick={toggleMenu} variants={linkItemVariants}>Skills</motion.a>
+                            <motion.a href="#experience" onClick={toggleMenu} variants={linkItemVariants}>Experience</motion.a>
                             <motion.a href="#testimonials" onClick={toggleMenu} variants={linkItemVariants}>Testimonials</motion.a>
                             <motion.a href="#contact" onClick={toggleMenu} variants={linkItemVariants} className="mt-8 flex items-center gap-3 px-6 py-3 bg-white/10 rounded-full text-xl">
                                 Let's talk <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M5 12l14 0"></path><path d="M13 18l6-6"></path><path d="M13 6l6 6"></path></svg>
