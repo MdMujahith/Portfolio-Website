@@ -58,7 +58,7 @@ const BottomNav: React.FC = () => {
                     <a href="#testimonials" className="h-full rounded-full px-4 flex items-center hover:bg-white/10 transition">Testimonials</a>
                 </div>
 
-                <a href="#contact" className="bg-black/80 hover:bg-black h-full rounded-full flex items-center px-6 gap-1.5 transition font-semibold">
+                <a href="https://mujahith.vercel.app/#contact" className="bg-black/80 hover:bg-black h-full rounded-full flex items-center px-6 gap-1.5 transition font-semibold">
                     Let's talk <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M5 12l14 0"></path><path d="M13 18l6-6"></path><path d="M13 6l6 6"></path></svg>
                 </a>
             </nav>

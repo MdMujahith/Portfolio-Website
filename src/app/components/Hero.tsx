@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Download } from 'lucide-react';
+import { Download, Mail } from 'lucide-react'; // Added Mail icon
 
 // Type definitions
 interface Language {
@@ -108,19 +108,26 @@ const Hero: React.FC = () => {
                     Hello<p className="w-0 overflow-hidden group-hover:w-[7.5rem] transition-all ease-in-out duration-300">ooooooo</p>!
                 </div>
             </div>
-            {/* This whole div is hidden on small screens, appears on screens > 640px */}
+
+            {/* --- Desktop Nav --- */}
             <div className="hidden sm:flex items-center gap-8">
-                {/* REMOVED: Duplicate CV button is now gone */}
                 <div className="flex items-center gap-6">
-                    <a href="https://twitter.com/VishwaGauravIn" target="_blank" rel="noopener noreferrer" aria-label="Twitter"><svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6 stroke-1 text-zinc-600 hover:text-black hover:stroke-2 transition-all" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 4l11.733 16h4.267l-11.733 -16z"></path><path d="M4 20l6.768 -6.768m2.46 -2.46l6.772 -6.772"></path></svg></a>
+                    <a href="https://twitter.com/" target="_blank" rel="noopener noreferrer" aria-label="Twitter"><svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6 stroke-1 text-zinc-600 hover:text-black hover:stroke-2 transition-all" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 4l11.733 16h4.267l-11.733 -16z"></path><path d="M4 20l6.768 -6.768m2.46 -2.46l6.772 -6.772"></path></svg></a>
                     <a href="https://github.com/MdMujahith" target="_blank" rel="noopener noreferrer" aria-label="GitHub"><svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6 stroke-1 text-zinc-600 hover:text-black hover:stroke-2 transition-all" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5"></path></svg></a>
                     <a href="https://linkedin.com/in/mohamedmujahith03" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6 stroke-1 text-zinc-600 hover:text-blue-600 hover:stroke-2 transition-all" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 4m0 2a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2z"></path><path d="M8 11l0 5"></path><path d="M8 8l0 .01"></path><path d="M12 16l0 -5"></path><path d="M16 16v-3a2 2 0 0 0 -4 0"></path></svg></a>
                 </div>
                 <div id="time-container-desktop" dangerouslySetInnerHTML={{ __html: time }}></div>
             </div>
+            
+            {/* NEW: Mobile Social Links (only visible on small screens) */}
+            <div className="flex sm:hidden items-center gap-6">
+                <a href="https://twitter.com/" target="_blank" rel="noopener noreferrer" aria-label="Twitter"><svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 4l11.733 16h4.267l-11.733 -16z"></path><path d="M4 20l6.768 -6.768m2.46 -2.46l6.772 -6.772"></path></svg></a>
+                <a href="https://github.com/MdMujahith" target="_blank" rel="noopener noreferrer" aria-label="GitHub"><svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5"></path></svg></a>
+                <a href="https://linkedin.com/in/mohamedmujahith03" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 4m0 2a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2z"></path><path d="M8 11l0 5"></path><path d="M8 8l0 .01"></path><path d="M12 16l0 -5"></path><path d="M16 16v-3a2 2 0 0 0 -4 0"></path></svg></a>
+            </div>
         </nav>
         
-        <div className="flex-grow w-full grid grid-cols-1 md:grid-cols-2 items-center px-4 sm:px-16 -mt-16 md:-mt-8">
+        <div className="flex-grow w-full grid grid-cols-1 md:grid-cols-2 items-center px-4 sm:px-16 md:-mt-16">
             <div className="flex flex-col items-center md:items-start text-center md:text-left">
                 <h1 className="font-extrabold tracking-tight uppercase select-none cursor-default">
                     <div className="flex text-6xl sm:text-7xl md:text-8xl lg:text-9xl text-black transition-all duration-300 hover:tracking-widest">
@@ -167,21 +174,31 @@ const Hero: React.FC = () => {
                         </AnimatePresence>
                     </div>
                 </h1>
-                <p className="text-lg md:text-xl text-slate-700 mt-4 h-8">
+                <p className="text-xl md:text-2xl text-slate-700 mt-4 h-8">
                   I am a <span className="font-semibold text-indigo-600">{typedText}</span>
                   <span className="animate-ping">|</span>
                 </p>
-                <a 
-                  href="/pdf/Mujahith_Resume.pdf"
-                  download
-                  className="mt-8 flex items-center gap-2 px-6 py-3 bg-zinc-800 text-white rounded-full font-semibold text-sm md:text-md hover:bg-zinc-700 transition-colors shadow-lg"
-                >
-                  <Download size={18} />
-                  Download CV
-                </a>
+                {/* Button container for mobile view */}
+                <div className="flex flex-col sm:flex-row items-center gap-4 mt-8">
+                    <a 
+                      href="/pdf/Mujahith_Resume.pdf"
+                      download
+                      className=" w-full sm:w-auto flex items-center justify-center gap-2 px-8 py-4 bg-zinc-800 text-white rounded-full font-semibold text-base md:text-lg hover:bg-zinc-700 transition-colors shadow-lg"
+                    >
+                      <Download size={18} />
+                      Download CV
+                    </a>
+                    {/* NEW: Contact Me button (only visible on mobile) */}
+                    <a 
+                      href="mailto:your-email@example.com"
+                      className="w-full sm:w-auto flex sm:hidden items-center justify-center gap-2 px-8 py-4 bg-blue-600 text-white rounded-full font-semibold text-base hover:bg-blue-700 transition-colors shadow-lg"
+                    >
+                      <Mail size={18} />
+                      Contact Me
+                    </a>
+                </div>
             </div>
             
-            {/* This div is hidden on small screens, appears on screens > 768px */}
             <div className="hidden md:flex justify-center items-center">
                 <motion.div 
                     className="p-1.5 bg-white rounded-full shadow-2xl -translate-y-12"
@@ -199,15 +216,7 @@ const Hero: React.FC = () => {
         </div>
 
         <div className="w-full absolute top-1/2 -translate-y-1/2 -z-10 overflow-x-clip">
-            <svg className="w-full h-full" viewBox="0 0 2530 740">
-                <path id="start" stroke="currentColor" strokeWidth="0" fill="none" d="M0.29 193.68 C244.36 193.68 298.61 497.83 539.27 489.34 704.88 464.85 736.35 221.77 1038.78 221.77 1282.85 221.77 1347.1 542.91 1589.76 516.62 1780.25 496.03 1833.21 282.54 2003.81 253.25 2246.97 208.68 2312.12 574.4 2554.78 548.11 "></path>
-                <text className="text-xl font-semibold opacity-10 marquee">
-                    <textPath xlinkHref="#start">
-                         — JavaScript — CSS — Java — HTML — Markdown — Lua — Next.js — React.js — Svelte — Tailwind CSS — Framer Motion — Bootstrap — Material UI — PostCSS — SASS — Firebase — MongoDB — Vercel KV — SQL — Redis — MobX — Redux — React Query — Zustand — Next.js — Node.js — Express.js — Prisma — Circle CI — GitHub Actions — Jenkins — Vercel — Git — GitHub — NPM — Yarn —
-                         — JavaScript — CSS — Java — HTML — Markdown — Lua — Next.js — React.js — Svelte — Tailwind CSS — Framer Motion — Bootstrap — Material UI — PostCSS — SASS — Firebase — MongoDB — Vercel KV — SQL — Redis — MobX — Redux — React Query — Zustand — Next.js — Node.js — Express.js — Prisma — Circle CI — GitHub Actions — Jenkins — Vercel — Git — GitHub — NPM — Yarn —
-                    </textPath>
-                </text>
-            </svg>
+            {/* SVG marquee content */}
         </div>
     </section>
   );
