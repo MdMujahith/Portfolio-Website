@@ -6,15 +6,15 @@ import { Mail } from 'lucide-react';
 
 const Footer: React.FC = () => {
     const marqueeText = (text: string) => (
-        <span className="mx-12 text-5xl font-bold whitespace-nowrap text-zinc-600">
+        <span className="mx-8 text-3xl sm:text-4xl md:text-5xl font-bold whitespace-nowrap text-zinc-600">
           {text}
         </span>
     );
 
     return (
-        <footer className="w-full bg-zinc-800 text-white pt-16 relative z-10 overflow-hidden">
+        <footer className="w-full bg-zinc-800 text-white pt-12 sm:pt-16 relative z-10 overflow-hidden">
             {/* --- Marquee Section --- */}
-            <div className="w-full mb-16">
+            <div className="w-full mb-12 sm:mb-16">
               <div className="flex animate-marquee-left">
                 {marqueeText("Thank You For Visiting My Portfolio")}
                 {marqueeText("Thank You For Visiting My Portfolio")}
@@ -37,12 +37,11 @@ const Footer: React.FC = () => {
                 viewport={{ once: true, amount: 0.3 }}
                 transition={{ duration: 0.8, ease: "easeOut" }}
             >
-                <h2 className="text-4xl font-bold text-white mb-4">Stay Connected</h2>
+                <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">Stay Connected</h2>
                 <p className="max-w-md text-zinc-400 mb-8">
                     Feel free to reach out. I'm always open to new ideas, collaborations, or just a friendly chat.
                 </p>
 
-                {/* RESTORED: Social media links */}
                 <div className="flex items-center gap-8 mb-8">
                     <a href="https://twitter.com/VishwaGauravIn" target="_blank" rel="noopener noreferrer" aria-label="Twitter">
                         <svg xmlns="http://www.w3.org/2000/svg" className="w-7 h-7 text-zinc-400 hover:text-white transition-colors" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -63,7 +62,6 @@ const Footer: React.FC = () => {
                     </a>
                 </div>
                 
-                {/* Get in Touch Email Button */}
                 <a 
                   href="mailto:your-email@example.com"
                   className="flex items-center gap-3 px-6 py-3 bg-white text-zinc-800 rounded-full font-semibold text-md hover:bg-zinc-200 transition-colors shadow-lg mb-8"
@@ -73,23 +71,26 @@ const Footer: React.FC = () => {
                 </a>
 
                 <hr className="w-full max-w-lg border-t border-zinc-700 mb-3" />
-                <p className="text-zinc-600 text-base mt-4">
+                
+                <p className="text-zinc-600 text-sm sm:text-base mt-4">
                     Inspired by{" "}
                     <a 
                         href="https://itsvg.in" 
                         target="_blank" 
                         rel="noopener noreferrer"
-                        className="text-lg font-semibold text-zinc-500 hover:text-white transition-colors"
+                        className="font-semibold text-zinc-500 hover:text-white transition-colors"
                     >
                         Vishwa Gaurav
                     </a>
                 </p>
-                <p className="text-zinc-500 text-sm mb-1">
+                
+                <p className="text-zinc-500 text-xs sm:text-sm mt-1 mb-1">
                     &copy; {new Date().getFullYear()} Mohamed Mujahith. All Rights Reserved.
                 </p>
             </motion.div>
             
-            <div className="h-24"></div>
+            {/* FIXED: This spacer is now hidden by default and only appears on medium screens and up, matching the BottomNav */}
+            <div className="h-16 hidden md:block"></div>
         </footer>
     );
 };

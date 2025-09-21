@@ -108,8 +108,9 @@ const Hero: React.FC = () => {
                     Hello<p className="w-0 overflow-hidden group-hover:w-[7.5rem] transition-all ease-in-out duration-300">ooooooo</p>!
                 </div>
             </div>
+            {/* This whole div is hidden on small screens, appears on screens > 640px */}
             <div className="hidden sm:flex items-center gap-8">
-                {/* REMOVED: Duplicate CV button is now gone from the nav */}
+                {/* REMOVED: Duplicate CV button is now gone */}
                 <div className="flex items-center gap-6">
                     <a href="https://twitter.com/VishwaGauravIn" target="_blank" rel="noopener noreferrer" aria-label="Twitter"><svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6 stroke-1 text-zinc-600 hover:text-black hover:stroke-2 transition-all" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 4l11.733 16h4.267l-11.733 -16z"></path><path d="M4 20l6.768 -6.768m2.46 -2.46l6.772 -6.772"></path></svg></a>
                     <a href="https://github.com/MdMujahith" target="_blank" rel="noopener noreferrer" aria-label="GitHub"><svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6 stroke-1 text-zinc-600 hover:text-black hover:stroke-2 transition-all" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5"></path></svg></a>
@@ -119,10 +120,10 @@ const Hero: React.FC = () => {
             </div>
         </nav>
         
-        <div className="flex-grow w-full grid grid-cols-1 md:grid-cols-2 items-center px-4 sm:px-16 -mt-16">
+        <div className="flex-grow w-full grid grid-cols-1 md:grid-cols-2 items-center px-4 sm:px-16 -mt-16 md:-mt-8">
             <div className="flex flex-col items-center md:items-start text-center md:text-left">
                 <h1 className="font-extrabold tracking-tight uppercase select-none cursor-default">
-                    <div className="flex text-7xl md:text-8xl lg:text-9xl text-black transition-all duration-300 hover:tracking-widest">
+                    <div className="flex text-6xl sm:text-7xl md:text-8xl lg:text-9xl text-black transition-all duration-300 hover:tracking-widest">
                       {nameLetters.map((letter, index) => {
                         const letterKey = `mohamed-${index}`;
                         return (
@@ -151,7 +152,7 @@ const Hero: React.FC = () => {
                       })}
                     </div>
 
-                    <div className="text-6xl md:text-7xl lg:text-8xl text-zinc-500 h-32 relative flex justify-center md:justify-start items-center transition-all duration-300 hover:tracking-widest">
+                    <div className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl text-zinc-500 h-28 sm:h-32 relative flex justify-center md:justify-start items-center transition-all duration-300 hover:tracking-widest">
                         <AnimatePresence mode="wait">
                             <motion.span
                                 key={currentLanguageIndex}
@@ -166,20 +167,21 @@ const Hero: React.FC = () => {
                         </AnimatePresence>
                     </div>
                 </h1>
-                <p className="text-xl md:text-2xl text-slate-700 mt-4 h-8">
+                <p className="text-lg md:text-xl text-slate-700 mt-4 h-8">
                   I am a <span className="font-semibold text-indigo-600">{typedText}</span>
                   <span className="animate-ping">|</span>
                 </p>
                 <a 
                   href="/pdf/Mujahith_Resume.pdf"
                   download
-                  className="mt-8 flex items-center gap-2 px-6 py-3 bg-zinc-800 text-white rounded-full font-semibold text-md hover:bg-zinc-700 transition-colors shadow-lg"
+                  className="mt-8 flex items-center gap-2 px-6 py-3 bg-zinc-800 text-white rounded-full font-semibold text-sm md:text-md hover:bg-zinc-700 transition-colors shadow-lg"
                 >
                   <Download size={18} />
                   Download CV
                 </a>
             </div>
             
+            {/* This div is hidden on small screens, appears on screens > 768px */}
             <div className="hidden md:flex justify-center items-center">
                 <motion.div 
                     className="p-1.5 bg-white rounded-full shadow-2xl -translate-y-12"

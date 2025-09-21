@@ -33,7 +33,7 @@ const skillsData: Skill[] = [
 
 const cardVariants = {
     hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } },
+    visible: { opacity: 1, y: 0 },
 };
 
 const Skills: React.FC = () => {
@@ -48,13 +48,17 @@ const Skills: React.FC = () => {
             <h2 className="text-5xl sm:text-7xl font-bold text-center animate-gradient-text mb-16">
                 Skills & Expertise
             </h2>
+            {/* The parent grid no longer controls the animation */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 xl:gap-16 max-w-7xl px-4">
                 {skillsData.slice(0, skillsToShow).map((skill) => (
+                    // FIXED: Animation is now controlled by each individual card
                     <motion.div 
                         key={skill.name} 
                         variants={cardVariants}
                         initial="hidden"
-                        animate="visible" // Each card animates itself
+                        whileInView="visible"
+                        viewport={{ once: true, amount: 0.5 }}
+                        transition={{ duration: 0.5, ease: "easeOut" }}
                     >
                         <div className="project-card-wrapper relative group">
                             <div className="card-main flex items-center gap-4 py-6 px-8 rounded-3xl h-32 bg-white ring-1 ring-black/10 shadow-sm relative top-0 left-0 z-10 group-hover:border-2 group-hover:border-black">
@@ -62,7 +66,7 @@ const Skills: React.FC = () => {
                                 <p className="text-xl font-semibold text-zinc-800">{skill.name}</p>
                             </div>
                             <div className="card-shadow-1 absolute h-full w-full left-0 top-0 bg-white ring-1 ring-black/10 -z-0 rounded-3xl transition-all ease-in-out"></div>
-                            <div className="card-shadow-2 absolute h-full w-full left-1.5 top-1.5 bg-zinc-400 -z-10 rounded-3xl transition-all ease-in-out"></div>
+                            <div className="card-shadow-2 absolute h-full w-full left-1.5 top-1.5 bg-zinc-400 ring-1 ring-zinc-400/20 -z-10 rounded-3xl transition-all ease-in-out"></div>
                         </div>
                     </motion.div>
                 ))}

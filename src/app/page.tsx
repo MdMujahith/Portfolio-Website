@@ -2,9 +2,9 @@ import React from 'react';
 import Hero from './components/Hero';
 import Intro from './components/Intro';
 import Skills from './components/Skills';
-import Testimonials from './components/Testimonials'; // 1. Import
 import Footer from './components/Footer';
 import BottomNav from './components/BottomNav';
+import Testimonials from './components/Testimonials'; // 1. Re-add the import
 
 const HomePage: React.FC = () => {
   return (
@@ -13,7 +13,7 @@ const HomePage: React.FC = () => {
         <Hero />
         <Intro />
         <Skills />
-        <Testimonials /> {/* 2. Add it here */}
+        <Testimonials /> {/* 2. Re-add the component here */}
       </main>
       <Footer />
       <BottomNav />
