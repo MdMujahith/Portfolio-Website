@@ -103,7 +103,7 @@ const Projects: React.FC = () => {
   return (
     <LazyMotion features={domAnimation}>
       <LayoutGroup>
-        <section id="projects" className="w-full bg-white py-20 sm:py-28">
+        <section id="projects" className="w-full animated-x-pattern py-20 sm:py-28">
           <div className="max-w-7xl mx-auto px-6">
             {/* Section Header */}
             <m.div

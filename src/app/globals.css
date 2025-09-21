@@ -130,3 +130,18 @@ body {
 .animate-marquee-right {
     animation: marquee-right 50s linear infinite;
 }
+/* --- NEW: Animated PlayStation Pattern --- */
+@keyframes move-lines {
+    from { background-position: 0 0; }
+    to { background-position: 56px 56px; }
+}
+@keyframes move-pattern {
+    0% { background-position: 0 0; }
+    100% { background-position: 50px 50px; }
+}
+
+.animated-x-pattern {
+    background-color: #f9fafb;
+    background-image: url("data:image/svg+xml,%3Csvg width='50' height='50' viewBox='0 0 50 50' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M10 10 L20 20 M10 20 L20 10' stroke='%23f3f4f6' stroke-width='1.5'/%3E%3Cpath d='M35 35 L45 45 M35 45 L45 35' stroke='%23f3f4f6' stroke-width='1.5'/%3E%3C/svg%3E");
+    animation: move-pattern 7s linear infinite;
+}
