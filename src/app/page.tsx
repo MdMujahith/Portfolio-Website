@@ -1,10 +1,11 @@
 import React from 'react';
 import Hero from './components/Hero';
 import Intro from './components/Intro';
+import Projects from './components/Projects'; // 1. Import
 import Skills from './components/Skills';
+import Testimonials from './components/Testimonials';
 import Footer from './components/Footer';
 import BottomNav from './components/BottomNav';
-import Testimonials from './components/Testimonials'; // 1. Re-add the import
 
 const HomePage: React.FC = () => {
   return (
@@ -12,8 +13,9 @@ const HomePage: React.FC = () => {
       <main className="w-full flex flex-col items-center overflow-hidden">
         <Hero />
         <Intro />
+        <Projects /> {/* 2. Add it here */}
         <Skills />
-        <Testimonials /> {/* 2. Re-add the component here */}
+        <Testimonials />
       </main>
       <Footer />
       <BottomNav />
