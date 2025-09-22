@@ -11,7 +11,7 @@ interface ContactModalProps {
 }
 
 const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose, onEmailCopied }) => {
-  const email = 'your-email@example.com'; // IMPORTANT: Replace with your actual email
+  const email = 'mohamedmujahith.mj@gmail.com'; // IMPORTANT: Replace with your actual email
 
   const handleSendEmail = () => {
     window.location.href = `mailto:${email}`;

@@ -3,9 +3,9 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { 
-  SiReact, SiNextdotjs, SiTypescript, SiTailwindcss, 
-  SiNodedotjs, SiFigma, SiJavascript, SiHtml5, SiCss3,
-  SiGit, SiPython, SiPostgresql
+  SiC, SiTypescript, SiCplusplus, 
+ SiLinux, SiJavascript, SiHtml5, SiCss3,
+  SiGit, SiPython, SiMysql,SiFigma,SiGoogleappsscript 
 } from 'react-icons/si';
 import { IconType } from 'react-icons';
 import { BadgePlus } from 'lucide-react';
@@ -17,16 +17,16 @@ interface Skill {
 }
 
 const skillsData: Skill[] = [
-  { name: 'JavaScript', icon: SiJavascript, color: '#F7DF1E' },
-  { name: 'TypeScript', icon: SiTypescript, color: '#3178C6' },
-  { name: 'React', icon: SiReact, color: '#61DAFB' },
-  { name: 'Next.js', icon: SiNextdotjs, color: '#000000' },
-  { name: 'Node.js', icon: SiNodedotjs, color: '#339933' },
   { name: 'Python', icon: SiPython, color: '#3776AB' },
+  { name: 'C', icon: SiC, color: '#4169E1' },
+  { name: 'C++', icon: SiCplusplus, color: '#06B6D4' },
+  { name: 'JavaScript', icon: SiJavascript, color: '#F7DF1E' },
+  { name: 'AppScript', icon: SiGoogleappsscript,color: '#3178C6' },
+  { name: 'Linux', icon: SiLinux, color: '#000000ff' },
+  { name: 'Java', icon: SiJavascript, color: '#339933' },
   { name: 'HTML5', icon: SiHtml5, color: '#E34F26' },
   { name: 'CSS3', icon: SiCss3, color: '#1572B6' },
-  { name: 'Tailwind CSS', icon: SiTailwindcss, color: '#06B6D4' },
-  { name: 'PostgreSQL', icon: SiPostgresql, color: '#4169E1' },
+  { name: 'MySQL', icon: SiMysql, color: '#4169E1' },
   { name: 'Git', icon: SiGit, color: '#F05032' },
   { name: 'Figma', icon: SiFigma, color: '#F24E1E' },
 ];
