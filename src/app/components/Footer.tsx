@@ -4,7 +4,12 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Mail } from 'lucide-react';
 
-const Footer: React.FC = () => {
+// Define the props the component will receive
+interface FooterProps {
+  onContactClick: () => void;
+}
+
+const Footer: React.FC<FooterProps> = ({ onContactClick }) => {
     const marqueeText = (text: string) => (
         <span className="mx-8 text-3xl sm:text-4xl md:text-5xl font-bold whitespace-nowrap text-zinc-600">
           {text}
@@ -18,12 +23,8 @@ const Footer: React.FC = () => {
               <div className="flex animate-marquee-left">
                 {marqueeText("Thank You For Visiting My Portfolio")}
                 {marqueeText("Thank You For Visiting My Portfolio")}
-                {marqueeText("Thank You For Visiting My Portfolio")}
-                {marqueeText("Thank You For Visiting My Portfolio")}
               </div>
               <div className="flex animate-marquee-right mt-4">
-                {marqueeText("Coded and Crafted With ❤️ by Mohamed Mujahith")}
-                {marqueeText("Coded and Crafted With ❤️ by Mohamed Mujahith")}
                 {marqueeText("Coded and Crafted With ❤️ by Mohamed Mujahith")}
                 {marqueeText("Coded and Crafted With ❤️ by Mohamed Mujahith")}
               </div>
@@ -62,13 +63,14 @@ const Footer: React.FC = () => {
                     </a>
                 </div>
                 
-                <a 
-                  href="mailto:your-email@example.com"
+                {/* UPDATED: This is now a button that opens the contact modal */}
+                <button 
+                  onClick={onContactClick}
                   className="flex items-center gap-3 px-6 py-3 bg-white text-zinc-800 rounded-full font-semibold text-md hover:bg-zinc-200 transition-colors shadow-lg mb-8"
                 >
                   <Mail size={18} />
                   Get in Touch
-                </a>
+                </button>
 
                 <hr className="w-full max-w-lg border-t border-zinc-700 mb-3" />
                 
@@ -89,7 +91,6 @@ const Footer: React.FC = () => {
                 </p>
             </motion.div>
             
-            {/* FIXED: This spacer is now hidden by default and only appears on medium screens and up, matching the BottomNav */}
             <div className="h-20 hidden md:block"></div>
         </footer>
     );
