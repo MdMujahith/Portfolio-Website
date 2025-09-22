@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-// --- Animation Variants ---
+// --- Animation Variants for Mobile Menu ---
 const menuBackgroundVariants = {
     hidden: { 
         clipPath: `circle(30px at calc(100% - 44px) calc(100% - 44px))`,
@@ -19,10 +19,7 @@ const linkContainerVariants = {
     hidden: { opacity: 0 },
     visible: {
         opacity: 1,
-        transition: {
-            staggerChildren: 0.1,
-            delayChildren: 0.2
-        }
+        transition: { staggerChildren: 0.1, delayChildren: 0.2 }
     }
 };
 
@@ -32,7 +29,12 @@ const linkItemVariants = {
 };
 
 
-const BottomNav: React.FC = () => {
+// 1. Add 'onContactClick' to the component's props
+interface BottomNavProps {
+  onContactClick: () => void;
+}
+
+const BottomNav: React.FC<BottomNavProps> = ({ onContactClick }) => {
     const [isOpen, setIsOpen] = useState(false);
 
     const toggleMenu = () => {
@@ -43,7 +45,6 @@ const BottomNav: React.FC = () => {
         <>
             {/* --- Desktop Navigation --- */}
             <nav 
-                // UPDATED: Increased height from h-14 to h-16 for a bigger feel
                 className="hidden md:flex fixed bottom-6 left-1/2 transform -translate-x-1/2 w-auto h-16 rounded-full p-2 justify-between items-center bg-[#222222cc] text-sm text-white z-50 bottom-nav"
             >
                 <a href="#home" className="flex items-center justify-center w-14 h-full rounded-full hover:bg-white/10 transition">
@@ -58,9 +59,13 @@ const BottomNav: React.FC = () => {
                     <a href="#testimonials" className="h-full rounded-full px-4 flex items-center hover:bg-white/10 transition">Testimonials</a>
                 </div>
 
-                <a href="https://mujahith.vercel.app/#contact" className="bg-black/80 hover:bg-black h-full rounded-full flex items-center px-6 gap-1.5 transition font-semibold">
+                {/* 2. Changed <a> to <button> and added onContactClick */}
+                <button 
+                    onClick={onContactClick}
+                    className="bg-black/80 hover:bg-black h-full rounded-full flex items-center px-6 gap-1.5 transition font-semibold"
+                >
                     Let's talk <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M5 12l14 0"></path><path d="M13 18l6-6"></path><path d="M13 6l6 6"></path></svg>
-                </a>
+                </button>
             </nav>
 
             {/* --- Mobile Navigation --- */}
@@ -88,6 +93,9 @@ const BottomNav: React.FC = () => {
                         <motion.div 
                             className="flex flex-col items-center gap-8 text-white text-3xl font-semibold"
                             variants={linkContainerVariants}
+                            initial="hidden"
+                            animate="visible"
+                            exit="hidden"
                         >
                             <motion.a href="#home" onClick={toggleMenu} variants={linkItemVariants}>Home</motion.a>
                             <motion.a href="#about" onClick={toggleMenu} variants={linkItemVariants}>About</motion.a>
@@ -95,9 +103,17 @@ const BottomNav: React.FC = () => {
                             <motion.a href="#skills" onClick={toggleMenu} variants={linkItemVariants}>Skills</motion.a>
                             <motion.a href="#experience" onClick={toggleMenu} variants={linkItemVariants}>Experience</motion.a>
                             <motion.a href="#testimonials" onClick={toggleMenu} variants={linkItemVariants}>Testimonials</motion.a>
-                            <motion.a href="#contact" onClick={toggleMenu} variants={linkItemVariants} className="mt-8 flex items-center gap-3 px-6 py-3 bg-white/10 rounded-full text-xl">
+                            {/* 3. Changed <a> to <button> and connected onContactClick for mobile menu */}
+                            <motion.button 
+                                onClick={() => {
+                                    toggleMenu();
+                                    onContactClick();
+                                }} 
+                                variants={linkItemVariants} 
+                                className="mt-8 flex items-center gap-3 px-6 py-3 bg-white/10 rounded-full text-xl"
+                            >
                                 Let's talk <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M5 12l14 0"></path><path d="M13 18l6-6"></path><path d="M13 6l6 6"></path></svg>
-                            </motion.a>
+                            </motion.button>
                         </motion.div>
                     </motion.div>
                 )}

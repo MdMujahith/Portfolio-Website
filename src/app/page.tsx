@@ -1,17 +1,20 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
-import Hero from './components/Hero';
-import Intro from './components/Intro';
-import Skills from './components/Skills';
-import Testimonials from './components/Testimonials';
-import Experience from './components/Experience';
-import Projects from './components/Projects';
-import Footer from './components/Footer';
-import BottomNav from './components/BottomNav';
-import ContactModal from './components/ContactModal';
-import Toast from './components/Toast';
-import { AnimatePresence } from 'framer-motion';
+import React, { useState, useEffect } from "react";
+import dynamic from "next/dynamic";
+import Hero from "./components/Hero"; // Keeping Hero static since it's above the fold
+import BottomNav from "./components/BottomNav";
+import ContactModal from "./components/ContactModal";
+import Toast from "./components/Toast";
+import { AnimatePresence } from "framer-motion";
+
+// Lazy load sections that are not immediately needed
+const Intro = dynamic(() => import("./components/Intro"));
+const Skills = dynamic(() => import("./components/Skills"));
+const Projects = dynamic(() => import("./components/Projects"));
+const Experience = dynamic(() => import("./components/Experience"));
+const Testimonials = dynamic(() => import("./components/Testimonials"));
+const Footer = dynamic(() => import("./components/Footer"));
 
 const HomePage: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -43,20 +46,21 @@ const HomePage: React.FC = () => {
         <Experience />
         <Testimonials />
       </main>
+
       <Footer onContactClick={openModal} />
       <BottomNav onContactClick={openModal} />
 
-      <ContactModal 
-        isOpen={isModalOpen} 
-        onClose={closeModal} 
-        onEmailCopied={handleEmailCopied} 
+      <ContactModal
+        isOpen={isModalOpen}
+        onClose={closeModal}
+        onEmailCopied={handleEmailCopied}
       />
-      
+
       <AnimatePresence>
         {showToast && <Toast message="Email copied to clipboard" />}
       </AnimatePresence>
     </>
   );
-}
+};
 
 export default HomePage;

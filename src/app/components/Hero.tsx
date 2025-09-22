@@ -2,7 +2,12 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Download, Mail } from 'lucide-react'; // Added Mail icon
+import { Download, Mail } from 'lucide-react';
+
+// Define the props the component will receive
+interface HeroProps {
+  onContactClick: () => void;
+}
 
 // Type definitions
 interface Language {
@@ -32,7 +37,7 @@ const letterSwapVariants = {
 
 const typingPhrases = ["Python Developer", "Open Source Enthusiast"];
 
-const Hero: React.FC = () => {
+const Hero: React.FC<HeroProps> = ({ onContactClick }) => {
   const [time, setTime] = useState<string>('');
   const [currentLanguageIndex, setCurrentLanguageIndex] = useState<number>(0);
   const [crossedOut, setCrossedOut] = useState<Record<string, boolean>>({});
@@ -119,11 +124,12 @@ const Hero: React.FC = () => {
                 <div id="time-container-desktop" dangerouslySetInnerHTML={{ __html: time }}></div>
             </div>
             
-            {/* NEW: Mobile Social Links (only visible on small screens) */}
+            {/* --- Mobile Social Links --- */}
             <div className="flex sm:hidden items-center gap-6">
-                <a href="https://twitter.com/" target="_blank" rel="noopener noreferrer" aria-label="Twitter"><svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 4l11.733 16h4.267l-11.733 -16z"></path><path d="M4 20l6.768 -6.768m2.46 -2.46l6.772 -6.772"></path></svg></a>
-                <a href="https://github.com/MdMujahith" target="_blank" rel="noopener noreferrer" aria-label="GitHub"><svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5"></path></svg></a>
-                <a href="https://linkedin.com/in/mohamedmujahith03" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 4m0 2a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2z"></path><path d="M8 11l0 5"></path><path d="M8 8l0 .01"></path><path d="M12 16l0 -5"></path><path d="M16 16v-3a2 2 0 0 0 -4 0"></path></svg></a>
+                <a href="https://twitter.com/" target="_blank" rel="noopener noreferrer" aria-label="Twitter"><svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6 text-zinc-600" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 4l11.733 16h4.267l-11.733 -16z"></path><path d="M4 20l6.768 -6.768m2.46 -2.46l6.772 -6.772"></path></svg></a>
+                {/* FIXED: Added text-zinc-600 to the mobile GitHub icon */}
+                <a href="https://github.com/MdMujahith" target="_blank" rel="noopener noreferrer" aria-label="GitHub"><svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6 stroke-1 text-zinc-600 hover:text-black hover:stroke-2 transition-all" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5"></path></svg></a>
+                <a href="https://linkedin.com/in/mohamedmujahith03" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6 text-zinc-600" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 4m0 2a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2z"></path><path d="M8 11l0 5"></path><path d="M8 8l0 .01"></path><path d="M12 16l0 -5"></path><path d="M16 16v-3a2 2 0 0 0 -4 0"></path></svg></a>
             </div>
         </nav>
         
@@ -178,24 +184,23 @@ const Hero: React.FC = () => {
                   I am a <span className="font-semibold text-indigo-600">{typedText}</span>
                   <span className="animate-ping">|</span>
                 </p>
-                {/* Button container for mobile view */}
                 <div className="flex flex-col sm:flex-row items-center gap-4 mt-8">
                     <a 
                       href="/pdf/Mujahith_Resume.pdf"
                       download
-                      className=" w-full sm:w-auto flex items-center justify-center gap-2 px-8 py-4 bg-zinc-800 text-white rounded-full font-semibold text-base md:text-lg hover:bg-zinc-700 transition-colors shadow-lg"
+                      className="w-full sm:w-auto flex items-center justify-center gap-2 px-8 py-4 bg-zinc-800 text-white rounded-full font-semibold text-base md:text-lg hover:bg-zinc-700 transition-colors shadow-lg"
                     >
                       <Download size={18} />
                       Download CV
                     </a>
-                    {/* NEW: Contact Me button (only visible on mobile) */}
-                    <a 
-                      href="mailto:your-email@example.com"
+                    {/* UPDATED: Changed to a button that opens the contact modal */}
+                    <button
+                      onClick={onContactClick}
                       className="w-full sm:w-auto flex sm:hidden items-center justify-center gap-2 px-8 py-4 bg-blue-600 text-white rounded-full font-semibold text-base hover:bg-blue-700 transition-colors shadow-lg"
                     >
                       <Mail size={18} />
                       Contact Me
-                    </a>
+                    </button>
                 </div>
             </div>
             
