@@ -1,10 +1,10 @@
 "use client";
 
 import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, Variants } from "framer-motion";
 
 // --- Animation Variants for Mobile Menu ---
-const menuBackgroundVariants = {
+const menuBackgroundVariants: Variants = {
     hidden: { 
         clipPath: `circle(30px at calc(100% - 44px) calc(100% - 44px))`,
         transition: { type: "spring", stiffness: 400, damping: 40 }
@@ -15,7 +15,7 @@ const menuBackgroundVariants = {
     },
 };
 
-const linkContainerVariants = {
+const linkContainerVariants: Variants = {
     hidden: { opacity: 0 },
     visible: {
         opacity: 1,
@@ -23,11 +23,10 @@ const linkContainerVariants = {
     }
 };
 
-const linkItemVariants = {
+const linkItemVariants: Variants = {
     hidden: { opacity: 0, y: 20 },
     visible: { opacity: 1, y: 0, transition: { ease: "easeOut" } }
 };
-
 
 // 1. Add 'onContactClick' to the component's props
 interface BottomNavProps {

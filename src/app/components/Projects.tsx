@@ -7,7 +7,9 @@ import {
   m,
   AnimatePresence,
   LayoutGroup,
-} from "framer-motion";
+  easeOut,
+  easeIn,
+} from "framer-motion"; // <-- import easing functions
 import { ArrowUpRight } from "lucide-react";
 import { SiGithub } from "react-icons/si";
 
@@ -77,12 +79,13 @@ const Projects: React.FC = () => {
 
   const selectedProject = projectsData.find((p) => p.id === selectedId);
 
+  // --- Fixed variants ---
   const cardVariants = {
     hidden: { opacity: 0, y: 30 },
     visible: {
       opacity: 1,
       y: 0,
-      transition: { duration: 0.6, ease: "easeOut" },
+      transition: { duration: 0.6, ease: easeOut }, // <-- replaced string
     },
   };
 
@@ -91,12 +94,12 @@ const Projects: React.FC = () => {
     visible: {
       opacity: 1,
       scale: 1,
-      transition: { duration: 0.3, ease: "easeOut" },
+      transition: { duration: 0.3, ease: easeOut }, // <-- replaced string
     },
     exit: {
       opacity: 0,
       scale: 0.9,
-      transition: { duration: 0.25, ease: "easeIn" },
+      transition: { duration: 0.25, ease: easeIn }, // <-- replaced string
     },
   };
 
@@ -110,7 +113,7 @@ const Projects: React.FC = () => {
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, amount: 0.3 }}
-              transition={{ duration: 0.8, ease: "easeOut" }}
+              transition={{ duration: 0.8, ease: easeOut }} // <-- replaced string
             >
               <h2 className="text-4xl sm:text-5xl lg:text-7xl font-bold text-center animate-gradient-text mb-12 sm:mb-16">
                 Featured Projects
