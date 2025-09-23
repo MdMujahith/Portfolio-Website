@@ -48,10 +48,10 @@ const Intro: React.FC<IntroProps> = ({ onContactClick }) => {
               }}
             >
               <p className="text-xl sm:text-2xl font-semibold text-gray-800 mb-4">
-                Hi, I'm Mohamed Mujahith.
+                {"Hi, I'm Mohamed Mujahith."}
               </p>
               <p className="text-gray-600 text-base sm:text-lg leading-relaxed">
-                As a recent B.Tech in Computer Science graduate and a current MBA candidate, I'm passionate about the intersection of technology and business. I am building a unique skill set to not only engineer powerful software but also to understand the market dynamics that make a product successful.
+                {"As a recent B.Tech in Computer Science graduate and a current MBA candidate, I'm passionate about the intersection of technology and business. I am building a unique skill set to not only engineer powerful software but also to understand the market dynamics that make a product successful."}
               </p>
               {/* UPDATED: This is now a button to open the contact modal */}
               <button 

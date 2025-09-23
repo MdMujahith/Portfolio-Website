@@ -64,7 +64,7 @@ const BottomNav: React.FC<BottomNavProps> = ({ onContactClick }) => {
                     onClick={onContactClick}
                     className="bg-black/80 hover:bg-black h-full rounded-full flex items-center px-6 gap-1.5 transition font-semibold"
                 >
-                    Let's talk <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M5 12l14 0"></path><path d="M13 18l6-6"></path><path d="M13 6l6 6"></path></svg>
+                    {"Let's talk"} <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M5 12l14 0"></path><path d="M13 18l6-6"></path><path d="M13 6l6 6"></path></svg>
                 </button>
             </nav>
 
@@ -112,7 +112,7 @@ const BottomNav: React.FC<BottomNavProps> = ({ onContactClick }) => {
                                 variants={linkItemVariants} 
                                 className="mt-8 flex items-center gap-3 px-6 py-3 bg-white/10 rounded-full text-xl"
                             >
-                                Let's talk <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M5 12l14 0"></path><path d="M13 18l6-6"></path><path d="M13 6l6 6"></path></svg>
+                                {"Let's talk"} <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M5 12l14 0"></path><path d="M13 18l6-6"></path><path d="M13 6l6 6"></path></svg>
                             </motion.button>
                         </motion.div>
                     </motion.div>

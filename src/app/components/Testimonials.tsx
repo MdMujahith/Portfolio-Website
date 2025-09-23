@@ -88,7 +88,7 @@ const Testimonials: React.FC = () => {
               transition={{ duration: 0.8, ease: "easeInOut" }}
             >
                 <p className="text-xl sm:text-2xl md:text-3xl font-light text-slate-700 leading-relaxed max-w-3xl mx-auto pt-8">
-                    "{testimonialsData[index].quote}"
+                    {"\"" + testimonialsData[index].quote + "\""}
                 </p>
                 <div className="mt-8">
                     <p className="font-bold text-slate-900 text-lg sm:text-xl">{testimonialsData[index].author}</p>

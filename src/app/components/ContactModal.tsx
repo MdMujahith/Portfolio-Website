@@ -2,7 +2,6 @@
 
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X } from 'lucide-react';
 
 interface ContactModalProps {
   isOpen: boolean;
@@ -55,7 +54,7 @@ const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose, onEmailCop
             transition={{ duration: 0.3, ease: 'easeOut' }}
             onClick={(e) => e.stopPropagation()}
           >
-            <h2 className="text-xl font-semibold text-gray-900 mb-4">Let's Talk</h2>
+            <h2 className="text-xl font-semibold text-gray-900 mb-4">{"Let's Talk"}</h2>
             <p className="text-gray-600 text-sm leading-relaxed mb-6">
               Please use email for professional inquiries or potential offers. For other queries, feel free to use my social media handles. Thanks!
             </p>
@@ -64,7 +63,7 @@ const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose, onEmailCop
                 onClick={handleSendEmail}
                 className="w-full bg-gray-900 text-white py-3 px-4 rounded-md text-sm font-medium hover:bg-gray-800 transition-transform active:scale-95"
               >
-                Yes, I'll send an email
+                {"Yes, I'll send an email"}
               </button>
               <button
                 onClick={handleCopyEmail}

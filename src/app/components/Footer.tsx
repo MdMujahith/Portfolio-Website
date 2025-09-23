@@ -40,7 +40,7 @@ const Footer: React.FC<FooterProps> = ({ onContactClick }) => {
             >
                 <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">Stay Connected</h2>
                 <p className="max-w-md text-zinc-400 mb-8">
-                    Feel free to reach out. I'm always open to new ideas, collaborations, or just a friendly chat.
+                    {"Feel free to reach out. I'm always open to new ideas, collaborations, or just a friendly chat."}
                 </p>
 
                 <div className="flex items-center gap-8 mb-8">

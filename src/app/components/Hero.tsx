@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Download, Mail } from 'lucide-react';
+import Image from "next/image";
 
 // Define the props the component will receive
 interface HeroProps {
@@ -211,11 +212,13 @@ const Hero: React.FC<HeroProps> = ({ onContactClick }) => {
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }}
                 >
-                    <img 
+                    <Image
                         src="/image/Profile_Pic.png"
                         alt="Mohamed Mujahith"
-                        className="w-80 h-80 lg:w-96 lg:h-96 rounded-full object-cover border-4 border-slate-200"
-                    />
+                        width={384}      // w-80 = 20rem = 320px? adjust as needed
+                        height={384}     // h-80
+                        className="rounded-full object-cover border-4 border-slate-200 lg:w-96 lg:h-96"
+/>
                 </motion.div>
             </div>
         </div>

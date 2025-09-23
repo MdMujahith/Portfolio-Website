@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { 
-  SiC, SiTypescript, SiCplusplus, 
+  SiC,SiCplusplus, 
  SiLinux, SiJavascript, SiHtml5, SiCss3,
   SiGit, SiPython, SiMysql,SiFigma,SiGoogleappsscript 
 } from 'react-icons/si';
