@@ -31,14 +31,14 @@ const Projects: React.FC = () => {
     () => [
       {
         id: 1,
-        title: "E-Commerce Platform",
-        description: "A full-featured e-commerce site with Stripe integration.",
-        longDescription:
-          "This project is a complete, full-featured e-commerce platform built with Next.js and TypeScript. It features a modern, clean UI, secure payment processing via Stripe, and a comprehensive admin dashboard for managing products, orders, and customers.",
-        imageUrl: "/image/ecomweb.png",
-        projectUrl: "#",
-        githubUrl: "#",
-        tags: ["Next.js", "React", "TypeScript", "Stripe"],
+        title: "SignBridge",
+        description: "A real-time sign language translation system converting ISL and ASL to English.",
+        longDescription:"SignBridge is a real-time sign language translation system that translates Indian Sign Language (ISL) and American Sign Language (ASL) into English. Built using Python, Flask, and YOLO for gesture recognition, with a front-end developed in HTML and CSS, it provides accurate and instant translations to facilitate communication for the hearing-impaired.",
+        imageUrl: "/image/signbridge.png", // replace with your actual image path
+        projectUrl: "https://github.com/MdMujahith/RTSLDS", // link to live project if available
+        githubUrl: "https://github.com/MdMujahith/RTSLDS", // link to GitHub repository
+        tags: ["Python", "Flask", "YOLO", "HTML", "CSS", "Sign Language"]
+
       },
       {
         id: 2,
@@ -47,8 +47,8 @@ const Projects: React.FC = () => {
         longDescription:
           "A real-time, collaborative task management application built using React and Firebase. The app features a clean drag-and-drop interface, real-time database listeners, and user authentication.",
         imageUrl: "/image/taskmanager.png",
-        projectUrl: "#",
-        githubUrl: "#",
+        projectUrl: "https://github.com/MdMujahith/Seyalio",
+        githubUrl: "https://github.com/MdMujahith/Seyalio",
         tags: ["React", "Firebase", "Tailwind CSS"],
       },
       {
@@ -58,8 +58,8 @@ const Projects: React.FC = () => {
         longDescription:
           "Built with Next.js, Tailwind CSS, and Framer Motion to showcase my work in an elegant and interactive way.",
         imageUrl: "/image/portweb.png",
-        projectUrl: "#",
-        githubUrl: "#",
+        projectUrl: "https://mdmujahith.vercel.app",
+        githubUrl: "https://mdmujahith.vercel.app",
         tags: ["Next.js", "Framer Motion", "Tailwind CSS"],
       },
       {
