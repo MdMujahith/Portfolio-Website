@@ -13,32 +13,32 @@ interface ExperienceItem {
 
 const experienceData: ExperienceItem[] = [
     { 
-        company: '915 Trade',
-        role: 'Software Development Engineer', 
-        tenure: '04/2025 - Present', 
-        description: 'Leading front-end development for a new fintech platform.',
-        bgImageUrl: 'https://images.unsplash.com/photo-1600985233544-fe592337d174?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wzNjAzNTV8MHwxfGFsbHx8fHx8fHx8fDE3MjY5NzE0MDR8&ixlib=rb-4.0.3&q=80&w=1080' // Replace with a relevant image
+        company: 'IBM',
+        role: 'Frontend Developer Intern', 
+        tenure: 'Oct 2024 - Nov 2024', 
+        description: 'Leading Front-end development for a Gaming Website.',
+        bgImageUrl: '/image/front-end-developer.jpg' // Replace with a relevant image
     },
     { 
-        company: 'Groww',
-        role: 'Software Development Engineer', 
-        tenure: '01/2025 - Present', 
-        description: 'Developed and maintained key features for the Groww web application.',
-        bgImageUrl: 'https://images.unsplash.com/photo-1640653298279-73c15836c77a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wzNjAzNTV8MHwxfGFsbHx8fHx8fHx8fDE3MjY5NzE0NDV8&ixlib=rb-4.0.3&q=80&w=1080' // Replace with a relevant image
+        company: 'Techno Hacks',
+        role: 'Cyber Security Intern', 
+        tenure: 'Oct 2023 - Nov 2023 ', 
+        description: 'Assisted in cybersecurity projects and learned about security tools.',
+        bgImageUrl: '/image/cyber security.jpg' // Replace with a relevant image
     },
     { 
-        company: 'Freelance & OSS',
-        role: 'Open Source Contributor', 
-        tenure: '10/2021 - Present', 
-        description: 'Created over 10 open-source projects and tools used by developers worldwide.',
-        bgImageUrl: 'https://images.unsplash.com/photo-1588868940428-1b3a3225a4c9?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wzNjAzNTV8MHwxfGFsbHx8fHx8fHx8fDE3MjY5NzE0NzV8&ixlib=rb-4.0.3&q=80&w=1080' // Replace with a relevant image
-    },
-    { 
-        company: 'Zivy Pvt. Ltd',
-        role: 'Software Developer', 
-        tenure: '03/2023 - 01/2024', 
-        description: 'Built responsive user interfaces for client websites using React and Next.js.',
+        company: 'Crescent Data Science Club',
+        role: 'Social Media Team Lead', 
+        tenure: '2024 - 2025', 
+        description: 'Managed social media presence, led campaigns, and grew community engagement.',
         bgImageUrl: 'https://images.unsplash.com/photo-1616763355548-1b606f439f86?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wzNjAzNTV8MHwxfGFsbHx8fHx8fHx8fDE3MjY5NzE1MDB8&ixlib=rb-4.0.3&q=80&w=1080' // Replace with a relevant image
+    },
+    { 
+        company: 'Open Source Projects',
+        role: 'Contributor',
+        tenure: '03/2023 - 01/2024',
+        description: 'Learned and contributed to open-source projects while improving coding and collaboration skills.',
+        bgImageUrl: '/image/open-source.png' // Replace with a relevant image
     },
 ];
 
