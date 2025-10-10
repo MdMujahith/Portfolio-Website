@@ -33,7 +33,7 @@ const Projects: React.FC = () => {
         id: 1,
         title: "SignBridge",
         description: "A real-time sign language translation system converting ISL and ASL to English.",
-        longDescription:"SignBridge is a real-time sign language translation system that translates Indian Sign Language (ISL) and American Sign Language (ASL) into English. Built using Python, Flask, and YOLO for gesture recognition, with a front-end developed in HTML and CSS, it provides accurate and instant translations to facilitate communication for the hearing-impaired.",
+        longDescription:"SignBridge is a real-time system that translates Indian (ISL) and American (ASL) Sign Language into English. Built with Python and YOLO, it provides instant translations to facilitate communication for the hearing-impaired.",
         imageUrl: "/image/signbridge.png", // replace with your actual image path
         projectUrl: "https://github.com/MdMujahith/RTSLDS", // link to live project if available
         githubUrl: "https://github.com/MdMujahith/RTSLDS", // link to GitHub repository

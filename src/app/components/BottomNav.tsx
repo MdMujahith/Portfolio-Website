@@ -52,8 +52,8 @@ const BottomNav: React.FC<BottomNavProps> = ({ onContactClick }) => {
                 
                 <div className="flex gap-2 h-full font-semibold px-2">
                     <a href="#about" className="h-full rounded-full px-4 flex items-center hover:bg-white/10 transition">About</a>
-                    <a href="#projects" className="h-full rounded-full px-4 flex items-center hover:bg-white/10 transition">Projects</a>
                     <a href="#skills" className="h-full rounded-full px-4 flex items-center hover:bg-white/10 transition">Skills</a>
+                    <a href="#projects" className="h-full rounded-full px-4 flex items-center hover:bg-white/10 transition">Projects</a>
                     <a href="#experience" className="h-full rounded-full px-4 flex items-center hover:bg-white/10 transition">Experience</a>
                     <a href="#testimonials" className="h-full rounded-full px-4 flex items-center hover:bg-white/10 transition">Testimonials</a>
                 </div>
@@ -98,8 +98,8 @@ const BottomNav: React.FC<BottomNavProps> = ({ onContactClick }) => {
                         >
                             <motion.a href="#home" onClick={toggleMenu} variants={linkItemVariants}>Home</motion.a>
                             <motion.a href="#about" onClick={toggleMenu} variants={linkItemVariants}>About</motion.a>
-                            <motion.a href="#projects" onClick={toggleMenu} variants={linkItemVariants}>Projects</motion.a>
                             <motion.a href="#skills" onClick={toggleMenu} variants={linkItemVariants}>Skills</motion.a>
+                            <motion.a href="#projects" onClick={toggleMenu} variants={linkItemVariants}>Projects</motion.a>
                             <motion.a href="#experience" onClick={toggleMenu} variants={linkItemVariants}>Experience</motion.a>
                             <motion.a href="#testimonials" onClick={toggleMenu} variants={linkItemVariants}>Testimonials</motion.a>
                             {/* 3. Changed <a> to <button> and connected onContactClick for mobile menu */}
