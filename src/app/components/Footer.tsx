@@ -23,8 +23,12 @@ const Footer: React.FC<FooterProps> = ({ onContactClick }) => {
               <div className="flex animate-marquee-left">
                 {marqueeText("Thank You For Visiting My Portfolio")}
                 {marqueeText("Thank You For Visiting My Portfolio")}
+                {marqueeText("Thank You For Visiting My Portfolio")}
+                {marqueeText("Thank You For Visiting My Portfolio")}
               </div>
               <div className="flex animate-marquee-right mt-4">
+                {marqueeText("Coded and Crafted With ❤️ by Mohamed Mujahith")}
+                {marqueeText("Coded and Crafted With ❤️ by Mohamed Mujahith")}
                 {marqueeText("Coded and Crafted With ❤️ by Mohamed Mujahith")}
                 {marqueeText("Coded and Crafted With ❤️ by Mohamed Mujahith")}
               </div>
