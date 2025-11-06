@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
+import Image from 'next/image';
 
 interface ExperienceItem {
     role: string;
@@ -75,9 +76,10 @@ const Experience: React.FC = () => {
                             whileHover={{ y: -8, transition: { duration: 0.3 } }}
                         >
                             {/* Background Image */}
-                            <img 
+                            <Image
                                 src={exp.bgImageUrl} 
                                 alt={exp.company} 
+                                fill
                                 className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 ease-in-out"
                             />
                             {/* Gradient Overlay */}

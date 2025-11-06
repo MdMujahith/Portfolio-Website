@@ -6,10 +6,10 @@ import {
   domAnimation,
   m,
   AnimatePresence,
-  LayoutGroup,
+  // *** CHANGED: LayoutGroup is no longer needed ***
   easeOut,
   easeIn,
-} from "framer-motion"; // <-- import easing functions
+} from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 import { SiGithub } from "react-icons/si";
 
@@ -33,10 +33,10 @@ const Projects: React.FC = () => {
         id: 1,
         title: "SignBridge",
         description: "A real-time sign language translation system converting ISL and ASL to English.",
-        longDescription:"SignBridge is a real-time system that translates Indian (ISL) and American (ASL) Sign Language into English. Built with Python and YOLO, it provides instant translations to facilitate communication for the hearing-impaired.",
-        imageUrl: "/image/signbridge.png", // replace with your actual image path
-        projectUrl: "https://github.com/MdMujahith/RTSLDS", // link to live project if available
-        githubUrl: "https://github.com/MdMujahith/RTSLDS", // link to GitHub repository
+        longDescription: "SignBridge is a real-time system that translates Indian (ISL) and American (ASL) Sign Language into English. Built with Python and YOLO, it provides instant translations to facilitate communication for the hearing-impaired.",
+        imageUrl: "/image/signbridge.png",
+        projectUrl: "https://github.com/MdMujahith/RTSLDS",
+        githubUrl: "https://github.com/MdMujahith/RTSLDS",
         tags: ["Python", "Flask", "YOLO", "HTML", "CSS", "Sign Language"]
 
       },
@@ -79,136 +79,162 @@ const Projects: React.FC = () => {
 
   const selectedProject = projectsData.find((p) => p.id === selectedId);
 
-  // --- Fixed variants ---
+  // --- Variants ---
   const cardVariants = {
     hidden: { opacity: 0, y: 30 },
     visible: {
       opacity: 1,
       y: 0,
-      transition: { duration: 0.6, ease: easeOut }, // <-- replaced string
+      transition: { duration: 0.6, ease: easeOut },
     },
   };
 
   const modalVariants = {
-    hidden: { opacity: 0, scale: 0.9 },
+    hidden: { opacity: 0, scale: 0.95 },
     visible: {
       opacity: 1,
       scale: 1,
-      transition: { duration: 0.3, ease: easeOut }, // <-- replaced string
+      transition: { duration: 0.3, ease: easeOut },
     },
     exit: {
       opacity: 0,
-      scale: 0.9,
-      transition: { duration: 0.25, ease: easeIn }, // <-- replaced string
+      scale: 0.95,
+      transition: { duration: 0.25, ease: easeIn },
     },
   };
 
+  const modalContentVariants = {
+    hidden: { opacity: 0, y: 10 },
+    visible: (delay: number = 0) => ({
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.4, delay, ease: easeOut },
+    }),
+    exit: {
+      opacity: 0,
+      transition: { duration: 0.1, ease: easeIn },
+    },
+  };
+
+
   return (
     <LazyMotion features={domAnimation}>
-      <LayoutGroup>
-        <section id="projects" className="w-full animated-x-pattern py-20 sm:py-28">
-          <div className="max-w-7xl mx-auto px-6">
-            {/* Section Header */}
-            <m.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.3 }}
-              transition={{ duration: 0.8, ease: easeOut }} // <-- replaced string
-            >
-              <h2 className="text-4xl sm:text-5xl lg:text-7xl font-bold text-center animate-gradient-text mb-12 sm:mb-16">
-                Featured Projects
-              </h2>
-              <p className="mt-4 max-w-2xl mx-auto text-base sm:text-lg text-slate-600 text-center">
-                A selection of my work, showcasing my skills in creating modern,
-                responsive, and user-friendly web applications.
-              </p>
-            </m.div>
+      {/* *** CHANGED: Removed LayoutGroup wrapper *** */}
+      <section id="projects" className="w-full animated-x-pattern py-20 sm:py-28">
+        <div className="max-w-7xl mx-auto px-6">
+          {/* Section Header */}
+          <m.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.3 }}
+            transition={{ duration: 0.8, ease: easeOut }}
+          >
+            <h2 className="text-4xl sm:text-5xl lg:text-7xl font-bold text-center animate-gradient-text mb-12 sm:mb-16">
+              Featured Projects
+            </h2>
+            <p className="mt-4 max-w-2xl mx-auto text-base sm:text-lg text-slate-600 text-center">
+              A selection of my work, showcasing my skills in creating modern,
+              responsive, and user-friendly web applications.
+            </p>
+          </m.div>
 
-            {/* Grid for 4 projects */}
-            <m.div
-              className="mt-12 sm:mt-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8"
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, amount: 0.1 }}
-              transition={{ staggerChildren: 0.2 }}
-            >
-              {projectsData.map((project) => (
-                <m.div
-                  key={project.id}
-                  layoutId={`project-card-${project.id}`}
-                  onClick={() => setSelectedId(project.id)}
-                  className="block group cursor-pointer"
-                  variants={cardVariants}
-                >
-                  <div className="bg-slate-50 rounded-xl overflow-hidden border border-slate-200/50 group-hover:shadow-xl transition-shadow duration-300">
-                    <m.img
-                      layoutId={`project-image-${project.id}`}
-                      src={project.imageUrl}
-                      alt={project.title}
-                      className="w-full h-48 sm:h-52 object-cover"
-                    />
-                    <div className="p-4 sm:p-6">
-                      <m.h3
-                        layoutId={`project-title-${project.id}`}
-                        className="text-lg sm:text-xl font-bold text-slate-800"
-                      >
-                        {project.title}
-                      </m.h3>
-                      <m.p
-                        layoutId={`project-description-${project.id}`}
-                        className="mt-2 text-slate-600 text-sm sm:text-base"
-                      >
-                        {project.description}
-                      </m.p>
-                    </div>
-                  </div>
-                </m.div>
-              ))}
-            </m.div>
-          </div>
-        </section>
-
-        {/* Modal */}
-        <AnimatePresence>
-          {selectedId && selectedProject && (
-            <m.div
-              className="fixed inset-0 bg-black/50 backdrop-blur-md z-50 flex items-center justify-center p-4"
-              onClick={() => setSelectedId(null)}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-            >
+          {/* Grid for 4 projects */}
+          <m.div
+            className="mt-12 sm:mt-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.1 }}
+            transition={{ staggerChildren: 0.2 }}
+          >
+            {projectsData.map((project) => (
               <m.div
-                layoutId={`project-card-${selectedId}`}
-                onClick={(e) => e.stopPropagation()}
-                className="w-full max-w-xl bg-slate-50 rounded-xl overflow-hidden flex flex-col shadow-2xl"
-                variants={modalVariants}
-                initial="hidden"
-                animate="visible"
-                exit="exit"
+                key={project.id}
+                onClick={() => setSelectedId(project.id)}
+                className="block group cursor-pointer"
+                variants={cardVariants}
               >
-                {/* Header Image */}
-                <m.img
-                  layoutId={`project-image-${selectedId}`}
-                  src={selectedProject.imageUrl}
-                  alt={selectedProject.title}
-                  className="w-full h-48 sm:h-64 object-cover"
-                />
+                <div className="bg-slate-50 rounded-xl overflow-hidden border border-slate-200/50 group-hover:shadow-xl transition-shadow duration-300">
+                  <m.img
+                    // *** CHANGED: layoutId removed ***
+                    src={project.imageUrl}
+                    alt={project.title}
+                    className="w-full h-48 sm:h-52 object-cover"
+                  />
+                  <div className="p-4 sm:p-6">
+                    <m.h3
+                      className="text-lg sm:text-xl font-bold text-slate-800"
+                    >
+                      {project.title}
+                    </m.h3>
+                    <m.p
+                      className="mt-2 text-slate-600 text-sm sm:text-base"
+                    >
+                      {project.description}
+                    </m.p>
+                  </div>
+                </div>
+              </m.div>
+            ))}
+          </m.div>
+        </div>
+      </section>
 
-                {/* Content */}
-                <div className="p-5 sm:p-6 overflow-y-auto max-h-[60vh]">
-                  <m.h3
-                    layoutId={`project-title-${selectedId}`}
-                    className="text-xl sm:text-2xl font-bold text-slate-800"
-                  >
-                    {selectedProject.title}
-                  </m.h3>
-                  <m.p
-                    layoutId={`project-description-${selectedId}`}
-                    className="mt-2 text-slate-600 text-sm sm:text-base"
-                  >
-                    {selectedProject.description}
-                  </m.p>
+      {/* Modal */}
+      <AnimatePresence>
+        {selectedId && selectedProject && (
+          <m.div
+            className="fixed inset-0 bg-black/50 backdrop-blur-md z-50 flex items-center justify-center p-4"
+            onClick={() => setSelectedId(null)}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <m.div
+              onClick={(e) => e.stopPropagation()}
+              className="w-full max-w-xl bg-slate-50 rounded-xl overflow-hidden flex flex-col shadow-2xl"
+              variants={modalVariants} // <-- This variant handles the scale/fade
+              initial="hidden"
+              animate="visible"
+              exit="exit"
+            >
+              {/* Header Image */}
+              <m.img
+                // *** CHANGED: layoutId removed ***
+                src={selectedProject.imageUrl}
+                alt={selectedProject.title}
+                className="w-full h-48 sm:h-64 object-cover"
+              />
+
+              {/* Content */}
+              <div className="p-5 sm:p-6 overflow-y-auto max-h-[60vh]">
+                <m.h3
+                  className="text-xl sm:text-2xl font-bold text-slate-800"
+                  custom={0.1}
+                  variants={modalContentVariants}
+                  initial="hidden"
+                  animate="visible"
+                  exit="exit"
+                >
+                  {selectedProject.title}
+                </m.h3>
+                <m.p
+                  className="mt-2 text-slate-600 text-sm sm:text-base"
+                  custom={0.15}
+                  variants={modalContentVariants}
+                  initial="hidden"
+                  animate="visible"
+                  exit="exit"
+                >
+                  {selectedProject.description}
+                </m.p>
+                
+                <m.div
+                  custom={0.2}
+                  variants={modalContentVariants}
+                  initial="hidden"
+                  animate="visible"
+                  exit="exit"
+                >
                   <hr className="my-4 border-slate-200" />
                   <p className="text-slate-700 text-sm sm:text-base leading-relaxed">
                     {selectedProject.longDescription}
@@ -228,7 +254,6 @@ const Projects: React.FC = () => {
 
                   {/* Buttons */}
                   <div className="flex flex-wrap items-center gap-5 mt-4">
-                    {/* View Project */}
                     <a
                       href={selectedProject.projectUrl}
                       target="_blank"
@@ -237,8 +262,6 @@ const Projects: React.FC = () => {
                     >
                       View Project <ArrowUpRight size={18} />
                     </a>
-
-                    {/* GitHub Capsule */}
                     <a
                       href={selectedProject.githubUrl}
                       target="_blank"
@@ -248,12 +271,13 @@ const Projects: React.FC = () => {
                       <SiGithub size={18} /> Visit GitHub
                     </a>
                   </div>
-                </div>
-              </m.div>
+                </m.div>
+              </div>
             </m.div>
-          )}
-        </AnimatePresence>
-      </LayoutGroup>
+          </m.div>
+        )}
+      </AnimatePresence>
+      {/* *** CHANGED: Removed closing </LayoutGroup> *** */}
     </LazyMotion>
   );
 };

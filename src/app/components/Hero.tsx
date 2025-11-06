@@ -218,7 +218,7 @@ const Hero: React.FC<HeroProps> = ({ onContactClick }) => {
                         width={384}      // w-80 = 20rem = 320px? adjust as needed
                         height={384}     // h-80
                         className="rounded-full object-cover border-4 border-slate-200 lg:w-120 lg:h-120"
-/>
+                       />
                 </motion.div>
             </div>
         </div>
