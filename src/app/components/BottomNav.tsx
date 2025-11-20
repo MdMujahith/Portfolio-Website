@@ -72,7 +72,7 @@ const BottomNav: React.FC<BottomNavProps> = ({ onContactClick }) => {
                     onClick={onContactClick}
                     className="bg-white text-black h-full rounded-full flex items-center px-6 gap-2 transition hover:scale-105 active:scale-95 font-bold ml-1"
                 >
-                    Let's talk <ArrowRight size={16} />
+                    Let&apos;s talk <ArrowRight size={16} />
                 </button>
             </nav>
 
@@ -126,7 +126,7 @@ const BottomNav: React.FC<BottomNavProps> = ({ onContactClick }) => {
                                 variants={linkItemVariants} 
                                 className="mt-8 flex items-center gap-3 px-8 py-4 bg-white text-black rounded-full text-xl font-bold hover:bg-zinc-200 active:scale-95 transition-all"
                             >
-                                Let's talk <ArrowRight size={24} />
+                                Let&apos;s talk<ArrowRight size={24} />
                             </motion.button>
                         </motion.div>
                     </motion.div>

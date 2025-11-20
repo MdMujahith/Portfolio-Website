@@ -87,7 +87,7 @@ const Testimonials: React.FC = () => {
                         }`}
                     >
                         <p className="text-xl sm:text-2xl md:text-3xl font-light text-slate-700 leading-relaxed max-w-3xl mx-auto">
-                            "{testimonial.quote}"
+                            &quot;{testimonialsData[index].quote}&quot;
                         </p>
                         <div className="mt-8">
                             <p className="font-bold text-slate-900 text-lg sm:text-xl">
