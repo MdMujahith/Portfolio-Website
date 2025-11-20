@@ -5,12 +5,10 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Download, Mail } from 'lucide-react';
 import Image from "next/image";
 
-// Define the props the component will receive
 interface HeroProps {
   onContactClick: () => void;
 }
 
-// Type definitions
 interface Language {
   name: string;
   lang: string;
@@ -39,7 +37,8 @@ const letterSwapVariants = {
 const typingPhrases = ["Python Developer", "Open Source Enthusiast"];
 
 const Hero: React.FC<HeroProps> = ({ onContactClick }) => {
-  const [time, setTime] = useState<string>('');
+  const [mounted, setMounted] = useState(false);
+  const [time, setTime] = useState<Date | null>(null);
   const [currentLanguageIndex, setCurrentLanguageIndex] = useState<number>(0);
   const [crossedOut, setCrossedOut] = useState<Record<string, boolean>>({});
   const [typedText, setTypedText] = useState("");
@@ -51,26 +50,9 @@ const Hero: React.FC<HeroProps> = ({ onContactClick }) => {
   };
   
   useEffect(() => {
-    const updateTime = () => {
-      const now = new Date();
-      const optionsTime: Intl.DateTimeFormatOptions = { timeZone: 'Asia/Kolkata', hour: '2-digit', minute: '2-digit', hour12: true };
-      const optionsDate: Intl.DateTimeFormatOptions = { timeZone: 'Asia/Kolkata', month: 'long', day: 'numeric' };
-      const timeString = now.toLocaleTimeString('en-US', optionsTime);
-      const dateString = now.toLocaleDateString('en-US', optionsDate);
-      const [timeValue, ampm] = timeString.split(' ');
-      
-      setTime(`
-        <div class="flex items-center justify-end gap-1.5">
-            <span class="text-3xl font-bold">${timeValue}</span>
-            <div class="text-left text-xs font-bold">
-                <span class="block">${ampm.toLowerCase()}</span>
-                <span class="block text-zinc-700">${dateString}</span>
-            </div>
-        </div>
-      `);
-    };
-    updateTime();
-    const timerId = setInterval(updateTime, 1000);
+    setMounted(true);
+    setTime(new Date());
+    const timerId = setInterval(() => setTime(new Date()), 1000);
     return () => clearInterval(timerId);
   }, []);
 
@@ -104,33 +86,67 @@ const Hero: React.FC<HeroProps> = ({ onContactClick }) => {
 
   const currentLanguageName = languages[currentLanguageIndex].name;
 
+  const formatTime = (date: Date) => {
+    const timeStr = date.toLocaleTimeString('en-US', { timeZone: 'Asia/Kolkata', hour: '2-digit', minute: '2-digit', hour12: true });
+    const [timeValue, ampm] = timeStr.split(' ');
+    const dateString = date.toLocaleDateString('en-US', { timeZone: 'Asia/Kolkata', month: 'long', day: 'numeric' });
+    return { timeValue, ampm, dateString };
+  };
+
+  // --- NEW FEATURE: Reusable Social Links Component ---
+  // This cleans up the code by defining the icons once and using them twice.
+  const SocialLinks = () => (
+    <>
+        <a href="https://twitter.com/" target="_blank" rel="noopener noreferrer" aria-label="Twitter">
+            <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6 stroke-1 text-zinc-600 hover:text-black hover:stroke-2 transition-all" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 4l11.733 16h4.267l-11.733 -16z"></path><path d="M4 20l6.768 -6.768m2.46 -2.46l6.772 -6.772"></path></svg>
+        </a>
+        <a href="https://github.com/MdMujahith" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
+            <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6 stroke-1 text-zinc-600 hover:text-black hover:stroke-2 transition-all" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5"></path></svg>
+        </a>
+        <a href="https://linkedin.com/in/mohamedmujahith03" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+            <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6 stroke-1 text-zinc-600 hover:text-blue-600 hover:stroke-2 transition-all" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 4m0 2a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2z"></path><path d="M8 11l0 5"></path><path d="M8 8l0 .01"></path><path d="M12 16l0 -5"></path><path d="M16 16v-3a2 2 0 0 0 -4 0"></path></svg>
+        </a>
+    </>
+  );
+
   return (
     <section id="home" className="w-full min-h-screen flex flex-col items-center relative">
         <div className="absolute inset-0 -z-10 grid-bg animate-custom-pulse"></div>
+        
         <nav className="flex justify-between p-4 items-center sm:px-16 sm:py-12 w-full">
-            <div className="flex items-baseline group cursor-default gap-2 relative">
-                <p className="text-3xl sm:text-5xl group-hover:scale-90 transition-all ease-in-out duration-300 group-hover:rotate-12">👋</p>
-                <div className="text-2xl font-bold tracking-wider text-[#FBC138] group-hover:tracking-widest transition-all ease-in-out duration-300 hidden sm:flex">
-                    Hello<p className="w-0 overflow-hidden group-hover:w-[7.5rem] transition-all ease-in-out duration-300">ooooooo</p>!
-                </div>
-            </div>
+            <div className="flex items-center group cursor-default gap-2 relative">
+                  <img 
+                    src="image/Waving_Hand.png" 
+                    alt="Waving Hand" 
+                    className="w-9 h-9 sm:w-12 sm:h-12 group-hover:scale-90 transition-all ease-in-out duration-300 group-hover:rotate-12"/>
+                  <div className="text-2xl font-bold tracking-wider text-[#FBC138] group-hover:tracking-widest transition-all ease-in-out duration-300 flex">
+                        Hello
+                        <p className="w-0 overflow-hidden group-hover:w-[7.5rem] transition-all ease-in-out duration-300">ooooooo</p>!          
+                  </div>
+             </div>
 
             {/* --- Desktop Nav --- */}
             <div className="hidden sm:flex items-center gap-8">
                 <div className="flex items-center gap-6">
-                    <a href="https://twitter.com/" target="_blank" rel="noopener noreferrer" aria-label="Twitter"><svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6 stroke-1 text-zinc-600 hover:text-black hover:stroke-2 transition-all" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 4l11.733 16h4.267l-11.733 -16z"></path><path d="M4 20l6.768 -6.768m2.46 -2.46l6.772 -6.772"></path></svg></a>
-                    <a href="https://github.com/MdMujahith" target="_blank" rel="noopener noreferrer" aria-label="GitHub"><svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6 stroke-1 text-zinc-600 hover:text-black hover:stroke-2 transition-all" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5"></path></svg></a>
-                    <a href="https://linkedin.com/in/mohamedmujahith03" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6 stroke-1 text-zinc-600 hover:text-blue-600 hover:stroke-2 transition-all" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 4m0 2a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2z"></path><path d="M8 11l0 5"></path><path d="M8 8l0 .01"></path><path d="M12 16l0 -5"></path><path d="M16 16v-3a2 2 0 0 0 -4 0"></path></svg></a>
+                    {/* UPDATED: Using SocialLinks component */}
+                    <SocialLinks />
                 </div>
-                <div id="time-container-desktop" dangerouslySetInnerHTML={{ __html: time }}></div>
+                
+                {mounted && time && (
+                    <div className="flex items-center justify-end gap-1.5">
+                        <span className="text-3xl font-bold">{formatTime(time).timeValue}</span>
+                        <div className="text-left text-xs font-bold">
+                            <span className="block">{formatTime(time).ampm.toLowerCase()}</span>
+                            <span className="block text-zinc-700">{formatTime(time).dateString}</span>
+                        </div>
+                    </div>
+                )}
             </div>
             
             {/* --- Mobile Social Links --- */}
             <div className="flex sm:hidden items-center gap-6">
-                <a href="https://twitter.com/" target="_blank" rel="noopener noreferrer" aria-label="Twitter"><svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6 text-zinc-600" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 4l11.733 16h4.267l-11.733 -16z"></path><path d="M4 20l6.768 -6.768m2.46 -2.46l6.772 -6.772"></path></svg></a>
-                {/* FIXED: Added text-zinc-600 to the mobile GitHub icon */}
-                <a href="https://github.com/MdMujahith" target="_blank" rel="noopener noreferrer" aria-label="GitHub"><svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6 stroke-1 text-zinc-600 hover:text-black hover:stroke-2 transition-all" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5"></path></svg></a>
-                <a href="https://linkedin.com/in/mohamedmujahith03" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6 text-zinc-600" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 4m0 2a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2z"></path><path d="M8 11l0 5"></path><path d="M8 8l0 .01"></path><path d="M12 16l0 -5"></path><path d="M16 16v-3a2 2 0 0 0 -4 0"></path></svg></a>
+                {/* UPDATED: Using SocialLinks component */}
+                <SocialLinks />
             </div>
         </nav>
         
@@ -185,6 +201,7 @@ const Hero: React.FC<HeroProps> = ({ onContactClick }) => {
                   I am a <span className="font-semibold text-indigo-600">{typedText}</span>
                   <span className="animate-ping">|</span>
                 </p>
+
                 <div className="flex flex-col sm:flex-row items-center gap-4 mt-8">
                     <a 
                       href="/pdf/Mujahith_Resume.pdf"
@@ -194,7 +211,6 @@ const Hero: React.FC<HeroProps> = ({ onContactClick }) => {
                       <Download size={18} />
                       Download CV
                     </a>
-                    {/* UPDATED: Changed to a button that opens the contact modal */}
                     <button
                       onClick={onContactClick}
                       className="w-full sm:w-auto flex sm:hidden items-center justify-center gap-2 px-8 py-4 bg-blue-600 text-white rounded-full font-semibold text-base hover:bg-blue-700 transition-colors shadow-lg"
@@ -213,10 +229,10 @@ const Hero: React.FC<HeroProps> = ({ onContactClick }) => {
                     transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }}
                 >
                     <Image
-                        src="/image/Profile_Pic.png"
+                        src="/image/Profile_Picture.jpg"
                         alt="Mohamed Mujahith"
-                        width={384}      // w-80 = 20rem = 320px? adjust as needed
-                        height={384}     // h-80
+                        width={384}      
+                        height={384}    
                         className="rounded-full object-cover border-4 border-slate-200 lg:w-120 lg:h-120"
                        />
                 </motion.div>

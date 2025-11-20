@@ -9,7 +9,7 @@ interface ExperienceItem {
     company: string;
     tenure: string;
     description: string;
-    bgImageUrl: string; // URL for the large background image
+    bgImageUrl: string;
 }
 
 const experienceData: ExperienceItem[] = [
@@ -18,28 +18,28 @@ const experienceData: ExperienceItem[] = [
         role: 'Frontend Developer Intern', 
         tenure: 'Oct 2024 - Nov 2024', 
         description: 'Leading Front-end development for a Gaming Website.',
-        bgImageUrl: '/image/front-end-developer.jpg' // Replace with a relevant image
+        bgImageUrl: '/image/Frontend_Exp.png'
     },
     { 
         company: 'Techno Hacks',
         role: 'Cyber Security Intern', 
         tenure: 'Oct 2023 - Nov 2023 ', 
         description: 'Assisted in cybersecurity projects and learned about security tools.',
-        bgImageUrl: '/image/cyber security.jpg' // Replace with a relevant image
+        bgImageUrl: '/image/Cybersecurity_Exp.png'
     },
     { 
         company: 'Crescent Data Science Club',
         role: 'Social Media Team Lead', 
         tenure: '2024 - 2025', 
         description: 'Managed social media presence, led campaigns, and grew community engagement.',
-        bgImageUrl: 'https://images.unsplash.com/photo-1616763355548-1b606f439f86?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wzNjAzNTV8MHwxfGFsbHx8fHx8fHx8fDE3MjY5NzE1MDB8&ixlib=rb-4.0.3&q=80&w=1080' // Replace with a relevant image
+        bgImageUrl: '/image/Socialmedia_Exp.png'
     },
     { 
         company: 'Open Source Projects',
         role: 'Contributor',
         tenure: '03/2023 - 01/2024',
         description: 'Learned and contributed to open-source projects while improving coding and collaboration skills.',
-        bgImageUrl: '/image/open-source.png' // Replace with a relevant image
+        bgImageUrl: '/image/Opensource_Exp.png'
     },
 ];
 

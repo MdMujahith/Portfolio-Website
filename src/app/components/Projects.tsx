@@ -1,17 +1,9 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
-import {
-  LazyMotion,
-  domAnimation,
-  m,
-  AnimatePresence,
-  // *** CHANGED: LayoutGroup is no longer needed ***
-  easeOut,
-  easeIn,
-} from "framer-motion";
-import { ArrowUpRight } from "lucide-react";
+import React, { useState, useMemo, useEffect } from "react";
+import { ArrowUpRight, X } from "lucide-react";
 import { SiGithub } from "react-icons/si";
+import Image from "next/image";
 
 export interface Project {
   id: number;
@@ -26,48 +18,86 @@ export interface Project {
 
 const Projects: React.FC = () => {
   const [selectedId, setSelectedId] = useState<number | null>(null);
+  const [isLoaded, setIsLoaded] = useState(false);
+  
+  // NEW: State to track if we are currently animating out
+  const [isClosing, setIsClosing] = useState(false);
+
+  // Trigger initial animation on mount
+  useEffect(() => {
+    setIsLoaded(true);
+  }, []);
+
+  // Lock Body Scroll when Modal is Open
+  useEffect(() => {
+    if (selectedId) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "unset";
+    }
+    return () => {
+      document.body.style.overflow = "unset";
+    };
+  }, [selectedId]);
+
+  // NEW: Handle Closing Logic (The "Smooth Exit")
+  const handleClose = () => {
+    setIsClosing(true); // 1. Trigger Exit Animation
+    setTimeout(() => {
+      setSelectedId(null); // 2. Wait 300ms, then unmount
+      setIsClosing(false); // 3. Reset closing state
+    }, 300); // Match this to CSS animation duration
+  };
+
+  // Handle Escape Key
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") handleClose(); // Use new close handler
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
 
   const projectsData: Project[] = useMemo(
     () => [
       {
         id: 1,
         title: "SignBridge",
-        description: "A real-time sign language translation system converting ISL and ASL to English.",
-        longDescription: "SignBridge is a real-time system that translates Indian (ISL) and American (ASL) Sign Language into English. Built with Python and YOLO, it provides instant translations to facilitate communication for the hearing-impaired.",
+        description: "Real-time ISL & ASL translation using Computer Vision.",
+        longDescription: "A real-time system translating Indian (ISL) and American (ASL) Sign Language into English using Python and YOLO. It facilitates instant communication for the hearing-impaired by mapping gestures to text output.",
         imageUrl: "/image/signbridge.png",
         projectUrl: "https://github.com/MdMujahith/RTSLDS",
         githubUrl: "https://github.com/MdMujahith/RTSLDS",
-        tags: ["Python", "Flask", "YOLO", "HTML", "CSS", "Sign Language"]
-
+        tags: ["Python", "YOLO", "Flask", "CV"]
       },
       {
         id: 2,
         title: "Task Management App",
-        description: "A collaborative task app with real-time updates.",
+        description: "Collaborative task app with real-time updates.",
         longDescription:
-          "A real-time, collaborative task management application built using React and Firebase. The app features a clean drag-and-drop interface, real-time database listeners, and user authentication.",
+          "A real-time, collaborative task management application built using React and Firebase. Features a drag-and-drop interface, live database listeners, and secure user authentication for seamless team workflows.",
         imageUrl: "/image/taskmanager.png",
         projectUrl: "https://github.com/MdMujahith/Seyalio",
         githubUrl: "https://github.com/MdMujahith/Seyalio",
-        tags: ["React", "Firebase", "Tailwind CSS"],
+        tags: ["React", "Firebase", "Tailwind"],
       },
       {
         id: 3,
         title: "Portfolio Website",
-        description: "A sleek personal portfolio with animations.",
+        description: "Sleek personal portfolio with interactive animations.",
         longDescription:
-          "Built with Next.js, Tailwind CSS, and Framer Motion to showcase my work in an elegant and interactive way.",
+          "Built with Next.js, Tailwind CSS, and Framer Motion. This site features high-performance animations, responsive layouts, and accessibility optimizations to showcase projects elegantly.",
         imageUrl: "/image/portweb.png",
         projectUrl: "https://mdmujahith.vercel.app",
         githubUrl: "https://mdmujahith.vercel.app",
-        tags: ["Next.js", "Framer Motion", "Tailwind CSS"],
+        tags: ["Next.js", "Framer Motion", "Tailwind"],
       },
       {
         id: 4,
         title: "Blog Platform",
-        description: "A markdown-based blogging site.",
+        description: "Markdown-based blogging site with SEO optimization.",
         longDescription:
-          "A blogging platform with markdown support, syntax highlighting, SEO optimization, and a fast static rendering system.",
+          "A high-performance blogging platform featuring Markdown support, syntax highlighting, and static rendering. Designed for developers to share technical articles with optimal SEO performance.",
         imageUrl: "/image/blogweb.png",
         projectUrl: "#",
         githubUrl: "#",
@@ -79,206 +109,190 @@ const Projects: React.FC = () => {
 
   const selectedProject = projectsData.find((p) => p.id === selectedId);
 
-  // --- Variants ---
-  const cardVariants = {
-    hidden: { opacity: 0, y: 30 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.6, ease: easeOut },
-    },
-  };
-
-  const modalVariants = {
-    hidden: { opacity: 0, scale: 0.95 },
-    visible: {
-      opacity: 1,
-      scale: 1,
-      transition: { duration: 0.3, ease: easeOut },
-    },
-    exit: {
-      opacity: 0,
-      scale: 0.95,
-      transition: { duration: 0.25, ease: easeIn },
-    },
-  };
-
-  const modalContentVariants = {
-    hidden: { opacity: 0, y: 10 },
-    visible: (delay: number = 0) => ({
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.4, delay, ease: easeOut },
-    }),
-    exit: {
-      opacity: 0,
-      transition: { duration: 0.1, ease: easeIn },
-    },
-  };
-
-
   return (
-    <LazyMotion features={domAnimation}>
-      {/* *** CHANGED: Removed LayoutGroup wrapper *** */}
-      <section id="projects" className="w-full animated-x-pattern py-20 sm:py-28">
-        <div className="max-w-7xl mx-auto px-6">
-          {/* Section Header */}
-          <m.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.3 }}
-            transition={{ duration: 0.8, ease: easeOut }}
-          >
-            <h2 className="text-4xl sm:text-5xl lg:text-7xl font-bold text-center animate-gradient-text mb-12 sm:mb-16">
-              Featured Projects
-            </h2>
-            <p className="mt-4 max-w-2xl mx-auto text-base sm:text-lg text-slate-600 text-center">
-              A selection of my work, showcasing my skills in creating modern,
-              responsive, and user-friendly web applications.
-            </p>
-          </m.div>
+    <section id="projects" className="w-full animated-x-pattern py-12 sm:py-20">
+      <div className="max-w-7xl mx-auto px-6">
+        
+        {/* Section Header */}
+        <div className={`transition-all duration-700 ease-out transform ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+          <h2 className="text-4xl sm:text-5xl lg:text-7xl font-bold text-center animate-gradient-text mb-12 sm:mb-16">
+            Featured Projects
+          </h2>
+          <p className="mt-4 max-w-2xl mx-auto text-base sm:text-lg text-slate-600 text-center">
+            A selection of my work, showcasing my skills in creating modern,
+            responsive, and user-friendly web applications.
+          </p>
+        </div>
 
-          {/* Grid for 4 projects */}
-          <m.div
-            className="mt-12 sm:mt-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8"
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, amount: 0.1 }}
-            transition={{ staggerChildren: 0.2 }}
-          >
-            {projectsData.map((project) => (
-              <m.div
-                key={project.id}
-                onClick={() => setSelectedId(project.id)}
-                className="block group cursor-pointer"
-                variants={cardVariants}
-              >
-                <div className="bg-slate-50 rounded-xl overflow-hidden border border-slate-200/50 group-hover:shadow-xl transition-shadow duration-300">
-                  <m.img
-                    // *** CHANGED: layoutId removed ***
+        {/* Grid */}
+        <div className="mt-12 sm:mt-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
+          {projectsData.map((project, index) => (
+            <div
+              key={project.id}
+              onClick={() => setSelectedId(project.id)}
+              className={`block group cursor-pointer h-full transition-all duration-700 ease-out transform ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
+              style={{ transitionDelay: `${index * 100}ms` }}
+            >
+              <div className="bg-white h-full rounded-2xl overflow-hidden border border-slate-200 shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-300 flex flex-col">
+                {/* Card Image */}
+                <div className="relative w-full h-40 sm:h-48 overflow-hidden bg-slate-100">
+                  <Image
                     src={project.imageUrl}
                     alt={project.title}
-                    className="w-full h-48 sm:h-52 object-cover"
+                    fill
+                    className="object-cover group-hover:scale-105 transition-transform duration-500"
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
                   />
-                  <div className="p-4 sm:p-6">
-                    <m.h3
-                      className="text-lg sm:text-xl font-bold text-slate-800"
-                    >
-                      {project.title}
-                    </m.h3>
-                    <m.p
-                      className="mt-2 text-slate-600 text-sm sm:text-base"
-                    >
-                      {project.description}
-                    </m.p>
-                  </div>
                 </div>
-              </m.div>
-            ))}
-          </m.div>
-        </div>
-      </section>
 
-      {/* Modal */}
-      <AnimatePresence>
-        {selectedId && selectedProject && (
-          <m.div
-            className="fixed inset-0 bg-black/50 backdrop-blur-md z-50 flex items-center justify-center p-4"
-            onClick={() => setSelectedId(null)}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-          >
-            <m.div
-              onClick={(e) => e.stopPropagation()}
-              className="w-full max-w-xl bg-slate-50 rounded-xl overflow-hidden flex flex-col shadow-2xl"
-              variants={modalVariants} // <-- This variant handles the scale/fade
-              initial="hidden"
-              animate="visible"
-              exit="exit"
-            >
-              {/* Header Image */}
-              <m.img
-                // *** CHANGED: layoutId removed ***
-                src={selectedProject.imageUrl}
-                alt={selectedProject.title}
-                className="w-full h-48 sm:h-64 object-cover"
-              />
-
-              {/* Content */}
-              <div className="p-5 sm:p-6 overflow-y-auto max-h-[60vh]">
-                <m.h3
-                  className="text-xl sm:text-2xl font-bold text-slate-800"
-                  custom={0.1}
-                  variants={modalContentVariants}
-                  initial="hidden"
-                  animate="visible"
-                  exit="exit"
-                >
-                  {selectedProject.title}
-                </m.h3>
-                <m.p
-                  className="mt-2 text-slate-600 text-sm sm:text-base"
-                  custom={0.15}
-                  variants={modalContentVariants}
-                  initial="hidden"
-                  animate="visible"
-                  exit="exit"
-                >
-                  {selectedProject.description}
-                </m.p>
-                
-                <m.div
-                  custom={0.2}
-                  variants={modalContentVariants}
-                  initial="hidden"
-                  animate="visible"
-                  exit="exit"
-                >
-                  <hr className="my-4 border-slate-200" />
-                  <p className="text-slate-700 text-sm sm:text-base leading-relaxed">
-                    {selectedProject.longDescription}
+                <div className="p-4 sm:p-5 flex flex-col flex-grow">
+                  {/* Card Text */}
+                  <h3 className="text-base sm:text-lg font-bold text-slate-900 group-hover:text-blue-600 transition-colors">
+                    {project.title}
+                  </h3>
+                  <p className="mt-1.5 text-slate-600 text-xs sm:text-sm line-clamp-2 leading-relaxed">
+                    {project.description}
                   </p>
 
-                  {/* Tags */}
-                  <div className="mt-2 flex flex-wrap gap-1">
-                    {selectedProject.tags.map((tag) => (
+                  {/* Card Tags */}
+                  <div className="mt-3 flex flex-wrap gap-1.5 mt-auto pt-3">
+                    {project.tags.slice(0, 3).map((tag) => (
                       <span
                         key={tag}
-                        className="px-2.5 py-1 text-xs font-medium bg-slate-200 text-slate-700 rounded-full"
+                        className="text-[10px] font-bold px-2 py-1 bg-slate-100 text-slate-500 rounded-md uppercase tracking-wide"
                       >
                         {tag}
                       </span>
                     ))}
                   </div>
-
-                  {/* Buttons */}
-                  <div className="flex flex-wrap items-center gap-5 mt-4">
-                    <a
-                      href={selectedProject.projectUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 px-6 py-2.5 bg-blue-600 text-white rounded-full text-sm sm:text-base font-semibold hover:bg-blue-700 transition-colors"
-                    >
-                      View Project <ArrowUpRight size={18} />
-                    </a>
-                    <a
-                      href={selectedProject.githubUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 px-6 py-2.5 bg-black text-white rounded-full text-sm sm:text-base font-semibold hover:bg-gray-800 transition-colors"
-                    >
-                      <SiGithub size={18} /> Visit GitHub
-                    </a>
-                  </div>
-                </m.div>
+                </div>
               </div>
-            </m.div>
-          </m.div>
-        )}
-      </AnimatePresence>
-      {/* *** CHANGED: Removed closing </LayoutGroup> *** */}
-    </LazyMotion>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Modal - Rendered Conditionally */}
+      {selectedId && selectedProject && (
+        <div className="fixed inset-0 z-[999] flex items-center justify-center p-4 sm:p-6">
+          
+          {/* Backdrop with Conditional Animation */}
+          <div
+            className={`absolute inset-0 bg-black/60 backdrop-blur-sm ${
+              isClosing 
+                ? 'animate-[fadeOut_0.3s_ease-in_forwards]' 
+                : 'animate-[fadeIn_0.3s_ease-out_forwards]'
+            }`}
+            onClick={handleClose}
+          />
+
+          {/* Modal Card with Conditional Animation */}
+          <div 
+            className={`relative w-full max-w-3xl bg-white rounded-2xl overflow-hidden shadow-2xl z-10 flex flex-col max-h-[85vh] ${
+              isClosing 
+                ? 'animate-[scaleOut_0.3s_ease-in_forwards]' 
+                : 'animate-[scaleIn_0.3s_ease-out_forwards]'
+            }`}
+          >
+            
+            {/* Close Button */}
+            <button
+              onClick={handleClose}
+              className="absolute top-4 right-4 z-20 p-2 bg-black/50 hover:bg-black/70 text-white rounded-full backdrop-blur-md transition-colors"
+              aria-label="Close modal"
+            >
+              <X size={20} />
+            </button>
+
+            {/* Modal Image */}
+            <div className="relative w-full h-48 sm:h-80 shrink-0 bg-slate-100 z-0">
+              <Image
+                src={selectedProject.imageUrl}
+                alt={selectedProject.title}
+                fill
+                className="object-cover"
+                priority
+                sizes="(max-width: 768px) 100vw, 800px"
+              />
+            </div>
+
+            {/* Modal Body */}
+            <div
+              className="p-6 sm:p-8 overflow-y-auto flex flex-col z-10 bg-white no-scrollbar"
+              style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+            >
+              <h3 className="text-2xl sm:text-3xl font-bold text-slate-900">
+                {selectedProject.title}
+              </h3>
+
+              <div className="mt-3 flex flex-wrap gap-2">
+                {selectedProject.tags.map((tag) => (
+                  <span
+                    key={tag}
+                    className="px-3 py-1 text-xs font-semibold bg-indigo-50 text-indigo-600 rounded-full border border-indigo-100"
+                  >
+                    {tag}
+                  </span>
+                ))}
+              </div>
+
+              <p className="mt-6 text-slate-600 text-base sm:text-lg leading-relaxed">
+                {selectedProject.longDescription}
+              </p>
+
+              <div className="mt-8 pt-6 border-t border-slate-100 mt-auto">
+                {/* Action Buttons */}
+                <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
+                  <a
+                    href={selectedProject.projectUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-full sm:w-auto flex justify-center items-center gap-2 px-6 py-3.5 bg-blue-600 text-white rounded-xl font-semibold hover:bg-blue-700 transition-all shadow-lg shadow-blue-600/20 hover:shadow-blue-600/40 hover:-translate-y-0.5"
+                  >
+                    View Project <ArrowUpRight size={18} />
+                  </a>
+                  <a
+                    href={selectedProject.githubUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-full sm:w-auto flex justify-center items-center gap-2 px-6 py-3.5 bg-slate-900 text-white rounded-xl font-semibold hover:bg-slate-800 transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5"
+                  >
+                    <SiGithub size={18} /> Source Code
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+      
+      {/* Global Styles with Exit Animations */}
+       <style jsx global>{`
+        .no-scrollbar::-webkit-scrollbar {
+          display: none;
+        }
+        
+        /* ENTRANCE ANIMATIONS */
+        @keyframes fadeIn {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
+        @keyframes scaleIn {
+          from { opacity: 0; transform: scale(0.95); }
+          to { opacity: 1; transform: scale(1); }
+        }
+
+        /* EXIT ANIMATIONS */
+        @keyframes fadeOut {
+          from { opacity: 1; }
+          to { opacity: 0; }
+        }
+        @keyframes scaleOut {
+          from { opacity: 1; transform: scale(1); }
+          to { opacity: 0; transform: scale(0.95); }
+        }
+      `}</style>
+    </section>
   );
 };
 
