@@ -84,9 +84,9 @@ const BottomNav: React.FC<BottomNavProps> = ({ onContactClick }) => {
                     animate={isOpen ? "open" : "closed"}
                 >
                     {/* Hamburger Icon - Dark Mode Style */}
-                    <motion.span className="w-8 h-0.5 bg-white" variants={{ closed: { rotate: 0, y: 0 }, open: { rotate: 45, y: 7 } }}></motion.span>
+                    <motion.span className="w-8 h-0.5 bg-white" variants={{ closed: { rotate: 0, y: 0 }, open: { rotate: 45, y: 8 } }}></motion.span>
                     <motion.span className="w-8 h-0.5 bg-white" variants={{ closed: { opacity: 1 }, open: { opacity: 0 } }}></motion.span>
-                    <motion.span className="w-8 h-0.5 bg-white" variants={{ closed: { rotate: 0, y: 0 }, open: { rotate: -45, y: -7 } }}></motion.span>
+                    <motion.span className="w-8 h-0.5 bg-white" variants={{ closed: { rotate: 0, y: 0 }, open: { rotate: -45, y: -8 } }}></motion.span>
                 </motion.button>
             </div>
 
@@ -123,7 +123,7 @@ const BottomNav: React.FC<BottomNavProps> = ({ onContactClick }) => {
                                     toggleMenu();
                                     onContactClick();
                                 }} 
-                                variants={linkItemVariants} 
+                                variants={{}} 
                                 className="mt-8 flex items-center gap-3 px-8 py-4 bg-white text-black rounded-full text-xl font-bold hover:bg-zinc-200 active:scale-95 transition-all"
                             >
                                 Let&apos;s talk<ArrowRight size={24} />
