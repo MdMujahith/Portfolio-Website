@@ -18,28 +18,28 @@ const experienceData: ExperienceItem[] = [
         role: 'Frontend Developer Intern', 
         tenure: 'Oct 2024 - Nov 2024', 
         description: 'Leading Front-end development for a Gaming Website.',
-        bgImageUrl: '/image/Frontend_Exp.png'
+        bgImageUrl: '/image/experience/Frontend_Exp.png'
     },
     { 
         company: 'Techno Hacks',
         role: 'Cyber Security Intern', 
         tenure: 'Oct 2023 - Nov 2023 ', 
         description: 'Assisted in cybersecurity projects and learned about security tools.',
-        bgImageUrl: '/image/Cybersecurity_Exp.png'
+        bgImageUrl: '/image/experience/Cybersecurity_Exp.png'
     },
     { 
         company: 'Crescent Data Science Club',
         role: 'Social Media Team Lead', 
         tenure: '2024 - 2025', 
         description: 'Managed social media presence, led campaigns, and grew community engagement.',
-        bgImageUrl: '/image/Socialmedia_Exp.png'
+        bgImageUrl: '/image/experience/Socialmedia_Exp.png'
     },
     { 
         company: 'Open Source Projects',
         role: 'Contributor',
         tenure: '03/2023 - 01/2024',
         description: 'Learned and contributed to open-source projects while improving coding and collaboration skills.',
-        bgImageUrl: '/image/Opensource_Exp.png'
+        bgImageUrl: '/image/experience/Opensource_Exp.png'
     },
 ];
 

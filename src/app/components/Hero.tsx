@@ -34,55 +34,49 @@ const letterSwapVariants = {
     exit: { opacity: 0, scale: 0.5 },
 };
 
-const typingPhrases = ["Python Developer", "Open Source Enthusiast"];
+// 1. DEFINE YOUR TITLES HERE
+const titles = ["Python Developer", "Open Source Enthusiast", "Full Stack Engineer"];
 
 const Hero: React.FC<HeroProps> = ({ onContactClick }) => {
   const [mounted, setMounted] = useState(false);
   const [time, setTime] = useState<Date | null>(null);
+  
+  // 2. STATE FOR LANGUAGE SWITCHER (Keep this)
   const [currentLanguageIndex, setCurrentLanguageIndex] = useState<number>(0);
+  
+  // 3. STATE FOR TITLE SLIDER (New, simple state)
+  const [titleIndex, setTitleIndex] = useState(0);
+  
   const [crossedOut, setCrossedOut] = useState<Record<string, boolean>>({});
-  const [typedText, setTypedText] = useState("");
-  const [isDeleting, setIsDeleting] = useState(false);
-  const [phraseIndex, setPhraseIndex] = useState(0);
 
   const handleLetterClick = (letterKey: string) => {
     setCrossedOut(prev => ({ ...prev, [letterKey]: !prev[letterKey] }));
   };
   
+  // EFFECT 1: MOUNT & CLOCK (Optimized to run every minute instead of second)
   useEffect(() => {
     setMounted(true);
     setTime(new Date());
-    const timerId = setInterval(() => setTime(new Date()), 1000);
+    // Update every minute (60000ms) to stop the stressful "ticking"
+    const timerId = setInterval(() => setTime(new Date()), 60000); 
     return () => clearInterval(timerId);
   }, []);
 
+  // EFFECT 2: LANGUAGE ROTATION (Slower: 4s)
   useEffect(() => {
     const intervalId = setInterval(() => {
       setCurrentLanguageIndex((prevIndex) => (prevIndex + 1) % languages.length);
-    }, 2000);
+    }, 4000);
     return () => clearInterval(intervalId);
   }, []);
 
+  // EFFECT 3: TITLE SLIDER (New - Vertical Slide Logic)
   useEffect(() => {
-    const handleTyping = () => {
-      const currentPhrase = typingPhrases[phraseIndex];
-      if (isDeleting) {
-        setTypedText(currentPhrase.substring(0, typedText.length - 1));
-      } else {
-        setTypedText(currentPhrase.substring(0, typedText.length + 1));
-      }
-
-      if (!isDeleting && typedText === currentPhrase) {
-        setTimeout(() => setIsDeleting(true), 2000);
-      } else if (isDeleting && typedText === "") {
-        setIsDeleting(false);
-        setPhraseIndex((prevIndex) => (prevIndex + 1) % typingPhrases.length);
-      }
-    };
-    const typingSpeed = isDeleting ? 100 : 150;
-    const timeout = setTimeout(handleTyping, typingSpeed);
-    return () => clearTimeout(timeout);
-  }, [typedText, isDeleting, phraseIndex]);
+    const intervalId = setInterval(() => {
+      setTitleIndex((prev) => (prev + 1) % titles.length);
+    }, 3000); // Change title every 3 seconds
+    return () => clearInterval(intervalId);
+  }, []);
 
   const currentLanguageName = languages[currentLanguageIndex].name;
 
@@ -94,7 +88,6 @@ const Hero: React.FC<HeroProps> = ({ onContactClick }) => {
   };
 
   // --- NEW FEATURE: Reusable Social Links Component ---
-  // This cleans up the code by defining the icons once and using them twice.
   const SocialLinks = () => (
     <>
         <a href="https://twitter.com/" target="_blank" rel="noopener noreferrer" aria-label="Twitter">
@@ -128,7 +121,6 @@ const Hero: React.FC<HeroProps> = ({ onContactClick }) => {
             {/* --- Desktop Nav --- */}
             <div className="hidden sm:flex items-center gap-8">
                 <div className="flex items-center gap-6">
-                    {/* UPDATED: Using SocialLinks component */}
                     <SocialLinks />
                 </div>
                 
@@ -145,7 +137,6 @@ const Hero: React.FC<HeroProps> = ({ onContactClick }) => {
             
             {/* --- Mobile Social Links --- */}
             <div className="flex sm:hidden items-center gap-6">
-                {/* UPDATED: Using SocialLinks component */}
                 <SocialLinks />
             </div>
         </nav>
@@ -197,10 +188,32 @@ const Hero: React.FC<HeroProps> = ({ onContactClick }) => {
                         </AnimatePresence>
                     </div>
                 </h1>
-                <p className="text-xl md:text-2xl text-slate-700 mt-4 h-8">
-                  I am a <span className="font-semibold text-indigo-600">{typedText}</span>
-                  <span className="animate-ping">|</span>
-                </p>
+                
+                {/* --- FIX START: Perfect Vertical Alignment --- */}
+<div className="text-xl md:text-2xl leading-8 text-slate-700 mt-4 h-8 flex items-center justify-center md:justify-start gap-2 overflow-hidden w-full pl-12 md:pl-0">
+    {/* Added 'leading-8' above. 
+       This forces the text line-height to be exactly 32px (matching the h-8 container).
+       Now both the static text and absolute text will sit at the exact same vertical position.
+    */}
+
+    <span className="inline">I am a</span>
+    
+    <div className="relative h-8 w-64 sm:w-72 text-left">
+        <AnimatePresence mode="wait">
+            <motion.span
+                key={titleIndex}
+                initial={{ y: 20, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                exit={{ y: -20, opacity: 0 }}
+                transition={{ duration: 0.5, ease: "easeOut" }}
+                className="absolute left-0 font-semibold text-indigo-600 block whitespace-nowrap leading-8"
+            >
+                {titles[titleIndex]}
+            </motion.span>
+        </AnimatePresence>
+    </div>
+</div>
+{/* --- FIX END --- */}
 
                 <div className="flex flex-col sm:flex-row items-center gap-4 mt-8">
                     <a 

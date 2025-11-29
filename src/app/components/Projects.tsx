@@ -65,7 +65,7 @@ const Projects: React.FC = () => {
         title: "SignBridge (RTSLDS)",
         description: "Real-time ISL & ASL translation using Computer Vision.",
         longDescription: "A real-time system translating Indian (ISL) and American (ASL) Sign Language into English using Python and YOLO. It facilitates instant communication for the hearing-impaired by mapping gestures to text output.",
-        imageUrl: "/image/RTSLDS.png",
+        imageUrl: "/image/project/RTSLDS.png",
         projectUrl: "https://github.com/MdMujahith/RTSLDS",
         githubUrl: "https://github.com/MdMujahith/RTSLDS",
         tags: ["Python", "YOLO", "Flask", "CV"]
@@ -75,7 +75,7 @@ const Projects: React.FC = () => {
        title: "Uni Navigator",
        description: "Emotionally intelligent academic co-pilot.",
        longDescription: "An innovative academic assistant powered by the Gemini API, designed to provide emotionally intelligent support and guidance for students. Features include personalized recommendations, resource management, and an AI agent for interactive help.",
-       imageUrl: "/image/UniNav.png",
+       imageUrl: "/image/project/UniNav.png",
        projectUrl: "https://github.com/MdMujahith/UniNavigator",
        githubUrl: "https://github.com/MdMujahith/UniNavigator",
        tags: ["Python", "Ai Agent", "Gemini API"],
@@ -86,7 +86,7 @@ const Projects: React.FC = () => {
         description: "Sleek personal portfolio with interactive animations.",
         longDescription:
           "Built with Next.js, Tailwind CSS, and Framer Motion. This site features high-performance animations, responsive layouts, and accessibility optimizations to showcase projects elegantly.",
-        imageUrl: "/image/Portfolio-Website.png",
+        imageUrl: "/image/project/Portfolio-Website.png",
         projectUrl: "https://mdmujahith.vercel.app",
         githubUrl: "https://mdmujahith.vercel.app",
         tags: ["Next.js", "Framer Motion", "Tailwind"],
@@ -97,7 +97,7 @@ const Projects: React.FC = () => {
         description: "Markdown-based blogging site with SEO optimization.",
         longDescription:
           "A high-performance blogging platform featuring Markdown support, syntax highlighting, and static rendering. Designed for developers to share technical articles with optimal SEO performance.",
-        imageUrl: "/image/blogweb.png",
+        imageUrl: "/image/project/blogweb.png",
         projectUrl: "#",
         githubUrl: "#",
         tags: ["Next.js", "Markdown", "SEO"],
