@@ -1,7 +1,8 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from "framer-motion";
+// ✅ 1. Added 'Variants' to the import list
+import { motion, AnimatePresence, Variants } from "framer-motion";
 import { 
   Home, 
   User, 
@@ -32,8 +33,10 @@ const BottomNav: React.FC<BottomNavProps> = ({ onContactClick }) => {
 
     const toggleMenu = () => setIsOpen(!isOpen);
 
-    // --- Fast & Snappy Animation Variants ---
-    const sidebarVariants = {
+    // --- Fast & Snappy Animation Variants (Now Typed Correctly) ---
+    
+    // ✅ 2. Added ': Variants' type here
+    const sidebarVariants: Variants = {
         open: {
             clipPath: `circle(150% at calc(100% - 40px) calc(100% - 40px))`,
             transition: {
@@ -53,7 +56,8 @@ const BottomNav: React.FC<BottomNavProps> = ({ onContactClick }) => {
         }
     };
 
-    const itemVariants = {
+    // ✅ 3. Added ': Variants' type here
+    const itemVariants: Variants = {
         open: {
             y: 0,
             opacity: 1,
@@ -70,7 +74,8 @@ const BottomNav: React.FC<BottomNavProps> = ({ onContactClick }) => {
         }
     };
 
-    const listVariants = {
+    // ✅ 4. Added ': Variants' type here
+    const listVariants: Variants = {
         open: {
             transition: { staggerChildren: 0.04, delayChildren: 0.1 }
         },
@@ -116,7 +121,6 @@ const BottomNav: React.FC<BottomNavProps> = ({ onContactClick }) => {
                     animate={isOpen ? "open" : "closed"}
                     variants={sidebarVariants}
                     className="fixed inset-0 bg-[#0a0a0a] z-40 flex flex-col justify-end items-end px-8 pb-32" 
-                    // ^^^ Changed items-start to items-end (Right Align)
                 >
                     {/* Background Texture */}
                     <div className="absolute inset-0 opacity-[0.05]" 
@@ -131,7 +135,6 @@ const BottomNav: React.FC<BottomNavProps> = ({ onContactClick }) => {
                                     href={`#${item.toLowerCase()}`}
                                     onClick={toggleMenu}
                                     className="text-5xl font-semibold text-white/50 hover:text-white transition-colors tracking-tight text-right block"
-                                    // ^^^ Changed font-bold to font-semibold & added text-right
                                 >
                                     {item}
                                 </a>
