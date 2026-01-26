@@ -4,6 +4,8 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Download, Mail } from 'lucide-react';
 import Image from "next/image";
+import DynamicResumeButton from "./DynamicResumeButton";
+
 
 interface HeroProps {
   onContactClick: () => void;
@@ -112,7 +114,7 @@ const Hero: React.FC<HeroProps> = ({ onContactClick }) => {
                     src="image/Waving_Hand.png" 
                     alt="Waving Hand" 
                     className="w-9 h-9 sm:w-12 sm:h-12 group-hover:scale-90 transition-all ease-in-out duration-300 group-hover:rotate-12"/>
-                  <div className="text-2xl font-bold tracking-wider text-[#FBC138] group-hover:tracking-widest transition-all ease-in-out duration-300 flex">
+                  <div className="text-2xl font-semibold tracking-wider text-[#FBC138] group-hover:tracking-widest transition-all ease-in-out duration-300 flex">
                         Hello
                         <p className="w-0 overflow-hidden group-hover:w-[7.5rem] transition-all ease-in-out duration-300">ooooooo</p>!          
                   </div>
@@ -126,8 +128,8 @@ const Hero: React.FC<HeroProps> = ({ onContactClick }) => {
                 
                 {mounted && time && (
                     <div className="flex items-center justify-end gap-1.5">
-                        <span className="text-3xl font-bold">{formatTime(time).timeValue}</span>
-                        <div className="text-left text-xs font-bold">
+                        <span className="text-3xl font-semibold">{formatTime(time).timeValue}</span>
+                        <div className="text-left text-xs font-semibold">
                             <span className="block">{formatTime(time).ampm.toLowerCase()}</span>
                             <span className="block text-zinc-700">{formatTime(time).dateString}</span>
                         </div>
@@ -143,7 +145,7 @@ const Hero: React.FC<HeroProps> = ({ onContactClick }) => {
         
         <div className="flex-grow w-full grid grid-cols-1 md:grid-cols-2 items-center px-4 sm:px-16 md:-mt-16">
             <div className="flex flex-col items-center md:items-start text-center md:text-left">
-                <h1 className="font-extrabold tracking-tight uppercase select-none cursor-default">
+                <h1 className="font-semibold tracking-tight uppercase select-none cursor-default">
                     <div className="flex text-6xl sm:text-7xl md:text-8xl lg:text-9xl text-black transition-all duration-300 hover:tracking-widest">
                       {nameLetters.map((letter, index) => {
                         const letterKey = `mohamed-${index}`;
@@ -215,23 +217,20 @@ const Hero: React.FC<HeroProps> = ({ onContactClick }) => {
 </div>
 {/* --- FIX END --- */}
 
-                <div className="flex flex-col sm:flex-row items-center gap-4 mt-8">
-                    <a 
-                      href="/pdf/Mujahith_Resume.pdf"
-                      download
-                      className="w-full sm:w-auto flex items-center justify-center gap-2 px-8 py-4 bg-zinc-800 text-white rounded-full font-semibold text-base md:text-lg hover:bg-zinc-700 transition-colors shadow-lg"
-                    >
-                      <Download size={18} />
-                      Download CV
-                    </a>
-                    <button
-                      onClick={onContactClick}
-                      className="w-full sm:w-auto flex sm:hidden items-center justify-center gap-2 px-8 py-4 bg-blue-600 text-white rounded-full font-semibold text-base hover:bg-blue-700 transition-colors shadow-lg"
-                    >
-                      <Mail size={18} />
-                      Contact Me
-                    </button>
-                </div>
+                <div className="flex flex-col sm:flex-row items-center gap-4 mt-8 relative">
+    
+    {/* 2. Replaced the <a> tag with this component */}
+    <DynamicResumeButton />
+
+    {/* 3. Your Contact Button (kept exactly as it was) */}
+    <button
+      onClick={onContactClick}
+      className="w-full sm:w-auto flex sm:hidden items-center justify-center gap-2 px-8 py-4 bg-blue-600 text-white rounded-full font-semibold text-base hover:bg-blue-700 transition-colors shadow-lg"
+    >
+      <Mail size={18} />
+      Contact Me
+    </button>
+</div>
             </div>
             
             <div className="hidden md:flex justify-center items-center">

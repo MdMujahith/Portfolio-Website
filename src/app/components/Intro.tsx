@@ -23,7 +23,7 @@ const Intro: React.FC<IntroProps> = ({ onContactClick }) => {
               transition={{ duration: 0.8, ease: "easeOut" }}
               className="w-full"
             >
-              <h2 className="text-5xl sm:text-6xl md:text-8xl font-extrabold text-[#1d1d1f] tracking-tighter leading-none text-center lg:text-left">
+              <h2 className="text-5xl sm:text-6xl md:text-8xl font-semibold text-[#1d1d1f] tracking-tighter leading-none text-center lg:text-left">
                 Developer.
                 <br />
                 Strategist.
@@ -50,7 +50,7 @@ const Intro: React.FC<IntroProps> = ({ onContactClick }) => {
               <p className="text-xl sm:text-2xl font-semibold text-gray-800 mb-4">
                 {"Hi, I'm Mohamed Mujahith."}
               </p>
-              <p className="text-gray-600 text-base sm:text-lg leading-relaxed">
+              <p className="text-gray-600 text-base sm:text-lg leading-relaxed font-regular">
                 {"As a recent B.Tech in Computer Science graduate and a current MBA candidate, I'm passionate about the intersection of technology and business. I am building a unique skill set to not only engineer powerful software but also to understand the market dynamics that make a product successful."}
               </p>
               {/* UPDATED: This is now a button to open the contact modal */}
@@ -72,22 +72,22 @@ const Intro: React.FC<IntroProps> = ({ onContactClick }) => {
               <div className="flex items-start gap-4 sm:gap-6 p-6 bg-white/60 rounded-xl border border-black/5 shadow-sm">
                 <Code size={36} className="text-blue-600 mt-1 flex-shrink-0" />
                 <div>
-                  <h3 className="text-lg sm:text-xl font-bold text-[#1d1d1f]">Technical Skills</h3>
-                  <p className="text-gray-600 mt-1 text-sm sm:text-base">Equipped with a strong foundation in modern web development, including hands-on experience with React, Next.js, and TypeScript to build responsive and efficient applications.</p>
+                  <h3 className="text-lg sm:text-xl font-semibold text-[#1d1d1f]">Technical Skills</h3>
+                  <p className="text-gray-600 mt-1 text-sm sm:text-base font-regular">Equipped with a strong foundation in modern web development, including hands-on experience with React, Next.js, and TypeScript to build responsive and efficient applications.</p>
                 </div>
               </div>
               <div className="flex items-start gap-4 sm:gap-6 p-6 bg-white/60 rounded-xl border border-black/5 shadow-sm">
                 <Briefcase size={36} className="text-blue-600 mt-1 flex-shrink-0" />
                 <div>
-                  <h3 className="text-lg sm:text-xl font-bold text-[#1d1d1f]">Strategic Mindset</h3>
-                  <p className="text-gray-600 mt-1 text-sm sm:text-base">My MBA studies are providing me with a robust framework for market analysis, product management, and strategic decision-making, ensuring technology aligns with business goals.</p>
+                  <h3 className="text-lg sm:text-xl font-semibold text-[#1d1d1f]">Strategic Mindset</h3>
+                  <p className="text-gray-600 mt-1 text-sm sm:text-base font-regular">My MBA studies are providing me with a robust framework for market analysis, product management, and strategic decision-making, ensuring technology aligns with business goals.</p>
                 </div>
               </div>
               <div className="flex items-start gap-4 sm:gap-6 p-6 bg-white/60 rounded-xl border border-black/5 shadow-sm">
                 <Zap size={36} className="text-blue-600 mt-1 flex-shrink-0" />
                 <div>
-                  <h3 className="text-lg sm:text-xl font-bold text-[#1d1d1f]">Eager to Innovate</h3>
-                  <p className="text-gray-600 mt-1 text-sm sm:text-base">I am driven to apply my combined skills to create innovative products. I am actively seeking opportunities to contribute to challenging projects and grow within a forward-thinking team.</p>
+                  <h3 className="text-lg sm:text-xl font-semibold text-[#1d1d1f]">Eager to Innovate</h3>
+                  <p className="text-gray-600 mt-1 text-sm sm:text-base font-regular">I am driven to apply my combined skills to create innovative products. I am actively seeking opportunities to contribute to challenging projects and grow within a forward-thinking team.</p>
                 </div>
               </div>
             </motion.div>

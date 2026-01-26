@@ -43,7 +43,7 @@ const Skills: React.FC = () => {
         
         {/* Header */}
         <div className={`transition-all duration-700 ease-out transform ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-            <h2 className="text-4xl sm:text-5xl lg:text-7xl font-bold text-center animate-gradient-text mb-12 sm:mb-16">
+            <h2 className="text-4xl sm:text-5xl lg:text-7xl font-semibold text-center animate-gradient-text mb-12 sm:mb-16">
                 Skills & Expertise
             </h2>
         </div>

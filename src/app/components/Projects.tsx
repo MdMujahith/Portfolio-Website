@@ -114,7 +114,7 @@ const Projects: React.FC = () => {
         
         {/* Section Header */}
         <div className={`transition-all duration-700 ease-out transform ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-          <h2 className="text-4xl sm:text-5xl lg:text-7xl font-bold text-center animate-gradient-text mb-12 sm:mb-16">
+          <h2 className="text-4xl sm:text-5xl lg:text-7xl font-semibold text-center animate-gradient-text mb-12 sm:mb-16">
             Featured Projects
           </h2>
           <p className="mt-4 max-w-2xl mx-auto text-base sm:text-lg text-slate-600 text-center">
@@ -146,7 +146,7 @@ const Projects: React.FC = () => {
 
                 <div className="p-4 sm:p-5 flex flex-col flex-grow">
                   {/* Card Text */}
-                  <h3 className="text-base sm:text-lg font-bold text-slate-900 group-hover:text-blue-600 transition-colors">
+                  <h3 className="text-base sm:text-lg font-semibold text-slate-900 group-hover:text-blue-600 transition-colors">
                     {project.title}
                   </h3>
                   <p className="mt-1.5 text-slate-600 text-xs sm:text-sm line-clamp-2 leading-relaxed">
@@ -158,7 +158,7 @@ const Projects: React.FC = () => {
                     {project.tags.slice(0, 3).map((tag) => (
                       <span
                         key={tag}
-                        className="text-[10px] font-bold px-2 py-1 bg-slate-100 text-slate-500 rounded-md uppercase tracking-wide"
+                        className="text-[10px] font-semibold px-2 py-1 bg-slate-100 text-slate-500 rounded-md uppercase tracking-wide"
                       >
                         {tag}
                       </span>
@@ -220,7 +220,7 @@ const Projects: React.FC = () => {
               className="p-6 sm:p-8 overflow-y-auto flex flex-col z-10 bg-white no-scrollbar"
               style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
             >
-              <h3 className="text-2xl sm:text-3xl font-bold text-slate-900">
+              <h3 className="text-2xl sm:text-3xl font-semibold text-slate-900">
                 {selectedProject.title}
               </h3>
 

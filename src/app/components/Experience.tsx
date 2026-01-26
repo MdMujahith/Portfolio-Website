@@ -53,7 +53,7 @@ const Experience: React.FC = () => {
                     viewport={{ once: true, amount: 0.3 }}
                     transition={{ duration: 0.8, ease: "easeOut" }}
                 >
-                    <h2 className="text-4xl sm:text-5xl lg:text-7xl font-bold text-center animate-gradient-text mb-20">
+                    <h2 className="text-4xl sm:text-5xl lg:text-7xl font-semibold text-center animate-gradient-text mb-20">
                         Professional Experience
                     </h2>
                 </motion.div>
@@ -87,7 +87,7 @@ const Experience: React.FC = () => {
                             
                             {/* Text Content */}
                             <div className="relative p-8 flex flex-col justify-end h-80">
-                                <h3 className="text-3xl font-bold text-white">{exp.company}</h3>
+                                <h3 className="text-3xl font-semibold text-white">{exp.company}</h3>
                                 <p className="text-lg font-semibold text-sky-300 mt-1">{exp.role}</p>
                                 <p className="text-sm font-medium text-slate-300 mt-2">{exp.tenure}</p>
                                 <p className="text-slate-200 mt-4 text-base opacity-0 group-hover:opacity-100 transition-opacity duration-300">

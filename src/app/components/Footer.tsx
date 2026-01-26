@@ -11,7 +11,7 @@ interface FooterProps {
 
 const Footer: React.FC<FooterProps> = ({ onContactClick }) => {
     const marqueeText = (text: string) => (
-        <span className="mx-8 text-3xl sm:text-4xl md:text-5xl font-bold whitespace-nowrap text-zinc-600">
+        <span className="mx-8 text-3xl sm:text-4xl md:text-5xl font-semibold whitespace-nowrap text-zinc-600">
           {text}
         </span>
     );
@@ -42,7 +42,7 @@ const Footer: React.FC<FooterProps> = ({ onContactClick }) => {
                 viewport={{ once: true, amount: 0.3 }}
                 transition={{ duration: 0.8, ease: "easeOut" }}
             >
-                <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">Stay Connected</h2>
+                <h2 className="text-3xl sm:text-4xl font-semibold text-white mb-4">Stay Connected</h2>
                 <p className="max-w-md text-zinc-400 mb-8">
                     {"Feel free to reach out. I'm always open to new ideas, collaborations, or just a friendly chat."}
                 </p>

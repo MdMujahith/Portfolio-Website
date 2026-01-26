@@ -54,7 +54,7 @@ const BottomNav: React.FC<BottomNavProps> = ({ onContactClick }) => {
             <nav 
                 className="hidden md:flex fixed bottom-6 left-1/2 transform -translate-x-1/2 w-auto h-16 rounded-full p-2 justify-between items-center 
                 bg-black/50 backdrop-blur-2xl backdrop-saturate-150 border border-white/20 
-                text-sm text-white z-50 shadow-2xl shadow-black/50 bottom-nav"
+                text-base text-white z-50 shadow-2xl shadow-black/50 bottom-nav"
             >
                 <a href="#home" className="flex items-center justify-center w-14 h-full rounded-full hover:bg-white/20 transition-colors">
                     <Home size={20} />
@@ -70,7 +70,7 @@ const BottomNav: React.FC<BottomNavProps> = ({ onContactClick }) => {
 
                 <button 
                     onClick={onContactClick}
-                    className="bg-white text-black h-full rounded-full flex items-center px-6 gap-2 transition hover:scale-105 active:scale-95 font-bold ml-1"
+                    className="bg-white text-black h-full rounded-full flex items-center px-6 gap-2 transition hover:scale-105 active:scale-95 font-semibold ml-1"
                 >
                     Let&apos;s talk <ArrowRight size={16} />
                 </button>
@@ -124,7 +124,7 @@ const BottomNav: React.FC<BottomNavProps> = ({ onContactClick }) => {
                                     onContactClick();
                                 }} 
                                 variants={{}} 
-                                className="mt-8 flex items-center gap-3 px-8 py-4 bg-white text-black rounded-full text-xl font-bold hover:bg-zinc-200 active:scale-95 transition-all"
+                                className="mt-8 flex items-center gap-3 px-8 py-4 bg-white text-black rounded-full text-xl font-semibold hover:bg-zinc-200 active:scale-95 transition-all"
                             >
                                 Let&apos;s talk<ArrowRight size={24} />
                             </motion.button>

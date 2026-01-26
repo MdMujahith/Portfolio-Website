@@ -55,7 +55,7 @@ const Testimonials: React.FC = () => {
       <div className="max-w-4xl mx-auto px-6 relative text-center">
         
         {/* Header */}
-        <h2 className="text-4xl sm:text-5xl lg:text-7xl font-bold text-center animate-gradient-text mb-12 sm:mb-16">
+        <h2 className="text-4xl sm:text-5xl lg:text-7xl font-semibold text-center animate-gradient-text mb-12 sm:mb-16">
            Testimonials
         </h2>
 
@@ -90,7 +90,7 @@ const Testimonials: React.FC = () => {
                             &quot;{testimonialsData[index].quote}&quot;
                         </p>
                         <div className="mt-8">
-                            <p className="font-bold text-slate-900 text-lg sm:text-xl">
+                            <p className="font-semibold text-slate-900 text-lg sm:text-xl">
                                 {testimonial.author}
                             </p>
                             <p className="text-slate-500 mt-1 text-sm sm:text-base">
