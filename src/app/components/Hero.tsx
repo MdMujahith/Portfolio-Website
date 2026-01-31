@@ -251,7 +251,12 @@ const Hero: React.FC<HeroProps> = ({ onContactClick }) => {
                         alt="Mohamed Mujahith"
                         width={500}      
                         height={500}    
-                        className="rounded-full object-cover border-4 border-slate-200 lg:w-120 lg:h-120"
+                        className="
+      rounded-full
+      object-cover
+      object-[50%_20%]
+      border-4 border-slate-200
+    "
                        />
                 </motion.div>
             </div>
