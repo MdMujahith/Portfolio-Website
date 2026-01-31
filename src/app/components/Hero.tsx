@@ -192,29 +192,35 @@ const Hero: React.FC<HeroProps> = ({ onContactClick }) => {
                 </h1>
                 
                 {/* --- FIX START: Perfect Vertical Alignment --- */}
-<div className="text-xl md:text-2xl leading-8 text-slate-700 mt-4 h-8 flex items-center justify-center md:justify-start gap-2 overflow-hidden w-full pl-12 md:pl-0">
-    {/* Added 'leading-8' above. 
-       This forces the text line-height to be exactly 32px (matching the h-8 container).
-       Now both the static text and absolute text will sit at the exact same vertical position.
-    */}
+<div className="
+  text-xl md:text-2xl
+  leading-8
+  text-slate-700
+  mt-4
+  flex
+  flex-col md:flex-row
+  items-center md:items-start
+  gap-1 md:gap-2
+  overflow-hidden
+">
+  <span className="inline">I am a</span>
 
-    <span className="inline">I am a</span>
-    
-    <div className="relative h-8 w-64 sm:w-72 text-left">
-        <AnimatePresence mode="wait">
-            <motion.span
-                key={titleIndex}
-                initial={{ y: 20, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                exit={{ y: -20, opacity: 0 }}
-                transition={{ duration: 0.5, ease: "easeOut" }}
-                className="absolute left-0 font-semibold text-indigo-600 block whitespace-nowrap leading-8"
-            >
-                {titles[titleIndex]}
-            </motion.span>
-        </AnimatePresence>
-    </div>
+  <div className="relative h-8 w-64 sm:w-72 text-center md:text-left">
+    <AnimatePresence mode="wait">
+      <motion.span
+        key={titleIndex}
+        initial={{ y: 20, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        exit={{ y: -20, opacity: 0 }}
+        transition={{ duration: 0.5, ease: "easeOut" }}
+        className="absolute inset-0 flex items-center justify-center md:justify-start font-semibold text-indigo-600 whitespace-nowrap leading-8"
+      >
+        {titles[titleIndex]}
+      </motion.span>
+    </AnimatePresence>
+  </div>
 </div>
+
 {/* --- FIX END --- */}
 
                 <div className="flex flex-col sm:flex-row items-center gap-4 mt-8 relative">
@@ -231,7 +237,7 @@ const Hero: React.FC<HeroProps> = ({ onContactClick }) => {
       Contact Me
     </button>
 </div>
-            </div>
+           </div>
             
             <div className="hidden md:flex justify-center items-center">
                 <motion.div 
@@ -241,10 +247,10 @@ const Hero: React.FC<HeroProps> = ({ onContactClick }) => {
                     transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }}
                 >
                     <Image
-                        src="/image/Profile_Picture.jpg"
+                        src="/image/ProfilePicture.jpeg"
                         alt="Mohamed Mujahith"
-                        width={384}      
-                        height={384}    
+                        width={500}      
+                        height={500}    
                         className="rounded-full object-cover border-4 border-slate-200 lg:w-120 lg:h-120"
                        />
                 </motion.div>
