@@ -19,7 +19,7 @@ export interface Project {
 const Projects: React.FC = () => {
   const [selectedId, setSelectedId] = useState<number | null>(null);
   const [isLoaded, setIsLoaded] = useState(false);
-  
+
   // NEW: State to track if we are currently animating out
   const [isClosing, setIsClosing] = useState(false);
 
@@ -64,22 +64,24 @@ const Projects: React.FC = () => {
         id: 1,
         title: "SignBridge (RTSLDS)",
         description: "Real-time ISL & ASL translation using Computer Vision.",
-        longDescription: "A real-time system translating Indian (ISL) and American (ASL) Sign Language into English using Python and YOLO. It facilitates instant communication for the hearing-impaired by mapping gestures to text output.",
+        longDescription:
+          "A real-time system translating Indian (ISL) and American (ASL) Sign Language into English using Python and YOLO. It facilitates instant communication for the hearing-impaired by mapping gestures to text output.",
         imageUrl: "/image/project/RTSLDS.png",
         projectUrl: "https://github.com/MdMujahith/RTSLDS",
         githubUrl: "https://github.com/MdMujahith/RTSLDS",
-        tags: ["Python", "YOLO", "Flask", "CV"]
+        tags: ["Python", "YOLO", "Flask", "CV"],
       },
       {
-       id: 2,
-       title: "Uni Navigator",
-       description: "Emotionally intelligent academic co-pilot.",
-       longDescription: "An innovative academic assistant powered by the Gemini API, designed to provide emotionally intelligent support and guidance for students. Features include personalized recommendations, resource management, and an AI agent for interactive help.",
-       imageUrl: "/image/project/UniNav.png",
-       projectUrl: "https://github.com/MdMujahith/UniNavigator",
-       githubUrl: "https://github.com/MdMujahith/UniNavigator",
-       tags: ["Python", "Ai Agent", "Gemini API"],
-},
+        id: 2,
+        title: "Uni Navigator",
+        description: "Emotionally intelligent academic co-pilot.",
+        longDescription:
+          "An innovative academic assistant powered by the Gemini API, designed to provide emotionally intelligent support and guidance for students. Features include personalized recommendations, resource management, and an AI agent for interactive help.",
+        imageUrl: "/image/project/UniNav.png",
+        projectUrl: "https://github.com/MdMujahith/UniNavigator",
+        githubUrl: "https://github.com/MdMujahith/UniNavigator",
+        tags: ["Python", "Ai Agent", "Gemini API"],
+      },
       {
         id: 3,
         title: "Portfolio Website",
@@ -103,7 +105,7 @@ const Projects: React.FC = () => {
         tags: ["Next.js", "Markdown", "SEO"],
       },
     ],
-    []
+    [],
   );
 
   const selectedProject = projectsData.find((p) => p.id === selectedId);
@@ -111,9 +113,10 @@ const Projects: React.FC = () => {
   return (
     <section id="projects" className="w-full animated-x-pattern py-12 sm:py-20">
       <div className="max-w-7xl mx-auto px-6">
-        
         {/* Section Header */}
-        <div className={`transition-all duration-700 ease-out transform ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+        <div
+          className={`transition-all duration-700 ease-out transform ${isLoaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}
+        >
           <h2 className="text-4xl sm:text-5xl lg:text-7xl font-semibold text-center animate-gradient-text mb-12 sm:mb-16">
             Featured Projects
           </h2>
@@ -129,7 +132,7 @@ const Projects: React.FC = () => {
             <div
               key={project.id}
               onClick={() => setSelectedId(project.id)}
-              className={`block group cursor-pointer h-full transition-all duration-700 ease-out transform ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
+              className={`block group cursor-pointer h-full transition-all duration-700 ease-out transform ${isLoaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}
               style={{ transitionDelay: `${index * 100}ms` }}
             >
               <div className="bg-white h-full rounded-2xl overflow-hidden border border-slate-200 shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-300 flex flex-col">
@@ -174,26 +177,24 @@ const Projects: React.FC = () => {
       {/* Modal - Rendered Conditionally */}
       {selectedId && selectedProject && (
         <div className="fixed inset-0 z-[999] flex items-center justify-center p-4 sm:p-6">
-          
           {/* Backdrop with Conditional Animation */}
           <div
             className={`absolute inset-0 bg-black/60 backdrop-blur-sm ${
-              isClosing 
-                ? 'animate-[fadeOut_0.3s_ease-in_forwards]' 
-                : 'animate-[fadeIn_0.3s_ease-out_forwards]'
+              isClosing
+                ? "animate-[fadeOut_0.3s_ease-in_forwards]"
+                : "animate-[fadeIn_0.3s_ease-out_forwards]"
             }`}
             onClick={handleClose}
           />
 
           {/* Modal Card with Conditional Animation */}
-          <div 
+          <div
             className={`relative w-full max-w-3xl bg-white rounded-2xl overflow-hidden shadow-2xl z-10 flex flex-col max-h-[85vh] ${
-              isClosing 
-                ? 'animate-[scaleOut_0.3s_ease-in_forwards]' 
-                : 'animate-[scaleIn_0.3s_ease-out_forwards]'
+              isClosing
+                ? "animate-[scaleOut_0.3s_ease-in_forwards]"
+                : "animate-[scaleIn_0.3s_ease-out_forwards]"
             }`}
           >
-            
             {/* Close Button */}
             <button
               onClick={handleClose}
@@ -264,31 +265,51 @@ const Projects: React.FC = () => {
           </div>
         </div>
       )}
-      
+
       {/* Global Styles with Exit Animations */}
-       <style jsx global>{`
+      <style jsx global>{`
         .no-scrollbar::-webkit-scrollbar {
           display: none;
         }
-        
+
         /* ENTRANCE ANIMATIONS */
         @keyframes fadeIn {
-          from { opacity: 0; }
-          to { opacity: 1; }
+          from {
+            opacity: 0;
+          }
+          to {
+            opacity: 1;
+          }
         }
         @keyframes scaleIn {
-          from { opacity: 0; transform: scale(0.95); }
-          to { opacity: 1; transform: scale(1); }
+          from {
+            opacity: 0;
+            transform: scale(0.95);
+          }
+          to {
+            opacity: 1;
+            transform: scale(1);
+          }
         }
 
         /* EXIT ANIMATIONS */
         @keyframes fadeOut {
-          from { opacity: 1; }
-          to { opacity: 0; }
+          from {
+            opacity: 1;
+          }
+          to {
+            opacity: 0;
+          }
         }
         @keyframes scaleOut {
-          from { opacity: 1; transform: scale(1); }
-          to { opacity: 0; transform: scale(0.95); }
+          from {
+            opacity: 1;
+            transform: scale(1);
+          }
+          to {
+            opacity: 0;
+            transform: scale(0.95);
+          }
         }
       `}</style>
     </section>

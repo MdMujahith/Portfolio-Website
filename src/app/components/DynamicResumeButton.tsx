@@ -10,24 +10,45 @@ export default function DynamicResumeButton() {
 
   // Resume Configurations
   const resumeVersions = [
-    { id: "full", label: "Full Resume", sub: "For general roles", icon: <FileText size={18} />, file: "/pdf/Mujahith_Resume.pdf" },
-    { id: "frontend", label: "Frontend Developer", sub: "React, Next.js, UI/UX", icon: <Code size={18} />, file: "/pdf/Mujahith_Frontend.pdf" },
-    { id: "backend", label: "Backend & AI", sub: "Python, Node, ML", icon: <Cpu size={18} />, file: "/pdf/Mujahith_Backend.pdf" },
+    {
+      id: "full",
+      label: "Full Resume",
+      sub: "For general roles",
+      icon: <FileText size={18} />,
+      file: "/pdf/Mujahith_Resume.pdf",
+    },
+    {
+      id: "frontend",
+      label: "Frontend Developer",
+      sub: "React, Next.js, UI/UX",
+      icon: <Code size={18} />,
+      file: "/pdf/Mujahith_Frontend.pdf",
+    },
+    {
+      id: "backend",
+      label: "Backend & AI",
+      sub: "Python, Node, ML",
+      icon: <Cpu size={18} />,
+      file: "/pdf/Mujahith_Backend.pdf",
+    },
   ];
 
   // Handle Resize & Click Outside
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth < 640);
-    checkMobile(); 
+    checkMobile();
     window.addEventListener("resize", checkMobile);
 
     function handleClickOutside(event: MouseEvent) {
-      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
+      if (
+        containerRef.current &&
+        !containerRef.current.contains(event.target as Node)
+      ) {
         setIsOpen(false);
       }
     }
     document.addEventListener("mousedown", handleClickOutside);
-    
+
     return () => {
       window.removeEventListener("resize", checkMobile);
       document.removeEventListener("mousedown", handleClickOutside);
@@ -36,22 +57,21 @@ export default function DynamicResumeButton() {
 
   const handleDownload = (fileUrl: string) => {
     setIsOpen(false);
-    const link = document.createElement('a');
+    const link = document.createElement("a");
     link.href = fileUrl;
-    link.download = fileUrl.split('/').pop() || 'resume.pdf';
+    link.download = fileUrl.split("/").pop() || "resume.pdf";
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
   };
 
   return (
-    <div 
+    <div
       ref={containerRef}
       /* ✅ FIX: Only apply high z-index when the menu is actually OPEN. 
          Otherwise, use z-10 so the Main Mobile Menu can cover it. */
       className={`relative ${isOpen ? "z-50" : "z-10"}`}
     >
-      
       {/* --- Main Trigger Button --- */}
       <motion.button
         onClick={() => setIsOpen(!isOpen)}
@@ -76,7 +96,7 @@ export default function DynamicResumeButton() {
         {isOpen && (
           <>
             {/* Mobile Backdrop */}
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
@@ -86,20 +106,20 @@ export default function DynamicResumeButton() {
 
             {/* Content Container */}
             <motion.div
-              initial={ isMobile 
-                ? { opacity: 0, scale: 0.9, y: 20 } 
-                : { opacity: 0, x: -10 } 
+              initial={
+                isMobile
+                  ? { opacity: 0, scale: 0.9, y: 20 }
+                  : { opacity: 0, x: -10 }
               }
-              animate={ isMobile 
-                ? { opacity: 1, scale: 1, y: 0 } 
-                : { opacity: 1, x: 0 } 
+              animate={
+                isMobile ? { opacity: 1, scale: 1, y: 0 } : { opacity: 1, x: 0 }
               }
-              exit={ isMobile 
-                ? { opacity: 0, scale: 0.95, y: 20 } 
-                : { opacity: 0, x: -10 } 
+              exit={
+                isMobile
+                  ? { opacity: 0, scale: 0.95, y: 20 }
+                  : { opacity: 0, x: -10 }
               }
               transition={{ duration: 0.2, ease: "easeOut" }}
-
               // CSS Positioning
               className="
                 fixed inset-0 z-[70] flex items-center justify-center p-4 sm:p-0
@@ -108,23 +128,31 @@ export default function DynamicResumeButton() {
                 sm:left-full sm:ml-4 sm:flex sm:items-start
               "
             >
-              <div className="
+              <div
+                className="
                 w-full max-w-xs sm:w-72 
                 bg-zinc-900 border border-white/10 
                 rounded-3xl sm:rounded-2xl shadow-2xl overflow-hidden
-              ">
-                
+              "
+              >
                 {/* Mobile Header */}
                 <div className="flex items-center justify-between p-4 border-b border-white/5 sm:hidden">
-                  <span className="text-sm font-bold text-white/60 uppercase tracking-wider">Select Resume</span>
-                  <button onClick={() => setIsOpen(false)} className="p-1 bg-white/10 rounded-full">
+                  <span className="text-sm font-bold text-white/60 uppercase tracking-wider">
+                    Select Resume
+                  </span>
+                  <button
+                    onClick={() => setIsOpen(false)}
+                    className="p-1 bg-white/10 rounded-full"
+                  >
                     <X size={16} className="text-white" />
                   </button>
                 </div>
 
                 {/* Desktop Header */}
                 <div className="hidden sm:block px-4 py-3 border-b border-white/5 bg-zinc-800/50">
-                  <span className="text-[10px] font-bold text-white/50 uppercase tracking-widest">Select Version</span>
+                  <span className="text-[10px] font-bold text-white/50 uppercase tracking-widest">
+                    Select Version
+                  </span>
                 </div>
 
                 {/* Options List */}
@@ -140,8 +168,12 @@ export default function DynamicResumeButton() {
                         {version.icon}
                       </div>
                       <div className="flex flex-col">
-                        <span className="text-sm font-semibold group-hover:text-white transition-colors">{version.label}</span>
-                        <span className="text-xs text-zinc-500 group-hover:text-zinc-400">{version.sub}</span>
+                        <span className="text-sm font-semibold group-hover:text-white transition-colors">
+                          {version.label}
+                        </span>
+                        <span className="text-xs text-zinc-500 group-hover:text-zinc-400">
+                          {version.sub}
+                        </span>
                       </div>
                     </button>
                   ))}
