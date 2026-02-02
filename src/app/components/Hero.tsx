@@ -325,7 +325,7 @@ const Hero: React.FC<HeroProps> = ({ onContactClick }) => {
 
         <div className="hidden md:flex justify-center items-center">
           <motion.div
-            className="p-1.5 bg-white rounded-full shadow-2xl -translate-y-12"
+            className="p-1.5 bg-[conic-gradient(from_90deg,#4285F4_0_25%,#EA4335_25%_50%,#FBBC05_50%_75%,#34A853_75%_100%)] rounded-full shadow-2xl -translate-y-12 translate-x-6"
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }}
@@ -339,7 +339,7 @@ const Hero: React.FC<HeroProps> = ({ onContactClick }) => {
       rounded-full
       object-cover
       object-[50%_20%]
-      border-4 border-slate-200
+      border-4 border-white
     "
             />
           </motion.div>
