@@ -1,0 +1,15 @@
+# Allow all search engines to crawl
+User-agent: *
+Allow: /
+
+# Sitemap location
+Sitemap: https://mdmujahith.vercel.app/sitemap.xml
+
+# Prevent indexing of specific paths
+User-agent: *
+Disallow: /api/
+Disallow: /_next/
+Disallow: /private/
+
+# Crawl delay (in seconds)
+Crawl-delay: 1

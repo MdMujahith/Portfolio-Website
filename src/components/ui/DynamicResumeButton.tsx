@@ -1,37 +1,20 @@
 "use client";
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { FileText, Code, Cpu, Download, ChevronRight, X } from "lucide-react";
+import { FileText, Code, Cpu, Download, ChevronRight, X, LucideIcon } from "lucide-react";
+import { resumeVersions } from "@/data/professional";
+
+// Map the string icon names from our CMS to actual Lucide components
+const iconMap: Record<string, LucideIcon> = {
+  FileText,
+  Code,
+  Cpu,
+};
 
 export default function DynamicResumeButton() {
   const [isOpen, setIsOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
-
-  // Resume Configurations
-  const resumeVersions = [
-    {
-      id: "full",
-      label: "Full Resume",
-      sub: "For general roles",
-      icon: <FileText size={18} />,
-      file: "/pdf/Mujahith_Resume.pdf",
-    },
-    {
-      id: "frontend",
-      label: "Frontend Developer",
-      sub: "React, Next.js, UI/UX",
-      icon: <Code size={18} />,
-      file: "/pdf/Mujahith_Frontend.pdf",
-    },
-    {
-      id: "backend",
-      label: "Backend & AI",
-      sub: "Python, Node, ML",
-      icon: <Cpu size={18} />,
-      file: "/pdf/Mujahith_Backend.pdf",
-    },
-  ];
 
   // Handle Resize & Click Outside
   useEffect(() => {
@@ -75,19 +58,21 @@ export default function DynamicResumeButton() {
       {/* --- Main Trigger Button --- */}
       <motion.button
         onClick={() => setIsOpen(!isOpen)}
+        aria-expanded={isOpen}
+        aria-haspopup="menu"
         className={`w-full sm:w-auto flex items-center justify-center gap-3 px-8 py-4 
         bg-zinc-800 text-white rounded-full font-semibold text-base md:text-lg 
         hover:bg-zinc-700 transition-all shadow-lg active:scale-95 border border-transparent
         ${isOpen ? "sm:ring-2 sm:ring-white/20 sm:bg-zinc-700 relative" : ""}`}
         whileTap={{ scale: 0.98 }}
       >
-        <Download size={20} />
+        <Download size={20} aria-hidden="true" />
         <span>Download CV</span>
         <motion.span
           animate={{ rotate: isOpen ? 90 : 0 }}
           transition={{ duration: 0.2 }}
         >
-          <ChevronRight size={16} className="opacity-60 hidden sm:block" />
+          <ChevronRight size={16} className="opacity-60 hidden sm:block" aria-hidden="true" />
         </motion.span>
       </motion.button>
 
@@ -102,6 +87,7 @@ export default function DynamicResumeButton() {
               exit={{ opacity: 0 }}
               onClick={() => setIsOpen(false)}
               className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[60] sm:hidden"
+              aria-hidden="true"
             />
 
             {/* Content Container */}
@@ -120,6 +106,7 @@ export default function DynamicResumeButton() {
                   : { opacity: 0, x: -10 }
               }
               transition={{ duration: 0.2, ease: "easeOut" }}
+              role="menu"
               // CSS Positioning
               className="
                 fixed inset-0 z-[70] flex items-center justify-center p-4 sm:p-0
@@ -142,7 +129,8 @@ export default function DynamicResumeButton() {
                   </span>
                   <button
                     onClick={() => setIsOpen(false)}
-                    className="p-1 bg-white/10 rounded-full"
+                    className="p-1 bg-white/10 rounded-full hover:bg-white/20 transition-colors"
+                    aria-label="Close menu"
                   >
                     <X size={16} className="text-white" />
                   </button>
@@ -157,26 +145,31 @@ export default function DynamicResumeButton() {
 
                 {/* Options List */}
                 <div className="p-2 flex flex-col gap-1">
-                  {resumeVersions.map((version) => (
-                    <button
-                      key={version.id}
-                      onClick={() => handleDownload(version.file)}
-                      className="group flex items-center gap-4 w-full p-3 rounded-xl 
-                      hover:bg-zinc-800 text-white text-left transition-colors active:scale-98"
-                    >
-                      <div className="p-3 bg-zinc-800 rounded-xl text-white/70 group-hover:text-white group-hover:bg-zinc-700 transition-colors">
-                        {version.icon}
-                      </div>
-                      <div className="flex flex-col">
-                        <span className="text-sm font-semibold group-hover:text-white transition-colors">
-                          {version.label}
-                        </span>
-                        <span className="text-xs text-zinc-500 group-hover:text-zinc-400">
-                          {version.sub}
-                        </span>
-                      </div>
-                    </button>
-                  ))}
+                  {resumeVersions.map((version) => {
+                    const IconComponent = iconMap[version.icon] || FileText;
+
+                    return (
+                      <button
+                        key={version.id}
+                        role="menuitem"
+                        onClick={() => handleDownload(version.file)}
+                        className="group flex items-center gap-4 w-full p-3 rounded-xl 
+                        hover:bg-zinc-800 text-white text-left transition-colors active:scale-98"
+                      >
+                        <div className="p-3 bg-zinc-800 rounded-xl text-white/70 group-hover:text-white group-hover:bg-zinc-700 transition-colors">
+                          <IconComponent size={18} aria-hidden="true" />
+                        </div>
+                        <div className="flex flex-col">
+                          <span className="text-sm font-semibold group-hover:text-white transition-colors">
+                            {version.label}
+                          </span>
+                          <span className="text-xs text-zinc-500 group-hover:text-zinc-400">
+                            {version.sub}
+                          </span>
+                        </div>
+                      </button>
+                    );
+                  })}
                 </div>
               </div>
             </motion.div>

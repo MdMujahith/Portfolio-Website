@@ -2,46 +2,20 @@
 
 import React, { useState, useEffect, useCallback } from "react";
 import { ChevronLeft, ChevronRight, Quote } from "lucide-react";
-
-interface Testimonial {
-  quote: string;
-  author: string;
-  title: string;
-}
-
-// Data moved outside to prevent re-creation
-const testimonialsData: Testimonial[] = [
-  {
-    quote:
-      "Working with Mohamed was an absolute pleasure. His technical expertise and commitment to quality are second to none. He delivered a product that exceeded all our expectations on time and on budget.",
-    author: "Jane Doe",
-    title: "Project Manager, TechCorp",
-  },
-  {
-    quote:
-      "Mujahith has a unique ability to understand complex requirements and translate them into clean, efficient, and scalable code. His problem-solving skills are exceptional.",
-    author: "John Smith",
-    title: "Lead Engineer, Innovate LLC",
-  },
-  {
-    quote:
-      "The strategic insights Mohamed brought to the table, thanks to his business background, were invaluable. He doesn't just build features; he builds products that are set up for success.",
-    author: "Emily White",
-    title: "Product Owner, Solutions Inc.",
-  },
-];
+import { testimonials } from "@/data/testimonials";
+import { content } from "@/data/content";
 
 const Testimonials: React.FC = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
 
   const handleNext = useCallback(() => {
-    setCurrentIndex((prev) => (prev + 1) % testimonialsData.length);
+    setCurrentIndex((prev) => (prev + 1) % testimonials.length);
   }, []);
 
   const handlePrev = () => {
     setCurrentIndex(
-      (prev) => (prev - 1 + testimonialsData.length) % testimonialsData.length,
+      (prev) => (prev - 1 + testimonials.length) % testimonials.length,
     );
   };
 
@@ -60,7 +34,7 @@ const Testimonials: React.FC = () => {
       <div className="max-w-4xl mx-auto px-6 relative text-center">
         {/* Header */}
         <h2 className="text-4xl sm:text-5xl lg:text-7xl font-semibold text-center animate-gradient-text mb-12 sm:mb-16">
-          Testimonials
+          {content.sections.testimonials.title}
         </h2>
 
         {/* Large Quote Icon Background */}
@@ -81,9 +55,9 @@ const Testimonials: React.FC = () => {
                Zero Layout Shift.
             */}
           <div className="grid grid-cols-1">
-            {testimonialsData.map((testimonial, index) => (
+            {testimonials.map((testimonial, index) => (
               <div
-                key={index}
+                key={testimonial.id}
                 className={`col-start-1 row-start-1 transition-all duration-700 ease-in-out flex flex-col items-center justify-center ${
                   index === currentIndex
                     ? "opacity-100 translate-y-0 pointer-events-auto"
@@ -91,7 +65,7 @@ const Testimonials: React.FC = () => {
                 }`}
               >
                 <p className="text-xl sm:text-2xl md:text-3xl font-light text-slate-700 leading-relaxed max-w-3xl mx-auto">
-                  &quot;{testimonialsData[index].quote}&quot;
+                  &quot;{testimonial.quote}&quot;
                 </p>
                 <div className="mt-8">
                   <p className="font-semibold text-slate-900 text-lg sm:text-xl">
@@ -99,6 +73,7 @@ const Testimonials: React.FC = () => {
                   </p>
                   <p className="text-slate-500 mt-1 text-sm sm:text-base">
                     {testimonial.title}
+                    {testimonial.company ? `, ${testimonial.company}` : ""}
                   </p>
                 </div>
               </div>
@@ -117,7 +92,7 @@ const Testimonials: React.FC = () => {
           </button>
 
           <div className="flex items-center gap-2">
-            {testimonialsData.map((_, index) => (
+            {testimonials.map((_, index) => (
               <button
                 key={index}
                 onClick={() => setCurrentIndex(index)}
