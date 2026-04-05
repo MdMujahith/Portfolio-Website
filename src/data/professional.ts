@@ -101,13 +101,13 @@ export const projects: Project[] = [
   },
   {
     id: 4,
-    title: "Blog Platform",
-    description: "Markdown-based blogging site with SEO optimization.",
+    title: "Personal Networth Tracker",
+    description: "A simple tool to track and manage personal finances.",
     longDescription:
       "A high-performance blogging platform featuring Markdown support, syntax highlighting, and static rendering. Designed for developers to share technical articles with optimal SEO performance.",
     imageUrl: "/image/project/blogweb.png",
     projectUrl: "#",
-    githubUrl: "#",
+    githubUrl: "https://github.com/MdMujahith/Finance-App",
     tags: ["Next.js", "Markdown", "SEO"],
     featured: false,
   },

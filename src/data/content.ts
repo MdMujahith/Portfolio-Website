@@ -87,6 +87,11 @@ export const content: ContentConfig = {
       primary: "Download CV",
       secondary: "Contact Me",
     },
+    status: {
+  text: "Open to work",
+  state: "available", // Green dot
+  emoji: ""         // Renders: [dot] 🚀 Open to work
+},
   },
 
   intro: {

@@ -15,7 +15,6 @@ interface HeroProps {
 /* ============================================
  * PERFORMANCE: Memoized Constants
  * ============================================
- * Prevent re-creation on every render
  */
 const letterColors = [
   "hover:text-red-500",
@@ -34,6 +33,26 @@ const letterSwapVariants = {
   exit: { opacity: 0, scale: 0.5 },
 };
 
+/* ============================================
+ * UTILITY: Status Color Mapper
+ * ============================================
+ */
+const getStatusColors = (state: string) => {
+  switch (state?.toLowerCase()) {
+    case "available":
+    case "open to work":
+      return { ping: "bg-green-400", dot: "bg-green-500" };
+    case "busy":
+    case "employed":
+      return { ping: "bg-red-400", dot: "bg-red-500" };
+    case "away":
+    case "learning":
+      return { ping: "bg-yellow-400", dot: "bg-yellow-500" };
+    default:
+      return { ping: "bg-blue-400", dot: "bg-blue-500" };
+  }
+};
+
 const Hero: React.FC<HeroProps> = ({ onContactClick }) => {
   const [mounted, setMounted] = useState(false);
   const [time, setTime] = useState<Date | null>(null);
@@ -46,7 +65,8 @@ const Hero: React.FC<HeroProps> = ({ onContactClick }) => {
    * ============================================
    */
   const { firstName } = siteConfig.owner;
-  const { languages, titles, cta } = content.hero;
+  // Added an optional 'emoji' to our default fallback just in case!
+  const { languages, titles, cta, status = { text: "Open to work", state: "available", emoji: "👨‍💻" } } = content.hero as any; 
   const nameLetters = useMemo(() => firstName.split(""), [firstName]);
 
   const handleLetterClick = (letterKey: string) => {
@@ -54,21 +74,16 @@ const Hero: React.FC<HeroProps> = ({ onContactClick }) => {
   };
 
   /* ============================================
-   * PERFORMANCE: Optimized Time Updates
+   * TIMERS & ANIMATIONS
    * ============================================
-   * Update every minute instead of every second
    */
   useEffect(() => {
     setMounted(true);
     setTime(new Date());
-    const timerId = setInterval(() => setTime(new Date()), 60000); // 60 seconds
+    const timerId = setInterval(() => setTime(new Date()), 60000);
     return () => clearInterval(timerId);
   }, []);
 
-  /* ============================================
-   * ANIMATION: Language Rotation
-   * ============================================
-   */
   useEffect(() => {
     const intervalId = setInterval(() => {
       setCurrentLanguageIndex((prevIndex) => (prevIndex + 1) % languages.length);
@@ -76,10 +91,6 @@ const Hero: React.FC<HeroProps> = ({ onContactClick }) => {
     return () => clearInterval(intervalId);
   }, [languages.length]);
 
-  /* ============================================
-   * ANIMATION: Title Slider
-   * ============================================
-   */
   useEffect(() => {
     const intervalId = setInterval(() => {
       setTitleIndex((prev) => (prev + 1) % titles.length);
@@ -89,10 +100,6 @@ const Hero: React.FC<HeroProps> = ({ onContactClick }) => {
 
   const currentLanguageName = languages[currentLanguageIndex].name;
 
-  /* ============================================
-   * UTILITY: Format Time Display
-   * ============================================
-   */
   const formatTime = (date: Date) => {
     const timeStr = date.toLocaleTimeString("en-US", {
       timeZone: siteConfig.owner.location.timezone,
@@ -110,62 +117,24 @@ const Hero: React.FC<HeroProps> = ({ onContactClick }) => {
   };
 
   /* ============================================
-   * COMPONENT: Social Links (Reusable)
+   * COMPONENT: Social Links
    * ============================================
    */
   const SocialLinks = () => (
     <>
-      <a
-        href={siteConfig.social.twitter}
-        target="_blank"
-        rel="noopener noreferrer"
-        aria-label="Twitter Profile"
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          className="w-6 h-6 stroke-1 text-zinc-600 hover:text-black hover:stroke-2 transition-all"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-        >
+      <a href={siteConfig.social.twitter} target="_blank" rel="noopener noreferrer" aria-label="Twitter Profile">
+        <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6 stroke-1 text-zinc-600 hover:text-black hover:stroke-2 transition-all" viewBox="0 0 24 24" fill="none" stroke="currentColor">
           <path d="M4 4l11.733 16h4.267l-11.733 -16z"></path>
           <path d="M4 20l6.768 -6.768m2.46 -2.46l6.772 -6.772"></path>
         </svg>
       </a>
-      
-      <a
-        href={siteConfig.social.github}
-        target="_blank"
-        rel="noopener noreferrer"
-        aria-label="GitHub Profile"
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          className="w-6 h-6 stroke-1 text-zinc-600 hover:text-black hover:stroke-2 transition-all"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        >
+      <a href={siteConfig.social.github} target="_blank" rel="noopener noreferrer" aria-label="GitHub Profile">
+        <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6 stroke-1 text-zinc-600 hover:text-black hover:stroke-2 transition-all" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
           <path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5"></path>
         </svg>
       </a>
-      
-      <a
-        href={siteConfig.social.linkedin}
-        target="_blank"
-        rel="noopener noreferrer"
-        aria-label="LinkedIn Profile"
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          className="w-6 h-6 stroke-1 text-zinc-600 hover:text-blue-600 hover:stroke-2 transition-all"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-        >
+      <a href={siteConfig.social.linkedin} target="_blank" rel="noopener noreferrer" aria-label="LinkedIn Profile">
+        <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6 stroke-1 text-zinc-600 hover:text-blue-600 hover:stroke-2 transition-all" viewBox="0 0 24 24" fill="none" stroke="currentColor">
           <path d="M4 4m0 2a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2z"></path>
           <path d="M8 11l0 5"></path>
           <path d="M8 8l0 .01"></path>
@@ -176,10 +145,12 @@ const Hero: React.FC<HeroProps> = ({ onContactClick }) => {
     </>
   );
 
+  const badgeColors = getStatusColors(status.state);
+
   return (
     <section
       id="home"
-      className="w-full min-h-screen flex flex-col items-center relative"
+      className="w-full min-h-screen flex flex-col items-center relative isolate overflow-hidden"
     >
       <div className="absolute inset-0 -z-10 grid-bg animate-custom-pulse"></div>
 
@@ -202,7 +173,6 @@ const Hero: React.FC<HeroProps> = ({ onContactClick }) => {
           </div>
         </div>
 
-        {/* Desktop Nav */}
         <div className="hidden sm:flex items-center gap-8">
           <div className="flex items-center gap-6">
             <SocialLinks />
@@ -214,18 +184,13 @@ const Hero: React.FC<HeroProps> = ({ onContactClick }) => {
                 {formatTime(time).timeValue}
               </span>
               <div className="text-left text-xs font-semibold">
-                <span className="block">
-                  {formatTime(time).ampm.toLowerCase()}
-                </span>
-                <span className="block text-zinc-700">
-                  {formatTime(time).dateString}
-                </span>
+                <span className="block">{formatTime(time).ampm.toLowerCase()}</span>
+                <span className="block text-zinc-700">{formatTime(time).dateString}</span>
               </div>
             </div>
           )}
         </div>
 
-        {/* Mobile Social Links */}
         <div className="flex sm:hidden items-center gap-6">
           <SocialLinks />
         </div>
@@ -234,7 +199,6 @@ const Hero: React.FC<HeroProps> = ({ onContactClick }) => {
       <div className="flex-grow w-full grid grid-cols-1 md:grid-cols-2 items-center px-4 sm:px-16 md:-mt-16">
         <div className="flex flex-col items-center md:items-start text-center md:text-left">
           <h1 className="font-semibold tracking-tight uppercase select-none cursor-default">
-            {/* First Name Animation */}
             <div className="flex text-6xl sm:text-7xl md:text-8xl lg:text-9xl text-black transition-all duration-300 hover:tracking-widest">
               {nameLetters.map((letter, index) => {
                 const letterKey = `${firstName.toLowerCase()}-${index}`;
@@ -264,7 +228,6 @@ const Hero: React.FC<HeroProps> = ({ onContactClick }) => {
               })}
             </div>
 
-            {/* Last Name / Language Animation */}
             <div className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl text-zinc-500 h-28 sm:h-32 relative flex justify-center md:justify-start items-center transition-all duration-300 hover:tracking-widest">
               <AnimatePresence mode="wait">
                 <motion.span
@@ -281,7 +244,6 @@ const Hero: React.FC<HeroProps> = ({ onContactClick }) => {
             </div>
           </h1>
 
-          {/* Title Slider */}
           <div className="text-xl md:text-2xl leading-8 text-slate-700 mt-4 flex flex-col md:flex-row items-center md:items-start gap-1 md:gap-2 overflow-hidden">
             <span className="inline">I am a</span>
 
@@ -301,7 +263,6 @@ const Hero: React.FC<HeroProps> = ({ onContactClick }) => {
             </div>
           </div>
 
-          {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row items-center gap-4 mt-8 relative">
             <DynamicResumeButton />
 
@@ -315,10 +276,10 @@ const Hero: React.FC<HeroProps> = ({ onContactClick }) => {
           </div>
         </div>
 
-        {/* Profile Image */}
+        {/* Profile Image with Dynamic Badge */}
         <div className="hidden md:flex justify-center items-center">
           <motion.div
-            className="p-1.5 bg-[conic-gradient(from_90deg,#4285F4_0_25%,#EA4335_25%_50%,#FBBC05_50%_75%,#34A853_75%_100%)] rounded-full shadow-2xl -translate-y-12 translate-x-6"
+            className="relative p-1.5 bg-[conic-gradient(from_90deg,#4285F4_0_25%,#EA4335_25%_50%,#FBBC05_50%_75%,#34A853_75%_100%)] rounded-full shadow-2xl -translate-y-12 translate-x-6"
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }}
@@ -328,9 +289,31 @@ const Hero: React.FC<HeroProps> = ({ onContactClick }) => {
               alt={`${firstName} ${siteConfig.owner.lastName} - Profile Picture`}
               width={500}
               height={500}
-              className="rounded-full object-cover object-[50%_20%] border-4 border-white"
+              className="rounded-full object-cover object-[50%_20%] border-4 border-white relative z-0"
               priority
             />
+            
+            {/* The Dynamic Badge with Emoji */}
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.8, type: "spring", stiffness: 200 }}
+              className="absolute bottom-2 right-4 px-5 py-3 rounded-full bg-white shadow-xl border border-zinc-100 z-10"
+            >
+              <div className="flex items-center gap-2.5">
+                {/* Status Dot */}
+                <span className="relative flex h-3 w-3">
+                  <span className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${badgeColors.ping}`}></span>
+                  <span className={`relative inline-flex rounded-full h-3 w-3 ${badgeColors.dot}`}></span>
+                </span>
+                
+                {/* Text and Emoji Container */}
+                <span className="text-sm font-bold text-zinc-800 tracking-wide select-none flex items-center gap-1.5">
+                  {status.emoji && <span className="text-base leading-none">{status.emoji}</span>}
+                  {status.text}
+                </span>
+              </div>
+            </motion.div>
           </motion.div>
         </div>
       </div>

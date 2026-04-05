@@ -120,9 +120,10 @@ const BottomNav: React.FC<BottomNavProps> = ({ onContactClick }) => {
 
         <button
           onClick={onContactClick}
-          className="bg-white text-black h-full rounded-full flex items-center px-6 gap-2 transition hover:scale-105 active:scale-95 font-semibold ml-1"
+          className="bg-white text-black h-full rounded-full flex items-center px-6 gap-2 transition hover:scale-105 active:scale-95 font-semibold ml-1 whitespace-nowrap"
         >
-          Let&apos;s talk <ArrowRight size={16} aria-hidden="true" />
+          <span>Let&apos;s talk</span>
+          <ArrowRight size={16} aria-hidden="true" className="shrink-0" />
         </button>
       </nav>
 
@@ -182,9 +183,10 @@ const BottomNav: React.FC<BottomNavProps> = ({ onContactClick }) => {
                   toggleMenu();
                   onContactClick();
                 }}
-                className="flex items-center gap-3 text-xl font-semibold text-white hover:text-blue-400 transition-colors"
+                className="flex items-center gap-3 text-xl font-semibold text-white hover:text-blue-400 transition-colors whitespace-nowrap"
               >
-                Let&apos;s Talk <ArrowRight size={24} aria-hidden="true" />
+                <span>Let&apos;s Talk</span>
+                <ArrowRight size={24} aria-hidden="true" className="shrink-0" />
               </button>
             </motion.li>
           </motion.ul>

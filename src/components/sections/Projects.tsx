@@ -18,10 +18,6 @@ const Projects: React.FC = () => {
     setIsLoaded(true);
   }, []);
 
-  /* ============================================
-   * ACCESSIBILITY: Lock Body Scroll & Focus Management
-   * ============================================
-   */
   useEffect(() => {
     if (selectedId) {
       previousFocusRef.current = document.activeElement as HTMLElement;
@@ -29,24 +25,16 @@ const Projects: React.FC = () => {
       setTimeout(() => modalRef.current?.focus(), 100);
     } else {
       document.body.style.overflow = "unset";
-      if (previousFocusRef.current) {
-        previousFocusRef.current.focus();
-      }
+      previousFocusRef.current?.focus();
     }
     return () => {
       document.body.style.overflow = "unset";
     };
   }, [selectedId]);
 
-  /* ============================================
-   * ACCESSIBILITY: Keyboard Navigation
-   * ============================================
-   */
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape" && selectedId) {
-        setSelectedId(null);
-      }
+      if (e.key === "Escape" && selectedId) setSelectedId(null);
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
@@ -61,65 +49,74 @@ const Projects: React.FC = () => {
       aria-labelledby="projects-heading"
     >
       <div className="max-w-7xl mx-auto px-6">
+
         {/* Section Header */}
-        <div
-          className={`transition-all duration-700 ease-out transform ${
-            isLoaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
-          }`}
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={isLoaded ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.5, ease: "easeOut" }}
+          className="text-center"
         >
           <h2
             id="projects-heading"
-            className="text-4xl sm:text-5xl lg:text-7xl font-semibold text-center animate-gradient-text mb-12 sm:mb-16"
+            className="text-4xl sm:text-5xl lg:text-7xl font-semibold text-center animate-gradient-text mb-4 sm:mb-6"
           >
             {content.sections.projects.title}
           </h2>
-          <p className="mt-4 max-w-2xl mx-auto text-base sm:text-lg text-slate-600 text-center">
+          <p className="max-w-2xl mx-auto text-base sm:text-lg text-slate-500">
             {content.sections.projects.description}
           </p>
-        </div>
+        </motion.div>
 
         {/* Projects Grid */}
         <div
-          className="mt-12 sm:mt-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8"
+          className="mt-12 sm:mt-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-6"
           role="list"
         >
           {projects.map((project, index) => (
-            <article
+            <motion.article
               key={project.id}
-              className={`block group cursor-pointer h-full transition-all duration-700 ease-out transform ${
-                isLoaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
-              }`}
-              style={{ transitionDelay: `${index * 100}ms` }}
+              initial={{ opacity: 0, y: 20 }}
+              animate={isLoaded ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.45, delay: index * 0.08, ease: "easeOut" }}
               role="listitem"
+              className="group cursor-pointer h-full"
             >
               <button
                 onClick={() => setSelectedId(project.id)}
                 className="w-full h-full text-left"
                 aria-label={`View details for ${project.title}`}
               >
-                <div className="bg-white h-full rounded-2xl overflow-hidden border border-slate-200 shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-300 flex flex-col">
+                <div className="bg-white h-full rounded-2xl overflow-hidden border border-slate-200 shadow-sm hover:shadow-lg hover:-translate-y-1.5 transition-all duration-300 will-change-transform flex flex-col">
+
                   {/* Card Image */}
                   <div className="relative w-full h-40 sm:h-48 overflow-hidden bg-slate-100">
                     <Image
                       src={project.imageUrl}
                       alt={`${project.title} project screenshot`}
                       fill
-                      className="object-cover group-hover:scale-105 transition-transform duration-500"
+                      className="object-cover group-hover:scale-105 transition-transform duration-500 will-change-transform"
                       sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
                     />
+                    <div className="absolute inset-0 bg-blue-600/0 group-hover:bg-blue-600/10 transition-colors duration-300" />
+                    <div className="absolute top-3 right-3 px-2.5 py-1 bg-white/90 rounded-full shadow text-[10px] font-bold text-blue-600 opacity-0 group-hover:opacity-100 translate-y-1 group-hover:translate-y-0 transition-all duration-300">
+                      View Details
+                    </div>
                   </div>
 
+                  {/* Card Content */}
                   <div className="p-4 sm:p-5 flex flex-col flex-grow">
-                    <h3 className="text-base sm:text-lg font-semibold text-slate-900 group-hover:text-blue-600 transition-colors">
-                      {project.title}
-                    </h3>
-                    <p className="mt-1.5 text-slate-600 text-xs sm:text-sm line-clamp-2 leading-relaxed">
+                    <div className="flex items-start justify-between gap-2">
+                      <h3 className="text-base sm:text-lg font-semibold text-slate-900 group-hover:text-blue-600 transition-colors duration-200 leading-snug">
+                        {project.title}
+                      </h3>
+                      <ArrowUpRight className="w-4 h-4 text-slate-300 group-hover:text-blue-500 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all duration-200 flex-shrink-0 mt-0.5" />
+                    </div>
+                    <p className="mt-2 text-slate-500 text-xs sm:text-sm line-clamp-2 leading-relaxed">
                       {project.description}
                     </p>
-
-                    {/* Card Tags */}
-                    <div className="mt-3 flex flex-wrap gap-1.5 mt-auto pt-3">
-                      {project.tags.slice(0, 3).map((tag) => (
+                    <div className="mt-auto pt-4 flex flex-wrap gap-1.5">
+                      {project.tags.slice(0, 3).map((tag: string) => (
                         <span
                           key={tag}
                           className="text-[10px] font-semibold px-2 py-1 bg-slate-100 text-slate-500 rounded-md uppercase tracking-wide"
@@ -129,14 +126,15 @@ const Projects: React.FC = () => {
                       ))}
                     </div>
                   </div>
+
                 </div>
               </button>
-            </article>
+            </motion.article>
           ))}
         </div>
       </div>
 
-      {/* REFACTORED: Framer Motion Modal for native mount/unmount animations */}
+      {/* Modal */}
       <AnimatePresence>
         {selectedId && selectedProject && (
           <div
@@ -150,8 +148,8 @@ const Projects: React.FC = () => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              transition={{ duration: 0.3 }}
-              className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+              transition={{ duration: 0.25 }}
+              className="absolute inset-0 bg-slate-900/70 backdrop-blur-sm"
               onClick={() => setSelectedId(null)}
               aria-hidden="true"
             />
@@ -159,24 +157,24 @@ const Projects: React.FC = () => {
             {/* Modal Card */}
             <motion.div
               ref={modalRef}
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.95 }}
+              initial={{ opacity: 0, scale: 0.97, y: 16 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.97, y: 16 }}
               transition={{ duration: 0.3, ease: "easeOut" }}
-              className="relative w-full max-w-3xl bg-white rounded-2xl overflow-hidden shadow-2xl z-10 flex flex-col max-h-[85vh]"
+              className="relative w-full max-w-2xl bg-white rounded-3xl overflow-hidden shadow-2xl z-10 flex flex-col max-h-[90vh]"
               tabIndex={-1}
             >
               {/* Close Button */}
               <button
                 onClick={() => setSelectedId(null)}
-                className="absolute top-4 right-4 z-20 p-2 bg-black/50 hover:bg-black/70 text-white rounded-full backdrop-blur-md transition-colors"
+                className="absolute top-4 right-4 z-20 p-2 bg-white/90 hover:bg-white text-slate-700 hover:text-slate-900 rounded-full shadow-md backdrop-blur-md transition-all duration-200 hover:scale-105"
                 aria-label="Close project details"
               >
-                <X size={20} />
+                <X size={18} />
               </button>
 
               {/* Modal Image */}
-              <div className="relative w-full h-48 sm:h-80 shrink-0 bg-slate-100 z-0">
+              <div className="relative w-full h-56 sm:h-72 shrink-0 bg-slate-100">
                 <Image
                   src={selectedProject.imageUrl}
                   alt={`${selectedProject.title} detailed view`}
@@ -185,65 +183,70 @@ const Projects: React.FC = () => {
                   priority
                   sizes="(max-width: 768px) 100vw, 800px"
                 />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/10 to-transparent" />
+
+                {/* Title overlaid on image */}
+                <div className="absolute bottom-0 left-0 right-0 p-6">
+                  <h3
+                    id="modal-title"
+                    className="text-2xl sm:text-3xl font-bold text-white drop-shadow-md leading-tight"
+                  >
+                    {selectedProject.title}
+                  </h3>
+                </div>
               </div>
 
               {/* Modal Body */}
               <div
-                className="p-6 sm:p-8 overflow-y-auto flex flex-col z-10 bg-white no-scrollbar"
+                className="flex flex-col overflow-y-auto"
                 style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
               >
-                <h3
-                  id="modal-title"
-                  className="text-2xl sm:text-3xl font-semibold text-slate-900"
-                >
-                  {selectedProject.title}
-                </h3>
-
-                <div className="mt-3 flex flex-wrap gap-2" role="list">
-                  {selectedProject.tags.map((tag) => (
+                {/* Tags Row */}
+                <div className="flex flex-wrap gap-2 px-6 pt-5">
+                  {selectedProject.tags.map((tag: string) => (
                     <span
                       key={tag}
                       className="px-3 py-1 text-xs font-semibold bg-indigo-50 text-indigo-600 rounded-full border border-indigo-100"
-                      role="listitem"
                     >
                       {tag}
                     </span>
                   ))}
                 </div>
 
-                <p className="mt-6 text-slate-600 text-base sm:text-lg leading-relaxed">
+                {/* Description */}
+                <p className="mt-4 px-6 text-slate-600 text-sm sm:text-base leading-relaxed">
                   {selectedProject.longDescription}
                 </p>
 
-                <div className="mt-8 pt-6 border-t border-slate-100 mt-auto">
-                  {/* Action Buttons */}
-                  <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
-                    <a
-                      href={selectedProject.projectUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="w-full sm:w-auto flex justify-center items-center gap-2 px-6 py-3.5 bg-blue-600 text-white rounded-xl font-semibold hover:bg-blue-700 transition-all shadow-lg shadow-blue-600/20 hover:shadow-blue-600/40 hover:-translate-y-0.5"
-                      aria-label={`View ${selectedProject.title} live project`}
-                    >
-                      View Project <ArrowUpRight size={18} />
-                    </a>
+               {/* Action Buttons */}
+<div className="flex flex-col sm:flex-row gap-3 px-6 py-6 mt-2 border-t border-slate-100">
+  <a
+    href={selectedProject.projectUrl}
+    target="_blank"
+    rel="noopener noreferrer"
+    className="flex-1 flex justify-center items-center gap-2 px-5 py-3 bg-blue-600 text-white rounded-xl text-sm font-semibold hover:bg-blue-700 transition-all duration-200 shadow-md shadow-blue-600/20 hover:shadow-blue-600/30 hover:-translate-y-0.5"
+    aria-label={`View ${selectedProject.title} live project`}
+  >
+    View Project <ArrowUpRight size={16} />
+  </a>
 
-                    <a
-                      href={selectedProject.githubUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="w-full sm:w-auto flex justify-center items-center gap-2 px-6 py-3.5 bg-slate-900 text-white rounded-xl font-semibold hover:bg-slate-800 transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5"
-                      aria-label={`View ${selectedProject.title} source code on GitHub`}
-                    >
-                      <SiGithub size={18} /> Source Code
-                    </a>
-                  </div>
-                </div>
+  <a
+    href={selectedProject.githubUrl}
+    target="_blank"
+    rel="noopener noreferrer"
+    className="flex-1 flex justify-center items-center gap-2 px-5 py-3 bg-slate-900 text-white rounded-xl text-sm font-semibold hover:bg-slate-800 transition-all duration-200 shadow-md hover:shadow-lg hover:-translate-y-0.5"
+    aria-label={`View ${selectedProject.title} source code on GitHub`}
+  >
+    <SiGithub size={16} /> Source Code
+  </a>
+</div>
+
               </div>
             </motion.div>
           </div>
         )}
       </AnimatePresence>
+
     </section>
   );
 };
