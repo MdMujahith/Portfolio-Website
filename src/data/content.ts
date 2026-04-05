@@ -2,8 +2,7 @@
  * CONTENT CONFIGURATION
  * ======================
  * All text content, headlines, and CTAs for the portfolio.
- * 
- * HOW TO EDIT:
+ * * HOW TO EDIT:
  * - Update hero headlines, section titles, and button text here
  * - Supports multi-language strings for hero name animation
  */
@@ -16,6 +15,12 @@ export interface ContentConfig {
     cta: {
       primary: string;
       secondary: string;
+    };
+    // FIX: Added the status block here!
+    status?: {
+      text: string;
+      state: string;
+      emoji: string;
     };
   };
 
@@ -88,10 +93,10 @@ export const content: ContentConfig = {
       secondary: "Contact Me",
     },
     status: {
-  text: "Open to work",
-  state: "available", // Green dot
-  emoji: ""         // Renders: [dot] 🚀 Open to work
-},
+      text: "Open to work",
+      state: "available", // Green dot
+      emoji: ""         // Renders: [dot] 🚀 Open to work
+    },
   },
 
   intro: {

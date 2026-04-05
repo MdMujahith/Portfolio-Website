@@ -7,7 +7,8 @@ import { siteConfig } from "@/data/site.config";
 interface ContactModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onEmailCopied: () => void;
+  onEmailCopied?: () => void;
+  onSuccess: () => void;
 }
 
 /* ============================================
@@ -52,7 +53,7 @@ const ContactModal: React.FC<ContactModalProps> = ({
     try {
       // Modern Clipboard API (secure contexts only)
       await navigator.clipboard.writeText(email);
-      onEmailCopied();
+      onEmailCopied?.();
       onClose();
     } catch (err) {
       // Fallback for older browsers
@@ -67,7 +68,7 @@ const ContactModal: React.FC<ContactModalProps> = ({
 
       try {
         document.execCommand("copy");
-        onEmailCopied();
+        onEmailCopied?.();
         onClose();
       } catch (copyErr) {
         console.error("Fallback copy failed:", copyErr);
