@@ -5,12 +5,10 @@ import { motion } from "framer-motion";
 import { Code, Briefcase, Zap, ArrowUpRight, LucideIcon } from "lucide-react";
 import { content } from "@/data/content";
 
-// Define the props the component will receive
 interface IntroProps {
   onContactClick: () => void;
 }
 
-// Map the string icon names from our CMS to actual Lucide components
 const iconMap: Record<string, LucideIcon> = {
   Code,
   Briefcase,
@@ -19,14 +17,14 @@ const iconMap: Record<string, LucideIcon> = {
 
 const Intro: React.FC<IntroProps> = ({ onContactClick }) => {
   return (
-    <section 
-      id="about" 
-      className="w-full bg-[#f5f5f7] py-20 overflow-hidden"
+    <section
+      id="about"
+      className="w-full bg-[#f5f5f7] dark:bg-[#111111] py-20 overflow-hidden transition-colors duration-300"
       aria-labelledby="about-heading"
     >
       <div className="max-w-7xl mx-auto px-6">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-start">
-          
+
           {/* Left Column: Sticky Headline */}
           <div className="lg:sticky top-0 lg:h-screen flex items-center">
             <motion.div
@@ -36,11 +34,10 @@ const Intro: React.FC<IntroProps> = ({ onContactClick }) => {
               transition={{ duration: 0.8, ease: "easeOut" }}
               className="w-full"
             >
-              <h2 
+              <h2
                 id="about-heading"
-                className="text-5xl sm:text-6xl md:text-8xl font-semibold text-[#1d1d1f] tracking-tighter leading-none text-center lg:text-left"
+                className="text-5xl sm:text-6xl md:text-8xl font-semibold text-[#1d1d1f] dark:text-white tracking-tighter leading-none text-center lg:text-left transition-colors duration-300"
               >
-                {/* Dynamically split the string by \n to insert line breaks */}
                 {content.intro.headline.split('\n').map((line, index, array) => (
                   <React.Fragment key={index}>
                     {line}
@@ -70,22 +67,22 @@ const Intro: React.FC<IntroProps> = ({ onContactClick }) => {
                 },
               }}
             >
-              <h3 className="text-xl sm:text-2xl font-semibold text-gray-800 mb-4">
+              <h3 className="text-xl sm:text-2xl font-semibold text-gray-800 dark:text-gray-100 mb-4 transition-colors duration-300">
                 {content.intro.subheadline}
               </h3>
-              <p className="text-gray-600 text-base sm:text-lg leading-relaxed font-regular">
+              <p className="text-gray-600 dark:text-gray-400 text-base sm:text-lg leading-relaxed transition-colors duration-300">
                 {content.intro.description}
               </p>
-              
+
               <button
                 onClick={onContactClick}
-                className="inline-flex items-center gap-2 text-base sm:text-lg text-blue-600 hover:text-blue-500 font-semibold mt-6 transition-colors group"
+                className="inline-flex items-center gap-2 text-base sm:text-lg text-blue-600 dark:text-blue-400 hover:text-blue-500 dark:hover:text-blue-300 font-semibold mt-6 transition-colors group"
                 aria-label="Open contact form"
               >
-                {content.intro.cta} 
-                <ArrowUpRight 
-                  size={20} 
-                  className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" 
+                {content.intro.cta}
+                <ArrowUpRight
+                  size={20}
+                  className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform"
                 />
               </button>
             </motion.div>
@@ -104,21 +101,24 @@ const Intro: React.FC<IntroProps> = ({ onContactClick }) => {
               role="list"
             >
               {content.intro.cards.map((card, index) => {
-                // Safely get the icon from the map, fallback to Zap if name is wrong
                 const IconComponent = iconMap[card.icon] || Zap;
 
                 return (
-                  <article 
-                    key={index} 
-                    className="flex items-start gap-4 sm:gap-6 p-6 bg-white/60 rounded-xl border border-black/5 shadow-sm hover:shadow-md transition-shadow"
+                  <article
+                    key={index}
+                    className="flex items-start gap-4 sm:gap-6 p-6 bg-white/60 dark:bg-white/5 rounded-xl border border-black/5 dark:border-white/10 shadow-sm hover:shadow-md dark:hover:shadow-black/30 transition-all duration-200"
                     role="listitem"
                   >
-                    <IconComponent size={36} className="text-blue-600 mt-1 flex-shrink-0" aria-hidden="true" />
+                    <IconComponent
+                      size={36}
+                      className="text-blue-600 dark:text-blue-400 mt-1 flex-shrink-0 transition-colors duration-300"
+                      aria-hidden="true"
+                    />
                     <div>
-                      <h4 className="text-lg sm:text-xl font-semibold text-[#1d1d1f]">
+                      <h4 className="text-lg sm:text-xl font-semibold text-[#1d1d1f] dark:text-white transition-colors duration-300">
                         {card.title}
                       </h4>
-                      <p className="text-gray-600 mt-1 text-sm sm:text-base font-regular">
+                      <p className="text-gray-600 dark:text-gray-400 mt-1 text-sm sm:text-base transition-colors duration-300">
                         {card.description}
                       </p>
                     </div>
@@ -127,7 +127,7 @@ const Intro: React.FC<IntroProps> = ({ onContactClick }) => {
               })}
             </motion.div>
           </motion.div>
-          
+
         </div>
       </div>
     </section>

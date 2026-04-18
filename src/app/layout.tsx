@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { siteConfig } from "@/data/site.config";
 import "./globals.css";
-
+import { ThemeProvider } from "@/components/providers/ThemeProvider";
 /* ============================================
  * SEO CONFIGURATION
  * ============================================
@@ -59,7 +59,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
         {/* ============================================
          * FONT OPTIMIZATION
@@ -88,7 +88,7 @@ export default function RootLayout({
         <meta httpEquiv="X-XSS-Protection" content="1; mode=block" />
       </head>
 
-      <body className="antialiased">{children}</body>
+      <body className="antialiased"><ThemeProvider>{children}</ThemeProvider></body>
     </html>
   );
 }

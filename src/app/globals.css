@@ -1,34 +1,35 @@
-/* 1. Import Google Sans Flex */
 @import url('https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,wght@6..144,1..1000&display=swap');
-
-/* 2. Import Tailwind */
 @import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
 
 @layer base {
   :root {
-    /* Define Google Sans Flex here */
     --font-sans: 'Google Sans Flex', system-ui, sans-serif;
-    
-    /* Keep mono as is */
     --font-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular, monospace;
-    
-    /* Colors */
     --background: #ffffff;
     --foreground: #171717;
+    --grid-color: rgba(0, 0, 0, 0.1);
+    --dot-color: rgba(0, 0, 0, 0.08);
+  }
+
+  .dark {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+    --grid-color: rgba(255, 255, 255, 0.07);
+    --dot-color: rgba(255, 255, 255, 0.05);
   }
 }
 
-/* 3. Update the Theme variables to use our new font definition */
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  
-  /* IMPORTANT: Point this to the variable defined above, NOT geist-sans */
-  --font-sans: var(--font-sans); 
+  --font-sans: var(--font-sans);
   --font-mono: var(--font-mono);
 }
 
 @layer base {
+  /* Light mode cursors */
   body {
     font-family: var(--font-sans);
     font-variation-settings: 'opsz' 16;
@@ -44,126 +45,144 @@
   .cursor-default {
     cursor: url('/icons/cursor.svg') 0 0, auto !important;
   }
+
+  /* Dark mode cursors — must be AFTER light rules in same layer */
+  html.dark body {
+    cursor: url('/icons/cursor-dark.svg') 0 0, auto;
+  }
+
+  html.dark a,
+  html.dark button,
+  html.dark [role="button"],
+  html.dark input,
+  html.dark select,
+  html.dark textarea,
+  html.dark .cursor-pointer {
+    cursor: url('/icons/cursor-dark.svg') 0 0, pointer !important;
+  }
+
+  html.dark .cursor-default {
+    cursor: url('/icons/cursor-dark.svg') 0 0, auto !important;
+  }
 }
 
-/* 5. Utility: Hide scrollbar */
 html, body {
   scrollbar-width: none;
   -ms-overflow-style: none;
   scroll-behavior: smooth;
 }
+body::-webkit-scrollbar { display: none; }
 
-body::-webkit-scrollbar {
-  display: none;
-}
+/* ============================================
+   ANIMATIONS
+   ============================================ */
 
-/* --- Animations --- */
-
-/* RESTORED: Marquee scrolling text animation */
 .marquee {
-    animation: marquee-scroll 60s linear infinite;
+  animation: marquee-scroll 60s linear infinite;
 }
 @keyframes marquee-scroll {
-    from { transform: translateX(0%); }
-    to { transform: translateX(-50%); }
+  from { transform: translateX(0%); }
+  to   { transform: translateX(-50%); }
 }
 
-/* Pulsing grid animation for Hero section */
 @keyframes custom-pulse {
-  50% {
-    transform: scale(1.05);
-  }
+  50% { transform: scale(1.05); }
 }
 .animate-custom-pulse {
   animation: custom-pulse 4s ease-in-out infinite;
 }
 
-/* Animated gradient text for headings */
+/* Gradient text — single definition with dark override */
 .animate-gradient-text {
-    background: linear-gradient(to right, #2d3748, #a0aec0, #2d3748);
-    background-size: 200% auto;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    animation: gradient-flow 5s linear infinite;
+  background: linear-gradient(to right, #2d3748, #a0aec0, #2d3748);
+  background-size: 200% auto;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gradient-flow 5s linear infinite;
+}
+.dark .animate-gradient-text {
+  background: linear-gradient(to right, #e2e8f0, #94a3b8, #e2e8f0);
+  background-size: 200% auto;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gradient-flow 5s linear infinite;
 }
 @keyframes gradient-flow {
-    to { background-position: 200% center; }
+  to { background-position: 200% center; }
 }
 
-/* Dotted pattern with upward animation */
+/* Dotted pattern */
 .pattern-bg-project {
-    background-color: #f9fafb;
-    background-image: radial-gradient(circle at 1px 1px, rgba(0,0,0,0.08) 1px, transparent 0);
-    background-size: 20px 20px;
-    animation: move-dots 10s linear infinite;
+  background-color: #f9fafb;
+  background-image: radial-gradient(circle at 1px 1px, var(--dot-color) 1px, transparent 0);
+  background-size: 20px 20px;
+  animation: move-dots 10s linear infinite;
 }
+.dark .pattern-bg-project { background-color: #0f0f0f; }
 @keyframes move-dots {
-    from { background-position: 0 0; }
-    to { background-position: 0 -200px; }
+  from { background-position: 0 0; }
+  to   { background-position: 0 -200px; }
 }
 
-/* --- Section Backgrounds & Styles --- */
-
+/* Grid background — auto-switches via CSS var */
 .grid-bg {
-    background-image:
-        linear-gradient(to right, rgba(0,0,0,0.1) 1px, transparent 1px),
-        linear-gradient(to bottom, rgba(0,0,0,0.1) 1px, transparent 1px);
-    background-size: 40px 40px;
+  background-image:
+    linear-gradient(to right, var(--grid-color) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--grid-color) 1px, transparent 1px);
+  background-size: 40px 40px;
 }
 
 .bottom-nav {
-    background-color: rgba(34, 34, 34, 0.8);
-    background-image: radial-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 0);
-    background-size: 6px 6px;
-    backdrop-filter: blur(4px);
+  background-color: rgba(34, 34, 34, 0.8);
+  background-image: radial-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 0);
+  background-size: 6px 6px;
+  backdrop-filter: blur(4px);
 }
 
-/* Styles for the skill card hover effect */
-.project-card-wrapper .card-main {
-    transition: all 0.3s ease-in-out;
-}
-.project-card-wrapper:hover .card-main {
-    transform: translate(-0.5rem, -0.5rem);
-}
+/* Project card hover */
+.project-card-wrapper .card-main { transition: all 0.3s ease-in-out; }
+.project-card-wrapper:hover .card-main { transform: translate(-0.5rem, -0.5rem); }
 .project-card-wrapper:hover .card-shadow-1 {
-    background-color: #6F00FF ; /* Violet */
-    border: 1.5px solid #171717
+  background-color: #6F00FF;
+  border: 1.5px solid #171717;
 }
 .project-card-wrapper:hover .card-shadow-2 {
-    transform: translate(0.5rem, 0.5rem);
-    background-color: #E9B3fb; /* Blue */
-    border: 1.5px solid #171717
+  transform: translate(0.5rem, 0.5rem);
+  background-color: #E9B3fb;
+  border: 1.5px solid #171717;
 }
-/* --- Animations --- */
 
-/* UPDATED: Smoother and slower marquee animations */
+/* Marquee */
 @keyframes marquee-left {
-    from { transform: translateX(-100%); }
-    to { transform: translateX(0%); }
+  from { transform: translateX(-100%); }
+  to   { transform: translateX(0%); }
 }
-.animate-marquee-left {
-    animation: marquee-left 50s linear infinite;
-}
+.animate-marquee-left { animation: marquee-left 50s linear infinite; }
 
 @keyframes marquee-right {
-    from { transform: translateX(0%); }
-    to { transform: translateX(-100%); }
+  from { transform: translateX(0%); }
+  to   { transform: translateX(-100%); }
 }
-.animate-marquee-right {
-    animation: marquee-right 50s linear infinite;
-}
-/* --- NEW: Animated PlayStation Pattern --- */
+.animate-marquee-right { animation: marquee-right 50s linear infinite; }
+
+/* PlayStation X pattern */
 @keyframes move-lines {
-    from { background-position: 0 0; }
-    to { background-position: 56px 56px; }
+  from { background-position: 0 0; }
+  to   { background-position: 56px 56px; }
 }
 @keyframes move-pattern {
-    0% { background-position: 0 0; }
-    100% { background-position: 50px 50px; }
+  0%   { background-position: 0 0; }
+  100% { background-position: 50px 50px; }
 }
 
 .animated-x-pattern {
-    background-color: #f9fafb;
-    background-image: url("data:image/svg+xml,%3Csvg width='50' height='50' viewBox='0 0 50 50' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M10 10 L20 20 M10 20 L20 10' stroke='%23f3f4f6' stroke-width='1.5'/%3E%3Cpath d='M35 35 L45 45 M35 45 L45 35' stroke='%23f3f4f6' stroke-width='1.5'/%3E%3C/svg%3E");
-    animation: move-pattern 7s linear infinite;
+  background-color: #f9fafb;
+  background-image: url("data:image/svg+xml,%3Csvg width='50' height='50' viewBox='0 0 50 50' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M10 10 L20 20 M10 20 L20 10' stroke='%23f3f4f6' stroke-width='1.5'/%3E%3Cpath d='M35 35 L45 45 M35 45 L45 35' stroke='%23f3f4f6' stroke-width='1.5'/%3E%3C/svg%3E");
+  animation: move-pattern 7s linear infinite;
+}
+.dark .animated-x-pattern {
+  background-color: #0f0f0f;
+  background-image: url("data:image/svg+xml,%3Csvg width='50' height='50' viewBox='0 0 50 50' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M10 10 L20 20 M10 20 L20 10' stroke='%231a1a1a' stroke-width='1.5'/%3E%3Cpath d='M35 35 L45 45 M35 45 L45 35' stroke='%231a1a1a' stroke-width='1.5'/%3E%3C/svg%3E");
 }

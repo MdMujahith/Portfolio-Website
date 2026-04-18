@@ -8,12 +8,6 @@ interface BottomNavProps {
   onContactClick: () => void;
 }
 
-/* ============================================
- * NAVIGATION DATA
- * ============================================
- * Centralized array to ensure desktop and mobile menus 
- * always stay perfectly synchronized.
- */
 const NAV_LINKS = [
   { label: "About", href: "#about" },
   { label: "Skills", href: "#skills" },
@@ -25,15 +19,12 @@ const NAV_LINKS = [
 const BottomNav: React.FC<BottomNavProps> = ({ onContactClick }) => {
   const [isOpen, setIsOpen] = useState(false);
 
-  // Lock body scroll when menu is open
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = "hidden";
     } else {
       document.body.style.overflow = "unset";
     }
-    
-    // Cleanup function to ensure scroll is restored if component unmounts
     return () => {
       document.body.style.overflow = "unset";
     };
@@ -41,27 +32,14 @@ const BottomNav: React.FC<BottomNavProps> = ({ onContactClick }) => {
 
   const toggleMenu = () => setIsOpen(!isOpen);
 
-  /* ============================================
-   * ANIMATION VARIANTS
-   * ============================================
-   */
   const sidebarVariants: Variants = {
     open: {
       clipPath: `circle(150% at calc(100% - 40px) calc(100% - 40px))`,
-      transition: {
-        type: "tween",
-        ease: "circOut",
-        duration: 0.4,
-      },
+      transition: { type: "tween", ease: "circOut", duration: 0.4 },
     },
     closed: {
       clipPath: `circle(0px at calc(100% - 40px) calc(100% - 40px))`,
-      transition: {
-        type: "tween",
-        ease: "circIn",
-        duration: 0.3,
-        delay: 0.1,
-      },
+      transition: { type: "tween", ease: "circIn", duration: 0.3, delay: 0.1 },
     },
   };
 
@@ -69,16 +47,12 @@ const BottomNav: React.FC<BottomNavProps> = ({ onContactClick }) => {
     open: {
       y: 0,
       opacity: 1,
-      transition: {
-        y: { stiffness: 1000, velocity: -100 },
-      },
+      transition: { y: { stiffness: 1000, velocity: -100 } },
     },
     closed: {
       y: 20,
       opacity: 0,
-      transition: {
-        y: { stiffness: 1000 },
-      },
+      transition: { y: { stiffness: 1000 } },
     },
   };
 
@@ -96,12 +70,12 @@ const BottomNav: React.FC<BottomNavProps> = ({ onContactClick }) => {
       {/* --- Desktop Navigation --- */}
       <nav
         aria-label="Desktop Primary Navigation"
-        className="hidden md:flex fixed bottom-6 left-1/2 transform -translate-x-1/2 w-auto h-16 rounded-full p-2 justify-between items-center bg-black/80 backdrop-blur-xl border border-white/10 text-base text-white z-50 shadow-2xl bottom-nav"
+        className="hidden md:flex fixed bottom-6 left-1/2 transform -translate-x-1/2 w-auto h-16 rounded-full p-2 justify-between items-center bg-black/80 dark:bg-zinc-900/90 backdrop-blur-xl border border-white/10 dark:border-white/5 text-base text-white z-50 shadow-2xl bottom-nav"
       >
         <a
           href="#home"
           aria-label="Go to Home"
-          className="flex items-center justify-center w-14 h-full rounded-full hover:bg-white/20 transition-colors"
+          className="flex items-center justify-center w-14 h-full rounded-full hover:bg-white/20 dark:hover:bg-white/10 transition-colors"
         >
           <Home size={20} aria-hidden="true" />
         </a>
@@ -111,7 +85,7 @@ const BottomNav: React.FC<BottomNavProps> = ({ onContactClick }) => {
             <a
               key={item.label}
               href={item.href}
-              className="h-full rounded-full px-4 flex items-center hover:bg-white/20 transition-colors"
+              className="h-full rounded-full px-4 flex items-center hover:bg-white/20 dark:hover:bg-white/10 transition-colors"
             >
               {item.label}
             </a>
@@ -120,7 +94,7 @@ const BottomNav: React.FC<BottomNavProps> = ({ onContactClick }) => {
 
         <button
           onClick={onContactClick}
-          className="bg-white text-black h-full rounded-full flex items-center px-6 gap-2 transition hover:scale-105 active:scale-95 font-semibold ml-1 whitespace-nowrap"
+          className="bg-white text-black h-full rounded-full flex items-center px-6 gap-2 transition hover:scale-105 active:scale-95 font-semibold ml-1 whitespace-nowrap hover:bg-zinc-100"
         >
           <span>Let&apos;s talk</span>
           <ArrowRight size={16} aria-hidden="true" className="shrink-0" />
@@ -135,8 +109,7 @@ const BottomNav: React.FC<BottomNavProps> = ({ onContactClick }) => {
           initial="closed"
           animate={isOpen ? "open" : "closed"}
           variants={sidebarVariants}
-          // Hide from screen readers when closed so they can't tab into invisible links
-          aria-hidden={!isOpen} 
+          aria-hidden={!isOpen}
           className="fixed inset-0 bg-[#0a0a0a] z-40 flex flex-col justify-end items-end px-8 pb-32"
         >
           {/* Background Texture */}
@@ -153,7 +126,6 @@ const BottomNav: React.FC<BottomNavProps> = ({ onContactClick }) => {
             variants={listVariants}
             className="flex flex-col gap-6 relative z-10 items-end"
           >
-            {/* Added Home back to mobile explicitly to match your original intent */}
             <motion.li variants={itemVariants}>
               <a
                 href="#home"
@@ -176,7 +148,6 @@ const BottomNav: React.FC<BottomNavProps> = ({ onContactClick }) => {
               </motion.li>
             ))}
 
-            {/* CTA Button */}
             <motion.li variants={itemVariants} className="pt-6">
               <button
                 onClick={() => {
@@ -192,7 +163,7 @@ const BottomNav: React.FC<BottomNavProps> = ({ onContactClick }) => {
           </motion.ul>
         </motion.nav>
 
-        {/* The Toggle Button (Always on Top) */}
+        {/* Toggle Button */}
         <button
           onClick={toggleMenu}
           aria-label={isOpen ? "Close menu" : "Open menu"}
@@ -200,7 +171,7 @@ const BottomNav: React.FC<BottomNavProps> = ({ onContactClick }) => {
           className={`fixed bottom-6 right-6 z-50 w-16 h-16 rounded-full flex items-center justify-center shadow-2xl transition-colors duration-200 ${
             isOpen
               ? "bg-white text-black"
-              : "bg-zinc-900 text-white border border-white/10"
+              : "bg-zinc-900 text-white border border-white/10 dark:bg-zinc-800 dark:border-white/5"
           }`}
         >
           <AnimatePresence mode="wait" initial={false}>
