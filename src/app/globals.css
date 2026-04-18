@@ -28,17 +28,21 @@
   --font-mono: var(--font-mono);
 }
 
-/* 4. Apply to Body */
 @layer base {
   body {
-    /* Use the variable we defined */
     font-family: var(--font-sans);
-    
-    /* Variable font settings */
     font-variation-settings: 'opsz' 16;
-    
     background: var(--background);
     color: var(--foreground);
+    cursor: url('/icons/cursor.svg') 0 0, auto;
+  }
+
+  a, button, [role="button"], input, select, textarea, .cursor-pointer {
+    cursor: url('/icons/cursor.svg') 0 0, pointer !important;
+  }
+
+  .cursor-default {
+    cursor: url('/icons/cursor.svg') 0 0, auto !important;
   }
 }
 
