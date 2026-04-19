@@ -3,38 +3,78 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
+/* ============================================================
+   DESIGN TOKENS
+   ============================================================ */
 @layer base {
   :root {
     --font-sans: 'Google Sans Flex', system-ui, sans-serif;
     --font-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular, monospace;
-    --background: #ffffff;
-    --foreground: #171717;
-    --grid-color: rgba(0, 0, 0, 0.1);
-    --dot-color: rgba(0, 0, 0, 0.08);
+
+    --bg:          #ffffff;
+    --bg-subtle:   #f5f5f7;
+    --bg-elevated: #ffffff;
+
+    --text-primary:   #111111;
+    --text-secondary: #444444;
+    --text-muted:     #6b6b6b;
+    --text-disabled:  #aaaaaa;
+
+    --accent:        #2563eb;
+    --accent-hover:  #1d4ed8;
+    --accent-subtle: #eff6ff;
+    --accent-text:   #2563eb;
+
+    --border:        rgba(0, 0, 0, 0.08);
+    --border-strong: rgba(0, 0, 0, 0.14);
+
+    --success: #16a34a;
+    --warning: #d97706;
+    --error:   #dc2626;
+
+    --grid-color: rgba(0, 0, 0, 0.07);
+    --dot-color:  rgba(0, 0, 0, 0.07);
   }
 
   .dark {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-    --grid-color: rgba(255, 255, 255, 0.07);
-    --dot-color: rgba(255, 255, 255, 0.05);
+    --bg:          #0a0a0a;
+    --bg-subtle:   #111111;
+    --bg-elevated: #1a1a1a;
+
+    --text-primary:   #ededed;
+    --text-secondary: #a0a0a0;
+    --text-muted:     #6b6b6b;
+    --text-disabled:  #3a3a3a;
+
+    --accent:        #3b82f6;
+    --accent-hover:  #2563eb;
+    --accent-subtle: #1e2a45;
+    --accent-text:   #60a5fa;
+
+    --border:        rgba(255, 255, 255, 0.07);
+    --border-strong: rgba(255, 255, 255, 0.12);
+
+    --grid-color: rgba(255, 255, 255, 0.06);
+    --dot-color:  rgba(255, 255, 255, 0.05);
   }
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
+  --color-background: var(--bg);
+  --color-foreground: var(--text-primary);
   --font-sans: var(--font-sans);
   --font-mono: var(--font-mono);
 }
 
+/* ============================================================
+   BASE
+   ============================================================ */
 @layer base {
-  /* Light mode cursors */
   body {
     font-family: var(--font-sans);
     font-variation-settings: 'opsz' 16;
-    background: var(--background);
-    color: var(--foreground);
+    background: var(--bg);
+    color: var(--text-primary);
     cursor: url('/icons/cursor.svg') 0 0, auto;
   }
 
@@ -46,7 +86,6 @@
     cursor: url('/icons/cursor.svg') 0 0, auto !important;
   }
 
-  /* Dark mode cursors — must be AFTER light rules in same layer */
   html.dark body {
     cursor: url('/icons/cursor-dark.svg') 0 0, auto;
   }
@@ -73,88 +112,70 @@ html, body {
 }
 body::-webkit-scrollbar { display: none; }
 
-/* ============================================
+/* ============================================================
+   COMPONENTS  –  shared across modal, form, and any future UI
+   ============================================================ */
+@layer components {
+
+  /* Capsule buttons ---------------------------------------- */
+  .btn-primary,
+  .btn-outline {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 0.75rem 1.5rem;
+    border-radius: 9999px;           /* ← capsule */
+    font-family: var(--font-sans);
+    font-size: 0.875rem;
+    font-weight: 600;
+    transition: opacity 0.2s, background 0.2s, transform 0.15s;
+  }
+  .btn-primary:active,
+  .btn-outline:active  { transform: scale(0.97); }
+  .btn-primary:disabled,
+  .btn-outline:disabled { opacity: 0.45; pointer-events: none; }
+
+  .btn-primary {
+    background: var(--text-primary);
+    color: var(--bg);
+    border: none;
+  }
+  .btn-primary:hover { opacity: 0.85; }
+
+  .btn-outline {
+    background: transparent;
+    color: var(--text-secondary);
+    border: 1px solid var(--border-strong);
+  }
+  .btn-outline:hover { background: var(--bg-subtle); }
+
+  /* Form inputs -------------------------------------------- */
+  .input-field {
+    width: 100%;
+    padding: 0.75rem 1.25rem;
+    border-radius: 9999px;           /* ← capsule for single-line */
+    font-family: var(--font-sans);
+    font-size: 0.875rem;
+    background: var(--bg-subtle);
+    color: var(--text-primary);
+    border: 1px solid var(--border);
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .input-field:focus       { border-color: var(--accent); }
+  .input-field::placeholder { color: var(--text-muted); }
+
+  textarea.input-field {
+    border-radius: 1.25rem;          /* softer rect for multi-line */
+    resize: none;
+  }
+}
+
+/* ============================================================
    ANIMATIONS
-   ============================================ */
+   ============================================================ */
 
-.marquee {
-  animation: marquee-scroll 60s linear infinite;
-}
-@keyframes marquee-scroll {
-  from { transform: translateX(0%); }
-  to   { transform: translateX(-50%); }
-}
-
-@keyframes custom-pulse {
-  50% { transform: scale(1.05); }
-}
-.animate-custom-pulse {
-  animation: custom-pulse 4s ease-in-out infinite;
-}
-
-/* Gradient text — single definition with dark override */
-.animate-gradient-text {
-  background: linear-gradient(to right, #2d3748, #a0aec0, #2d3748);
-  background-size: 200% auto;
-  background-clip: text;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  animation: gradient-flow 5s linear infinite;
-}
-.dark .animate-gradient-text {
-  background: linear-gradient(to right, #e2e8f0, #94a3b8, #e2e8f0);
-  background-size: 200% auto;
-  background-clip: text;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  animation: gradient-flow 5s linear infinite;
-}
-@keyframes gradient-flow {
-  to { background-position: 200% center; }
-}
-
-/* Dotted pattern */
-.pattern-bg-project {
-  background-color: #f9fafb;
-  background-image: radial-gradient(circle at 1px 1px, var(--dot-color) 1px, transparent 0);
-  background-size: 20px 20px;
-  animation: move-dots 10s linear infinite;
-}
-.dark .pattern-bg-project { background-color: #0f0f0f; }
-@keyframes move-dots {
-  from { background-position: 0 0; }
-  to   { background-position: 0 -200px; }
-}
-
-/* Grid background — auto-switches via CSS var */
-.grid-bg {
-  background-image:
-    linear-gradient(to right, var(--grid-color) 1px, transparent 1px),
-    linear-gradient(to bottom, var(--grid-color) 1px, transparent 1px);
-  background-size: 40px 40px;
-}
-
-.bottom-nav {
-  background-color: rgba(34, 34, 34, 0.8);
-  background-image: radial-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 0);
-  background-size: 6px 6px;
-  backdrop-filter: blur(4px);
-}
-
-/* Project card hover */
-.project-card-wrapper .card-main { transition: all 0.3s ease-in-out; }
-.project-card-wrapper:hover .card-main { transform: translate(-0.5rem, -0.5rem); }
-.project-card-wrapper:hover .card-shadow-1 {
-  background-color: #6F00FF;
-  border: 1.5px solid #171717;
-}
-.project-card-wrapper:hover .card-shadow-2 {
-  transform: translate(0.5rem, 0.5rem);
-  background-color: #E9B3fb;
-  border: 1.5px solid #171717;
-}
-
-/* Marquee */
 @keyframes marquee-left {
   from { transform: translateX(-100%); }
   to   { transform: translateX(0%); }
@@ -167,22 +188,66 @@ body::-webkit-scrollbar { display: none; }
 }
 .animate-marquee-right { animation: marquee-right 50s linear infinite; }
 
-/* PlayStation X pattern */
-@keyframes move-lines {
+@keyframes custom-pulse { 50% { transform: scale(1.05); } }
+.animate-custom-pulse { animation: custom-pulse 4s ease-in-out infinite; }
+
+@keyframes gradient-flow { to { background-position: 200% center; } }
+
+.animate-gradient-text {
+  background: linear-gradient(to right, var(--text-secondary), var(--text-muted), var(--text-secondary));
+  background-size: 200% auto;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gradient-flow 5s linear infinite;
+}
+.dark .animate-gradient-text {
+  background: linear-gradient(to right, #d4d4d4, #737373, #d4d4d4);
+  background-size: 200% auto;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gradient-flow 5s linear infinite;
+}
+
+/* ============================================================
+   BACKGROUNDS
+   ============================================================ */
+
+.grid-bg {
+  background-image:
+    linear-gradient(to right, var(--grid-color) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--grid-color) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+.pattern-bg-project {
+  background-color: var(--bg);
+  background-image: radial-gradient(circle at 1px 1px, var(--dot-color) 1px, transparent 0);
+  background-size: 20px 20px;
+  animation: move-dots 10s linear infinite;
+}
+@keyframes move-dots {
   from { background-position: 0 0; }
-  to   { background-position: 56px 56px; }
+  to   { background-position: 0 -200px; }
+}
+
+.animated-x-pattern {
+  background-color: var(--bg);
+  background-image: url("data:image/svg+xml,%3Csvg width='50' height='50' viewBox='0 0 50 50' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M10 10 L20 20 M10 20 L20 10' stroke='%23e5e7eb' stroke-width='1.5'/%3E%3Cpath d='M35 35 L45 45 M35 45 L45 35' stroke='%23e5e7eb' stroke-width='1.5'/%3E%3C/svg%3E");
+  animation: move-pattern 7s linear infinite;
+}
+.dark .animated-x-pattern {
+  background-image: url("data:image/svg+xml,%3Csvg width='50' height='50' viewBox='0 0 50 50' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M10 10 L20 20 M10 20 L20 10' stroke='%231a1a1a' stroke-width='1.5'/%3E%3Cpath d='M35 35 L45 45 M35 45 L45 35' stroke='%231a1a1a' stroke-width='1.5'/%3E%3C/svg%3E");
 }
 @keyframes move-pattern {
   0%   { background-position: 0 0; }
   100% { background-position: 50px 50px; }
 }
 
-.animated-x-pattern {
-  background-color: #f9fafb;
-  background-image: url("data:image/svg+xml,%3Csvg width='50' height='50' viewBox='0 0 50 50' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M10 10 L20 20 M10 20 L20 10' stroke='%23f3f4f6' stroke-width='1.5'/%3E%3Cpath d='M35 35 L45 45 M35 45 L45 35' stroke='%23f3f4f6' stroke-width='1.5'/%3E%3C/svg%3E");
-  animation: move-pattern 7s linear infinite;
-}
-.dark .animated-x-pattern {
-  background-color: #0f0f0f;
-  background-image: url("data:image/svg+xml,%3Csvg width='50' height='50' viewBox='0 0 50 50' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M10 10 L20 20 M10 20 L20 10' stroke='%231a1a1a' stroke-width='1.5'/%3E%3Cpath d='M35 35 L45 45 M35 45 L45 35' stroke='%231a1a1a' stroke-width='1.5'/%3E%3C/svg%3E");
+.bottom-nav {
+  background-color: rgba(17, 17, 17, 0.85);
+  background-image: radial-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 0);
+  background-size: 6px 6px;
+  backdrop-filter: blur(12px);
 }
