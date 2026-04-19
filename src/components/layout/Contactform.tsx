@@ -12,8 +12,8 @@ interface ToastState {
   type: "success" | "error" | "info";
 }
 
-const appleSpring = { type: "spring", damping: 25, stiffness: 200 };
-const fadeSpring = { type: "spring", damping: 30, stiffness: 150 };
+const appleSpring = { type: "spring", damping: 25, stiffness: 200 } as const;
+const fadeSpring = { type: "spring", damping: 30, stiffness: 150 } as const;
 
 const ContactForm: React.FC = () => {
   const [form, setForm] = useState({ name: "", email: "", subject: "", message: "" });

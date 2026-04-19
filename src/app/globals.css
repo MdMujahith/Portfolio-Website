@@ -32,8 +32,9 @@
     --warning: #d97706;
     --error:   #dc2626;
 
-    --grid-color: rgba(0, 0, 0, 0.07);
-    --dot-color:  rgba(0, 0, 0, 0.07);
+    /* Crisp neutral grid for light mode */
+    --grid-color: rgba(0, 0, 0, 0.08); 
+    --dot-color:  rgba(0, 0, 0, 0.08);
   }
 
   .dark {
@@ -54,8 +55,9 @@
     --border:        rgba(255, 255, 255, 0.07);
     --border-strong: rgba(255, 255, 255, 0.12);
 
-    --grid-color: rgba(255, 255, 255, 0.06);
-    --dot-color:  rgba(255, 255, 255, 0.05);
+    /* Pure translucent white for dark mode */
+    --grid-color: rgba(255, 255, 255, 0.08); 
+    --dot-color:  rgba(255, 255, 255, 0.08);
   }
 }
 
@@ -113,7 +115,7 @@ html, body {
 body::-webkit-scrollbar { display: none; }
 
 /* ============================================================
-   COMPONENTS  –  shared across modal, form, and any future UI
+   COMPONENTS
    ============================================================ */
 @layer components {
 
@@ -125,7 +127,7 @@ body::-webkit-scrollbar { display: none; }
     justify-content: center;
     width: 100%;
     padding: 0.75rem 1.5rem;
-    border-radius: 9999px;           /* ← capsule */
+    border-radius: 9999px;
     font-family: var(--font-sans);
     font-size: 0.875rem;
     font-weight: 600;
@@ -154,7 +156,7 @@ body::-webkit-scrollbar { display: none; }
   .input-field {
     width: 100%;
     padding: 0.75rem 1.25rem;
-    border-radius: 9999px;           /* ← capsule for single-line */
+    border-radius: 9999px;
     font-family: var(--font-sans);
     font-size: 0.875rem;
     background: var(--bg-subtle);
@@ -167,13 +169,13 @@ body::-webkit-scrollbar { display: none; }
   .input-field::placeholder { color: var(--text-muted); }
 
   textarea.input-field {
-    border-radius: 1.25rem;          /* softer rect for multi-line */
+    border-radius: 1.25rem;
     resize: none;
   }
 }
 
 /* ============================================================
-   ANIMATIONS
+   PREMIUM ANIMATIONS
    ============================================================ */
 
 @keyframes marquee-left {
@@ -188,8 +190,14 @@ body::-webkit-scrollbar { display: none; }
 }
 .animate-marquee-right { animation: marquee-right 50s linear infinite; }
 
-@keyframes custom-pulse { 50% { transform: scale(1.05); } }
-.animate-custom-pulse { animation: custom-pulse 4s ease-in-out infinite; }
+/* The Ambient Breathe fix: Never fades away completely */
+@keyframes ambient-breathe { 
+  0%, 100% { opacity: 1; } 
+  50% { opacity: 0.65; } 
+}
+.animate-custom-pulse { 
+  animation: ambient-breathe 8s ease-in-out infinite; 
+}
 
 @keyframes gradient-flow { to { background-position: 200% center; } }
 
@@ -211,21 +219,27 @@ body::-webkit-scrollbar { display: none; }
 }
 
 /* ============================================================
-   BACKGROUNDS
+   PREMIUM BACKGROUNDS
    ============================================================ */
 
 .grid-bg {
+  background-size: 40px 40px;
   background-image:
     linear-gradient(to right, var(--grid-color) 1px, transparent 1px),
     linear-gradient(to bottom, var(--grid-color) 1px, transparent 1px);
-  background-size: 40px 40px;
+    
+  /* Solid center 50%, gently fades to invisible at edges */
+  -webkit-mask-image: radial-gradient(ellipse at center, black 50%, transparent 100%);
+  mask-image: radial-gradient(ellipse at center, black 50%, transparent 100%);
 }
 
 .pattern-bg-project {
   background-color: var(--bg);
   background-image: radial-gradient(circle at 1px 1px, var(--dot-color) 1px, transparent 0);
   background-size: 20px 20px;
-  animation: move-dots 10s linear infinite;
+  animation: move-dots 15s linear infinite;
+  -webkit-mask-image: radial-gradient(ellipse at top, black 50%, transparent 100%);
+  mask-image: radial-gradient(ellipse at top, black 50%, transparent 100%);
 }
 @keyframes move-dots {
   from { background-position: 0 0; }
@@ -235,7 +249,7 @@ body::-webkit-scrollbar { display: none; }
 .animated-x-pattern {
   background-color: var(--bg);
   background-image: url("data:image/svg+xml,%3Csvg width='50' height='50' viewBox='0 0 50 50' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M10 10 L20 20 M10 20 L20 10' stroke='%23e5e7eb' stroke-width='1.5'/%3E%3Cpath d='M35 35 L45 45 M35 45 L45 35' stroke='%23e5e7eb' stroke-width='1.5'/%3E%3C/svg%3E");
-  animation: move-pattern 7s linear infinite;
+  animation: move-pattern 12s linear infinite;
 }
 .dark .animated-x-pattern {
   background-image: url("data:image/svg+xml,%3Csvg width='50' height='50' viewBox='0 0 50 50' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M10 10 L20 20 M10 20 L20 10' stroke='%231a1a1a' stroke-width='1.5'/%3E%3Cpath d='M35 35 L45 45 M35 45 L45 35' stroke='%231a1a1a' stroke-width='1.5'/%3E%3C/svg%3E");

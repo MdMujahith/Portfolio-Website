@@ -16,6 +16,9 @@ const NAV_LINKS = [
   { label: "Testimonials", href: "#testimonials" },
 ] as const;
 
+// Fortune 500 easing
+const premiumEase = [0.16, 1, 0.3, 1] as const;
+
 const BottomNav: React.FC<BottomNavProps> = ({ onContactClick }) => {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -32,14 +35,15 @@ const BottomNav: React.FC<BottomNavProps> = ({ onContactClick }) => {
 
   const toggleMenu = () => setIsOpen(!isOpen);
 
+  // Circular reveal for the mobile menu background
   const sidebarVariants: Variants = {
     open: {
       clipPath: `circle(150% at calc(100% - 40px) calc(100% - 40px))`,
-      transition: { type: "tween", ease: "circOut", duration: 0.4 },
+      transition: { type: "tween", ease: "circOut", duration: 0.5 },
     },
     closed: {
       clipPath: `circle(0px at calc(100% - 40px) calc(100% - 40px))`,
-      transition: { type: "tween", ease: "circIn", duration: 0.3, delay: 0.1 },
+      transition: { type: "tween", ease: "circIn", duration: 0.4, delay: 0.1 },
     },
   };
 
@@ -47,62 +51,87 @@ const BottomNav: React.FC<BottomNavProps> = ({ onContactClick }) => {
     open: {
       y: 0,
       opacity: 1,
-      transition: { y: { stiffness: 1000, velocity: -100 } },
+      transition: { duration: 0.6, ease: premiumEase },
     },
     closed: {
       y: 20,
       opacity: 0,
-      transition: { y: { stiffness: 1000 } },
+      transition: { duration: 0.4, ease: premiumEase },
     },
   };
 
   const listVariants: Variants = {
     open: {
-      transition: { staggerChildren: 0.04, delayChildren: 0.1 },
+      transition: { staggerChildren: 0.05, delayChildren: 0.2 },
     },
     closed: {
-      transition: { staggerChildren: 0.02, staggerDirection: -1 },
+      transition: { staggerChildren: 0.03, staggerDirection: -1 },
     },
   };
 
   return (
     <>
-      {/* --- Desktop Navigation --- */}
+      {/* =======================================
+        * DESKTOP NAVIGATION: Universal Dark Glass
+        * ======================================= */}
       <nav
         aria-label="Desktop Primary Navigation"
-        className="hidden md:flex fixed bottom-6 left-1/2 transform -translate-x-1/2 w-auto h-16 rounded-full p-2 justify-between items-center bg-black/80 dark:bg-zinc-900/90 backdrop-blur-xl border border-white/10 dark:border-white/5 text-base text-white z-50 shadow-2xl bottom-nav"
+        className="hidden md:flex fixed bottom-8 left-1/2 transform -translate-x-1/2 w-auto h-[68px] rounded-full p-2 justify-between items-center z-50 overflow-hidden transition-all duration-300
+        /* Universal Dark Transparent Glass */
+        bg-black/70 backdrop-blur-2xl
+        /* Bright specular edge highlight */
+        border border-white/10
+        /* Deep floating shadow */
+        shadow-[0_20px_40px_rgba(0,0,0,0.4)]"
       >
+        {/* TEXTURE: Subtle White Dots (Ghosted opacity) */}
+        <div
+          className="absolute inset-0 pointer-events-none -z-10 opacity-[0.08]"
+          style={{
+            backgroundImage: "radial-gradient(rgba(255,255,255,0.5) 1px, transparent 1px)",
+            backgroundSize: "8px 8px",
+          }}
+        />
+
         <a
           href="#home"
           aria-label="Go to Home"
-          className="flex items-center justify-center w-14 h-full rounded-full hover:bg-white/20 dark:hover:bg-white/10 transition-colors"
+          className="flex items-center justify-center w-[52px] h-full rounded-full transition-all duration-300 
+          text-zinc-400 hover:text-white hover:bg-white/10"
         >
-          <Home size={20} aria-hidden="true" />
+          <Home size={22} aria-hidden="true" strokeWidth={2.5} />
         </a>
 
-        <div className="flex gap-2 h-full font-semibold px-2">
+        {/* Bigger, Bolder Links */}
+        <div className="flex gap-1 h-full font-semibold px-3 text-[16px] tracking-tight">
           {NAV_LINKS.map((item) => (
             <a
               key={item.label}
               href={item.href}
-              className="h-full rounded-full px-4 flex items-center hover:bg-white/20 dark:hover:bg-white/10 transition-colors"
+              className="h-full rounded-full px-5 flex items-center transition-all duration-300
+              text-zinc-400 hover:text-white hover:bg-white/10"
             >
               {item.label}
             </a>
           ))}
         </div>
 
+        {/* CTA Button: Solid white for high contrast, bold text */}
         <button
           onClick={onContactClick}
-          className="bg-white text-black h-full rounded-full flex items-center px-6 gap-2 transition hover:scale-105 active:scale-95 font-semibold ml-1 whitespace-nowrap hover:bg-zinc-100"
+          className="h-full rounded-full flex items-center px-7 gap-2 transition-transform duration-300 hover:scale-[1.02] active:scale-95 font-bold text-[16px] ml-2 whitespace-nowrap shadow-md
+          bg-white text-black"
         >
           <span>Let&apos;s talk</span>
-          <ArrowRight size={16} aria-hidden="true" className="shrink-0" />
+          <ArrowRight size={18} aria-hidden="true" className="shrink-0" strokeWidth={2.5} />
         </button>
       </nav>
 
-      {/* --- Mobile Navigation --- */}
+      {/* =======================================
+        * MOBILE NAVIGATION OVERLAY
+        * ======================================= */}
       <div className="md:hidden">
+        
         {/* The Overlay */}
         <motion.nav
           aria-label="Mobile Primary Navigation"
@@ -110,13 +139,14 @@ const BottomNav: React.FC<BottomNavProps> = ({ onContactClick }) => {
           animate={isOpen ? "open" : "closed"}
           variants={sidebarVariants}
           aria-hidden={!isOpen}
-          className="fixed inset-0 bg-[#0a0a0a] z-40 flex flex-col justify-end items-end px-8 pb-32"
+          /* Universal Dark Transparent Background */
+          className="fixed inset-0 z-40 flex flex-col justify-end items-end px-8 pb-32 transition-colors duration-300 bg-black/80 backdrop-blur-2xl"
         >
-          {/* Background Texture */}
+          {/* TEXTURE: Subtle White Dots for Full Screen */}
           <div
-            className="absolute inset-0 opacity-[0.05]"
+            className="absolute inset-0 pointer-events-none opacity-[0.04]"
             style={{
-              backgroundImage: "radial-gradient(#fff 1px, transparent 1px)",
+              backgroundImage: "radial-gradient(rgba(255,255,255,0.6) 1.5px, transparent 1.5px)",
               backgroundSize: "24px 24px",
             }}
           />
@@ -130,7 +160,9 @@ const BottomNav: React.FC<BottomNavProps> = ({ onContactClick }) => {
               <a
                 href="#home"
                 onClick={toggleMenu}
-                className="text-5xl font-semibold text-white/50 hover:text-white transition-colors tracking-tight text-right block"
+                /* Bigger, Bolder Mobile Links */
+                className="text-6xl sm:text-7xl font-bold tracking-tighter text-right block transition-colors duration-300
+                text-zinc-500 hover:text-white"
               >
                 Home
               </a>
@@ -141,37 +173,45 @@ const BottomNav: React.FC<BottomNavProps> = ({ onContactClick }) => {
                 <a
                   href={item.href}
                   onClick={toggleMenu}
-                  className="text-5xl font-semibold text-white/50 hover:text-white transition-colors tracking-tight text-right block"
+                  /* Bigger, Bolder Mobile Links */
+                  className="text-6xl sm:text-7xl font-bold tracking-tighter text-right block transition-colors duration-300
+                  text-zinc-500 hover:text-white"
                 >
                   {item.label}
                 </a>
               </motion.li>
             ))}
 
-            <motion.li variants={itemVariants} className="pt-6">
+            {/* Mobile Contact Button */}
+            <motion.li variants={itemVariants} className="pt-8">
               <button
                 onClick={() => {
                   toggleMenu();
                   onContactClick();
                 }}
-                className="flex items-center gap-3 text-xl font-semibold text-white hover:text-blue-400 transition-colors whitespace-nowrap"
+                className="group flex items-center gap-3 text-3xl font-bold tracking-tight transition-colors whitespace-nowrap pb-1 border-b-[3px]
+                text-white border-white"
               >
                 <span>Let&apos;s Talk</span>
-                <ArrowRight size={24} aria-hidden="true" className="shrink-0" />
+                <ArrowRight size={28} aria-hidden="true" className="shrink-0 transition-transform group-hover:translate-x-1" strokeWidth={2.5} />
               </button>
             </motion.li>
           </motion.ul>
         </motion.nav>
 
-        {/* Toggle Button */}
+        {/* =======================================
+          * MOBILE TOGGLE BUTTON
+          * ======================================= */}
         <button
           onClick={toggleMenu}
           aria-label={isOpen ? "Close menu" : "Open menu"}
           aria-expanded={isOpen}
-          className={`fixed bottom-6 right-6 z-50 w-16 h-16 rounded-full flex items-center justify-center shadow-2xl transition-colors duration-200 ${
-            isOpen
-              ? "bg-white text-black"
-              : "bg-zinc-900 text-white border border-white/10 dark:bg-zinc-800 dark:border-white/5"
+          className={`fixed bottom-6 right-6 z-50 w-[64px] h-[64px] rounded-full flex items-center justify-center shadow-[0_12px_30px_rgba(0,0,0,0.3)] transition-all duration-300 hover:scale-105 active:scale-95 border ${
+            isOpen 
+              /* Open: High contrast solid white */
+              ? "bg-white text-black border-transparent" 
+              /* Closed: Universal Dark Transparent Glass */
+              : "bg-black/70 backdrop-blur-2xl border-white/15 text-white"
           }`}
         >
           <AnimatePresence mode="wait" initial={false}>
@@ -183,7 +223,7 @@ const BottomNav: React.FC<BottomNavProps> = ({ onContactClick }) => {
                 exit={{ rotate: 90, opacity: 0 }}
                 transition={{ duration: 0.2 }}
               >
-                <X size={28} aria-hidden="true" />
+                <X size={32} aria-hidden="true" strokeWidth={2.5} />
               </motion.div>
             ) : (
               <motion.div
@@ -193,11 +233,12 @@ const BottomNav: React.FC<BottomNavProps> = ({ onContactClick }) => {
                 exit={{ rotate: -90, opacity: 0 }}
                 transition={{ duration: 0.2 }}
               >
-                <Menu size={28} aria-hidden="true" />
+                <Menu size={32} aria-hidden="true" strokeWidth={2.5} />
               </motion.div>
             )}
           </AnimatePresence>
         </button>
+
       </div>
     </>
   );

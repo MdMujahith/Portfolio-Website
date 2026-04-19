@@ -1,252 +1,567 @@
+// components/Projects.tsx
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
-import { ArrowUpRight, X } from "lucide-react";
+import React, { useState, useRef, useEffect } from "react";
+import { ArrowUpRight, ChevronUp, X } from "lucide-react";
 import { SiGithub } from "react-icons/si";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { projects } from "@/data/professional";
 import { content } from "@/data/content";
 
+const spring = [0.16, 1, 0.3, 1] as const;
+
 const Projects: React.FC = () => {
-  const [selectedId, setSelectedId] = useState<number | null>(null);
-  const [isLoaded, setIsLoaded] = useState(false);
-  const modalRef = useRef<HTMLDivElement>(null);
-  const previousFocusRef = useRef<HTMLElement | null>(null);
+  const [expandedId, setExpandedId] = useState<number | null>(null);
+  const [isMobile, setIsMobile] = useState(false);
+  const expandRefs = useRef<Record<number, HTMLDivElement | null>>({});
 
   useEffect(() => {
-    setIsLoaded(true);
+    const check = () => setIsMobile(window.innerWidth < 768);
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
   }, []);
 
+  // Scroll lock for mobile drawer
   useEffect(() => {
-    if (selectedId) {
-      previousFocusRef.current = document.activeElement as HTMLElement;
+    if (isMobile && expandedId !== null) {
       document.body.style.overflow = "hidden";
-      setTimeout(() => modalRef.current?.focus(), 100);
     } else {
       document.body.style.overflow = "unset";
-      previousFocusRef.current?.focus();
     }
-    return () => {
-      document.body.style.overflow = "unset";
-    };
-  }, [selectedId]);
+    return () => { document.body.style.overflow = "unset"; };
+  }, [expandedId, isMobile]);
 
+  // Escape key
   useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape" && selectedId) setSelectedId(null);
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setExpandedId(null);
     };
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [selectedId]);
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, []);
 
-  const selectedProject = projects.find((p) => p.id === selectedId);
+  const toggle = (id: number) => {
+    const next = expandedId === id ? null : id;
+    setExpandedId(next);
+    if (next !== null && !isMobile) {
+      setTimeout(() => {
+        expandRefs.current[next]?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      }, 120);
+    }
+  };
+
+  const selectedProject = projects.find((p) => p.id === expandedId);
 
   return (
     <section
       id="projects"
-      className="w-full animated-x-pattern dark:animated-x-pattern py-12 sm:py-20 transition-colors duration-300"
+      className="w-full pt-16 pb-24 md:pt-24 md:pb-36 relative z-10"
       aria-labelledby="projects-heading"
     >
-      <div className="max-w-7xl mx-auto px-6">
-
-        {/* Section Header */}
+      {/* ── HEADER ──────────────────────────────────── */}
+      <div className="max-w-7xl mx-auto px-6 sm:px-10 md:px-16 lg:px-24">
         <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={isLoaded ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.5, ease: "easeOut" }}
-          className="text-center"
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-80px" }}
+          transition={{ duration: 0.9, ease: spring }}
+          className="mb-20 md:mb-28"
         >
-          <h2
-            id="projects-heading"
-            className="text-4xl sm:text-5xl lg:text-7xl font-semibold text-center animate-gradient-text mb-4 sm:mb-6"
+          <p
+            className="text-[11px] font-semibold uppercase tracking-[0.3em] mb-5"
+            style={{ color: "var(--text-muted)" }}
           >
-            {content.sections.projects.title}
-          </h2>
-          <p className="max-w-2xl mx-auto text-base sm:text-lg text-slate-500 dark:text-zinc-400">
-            {content.sections.projects.description}
+            03 // Selected Works
           </p>
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 md:gap-12">
+            <h2
+              id="projects-heading"
+              className="text-5xl sm:text-6xl md:text-7xl font-semibold tracking-[-0.035em] leading-[0.95]"
+              style={{ color: "var(--text-primary)" }}
+            >
+              {content.sections.projects.title}
+            </h2>
+            <p
+              className="max-w-sm text-[15px] md:text-[16px] leading-relaxed md:pb-2 shrink-0"
+              style={{ color: "var(--text-secondary)" }}
+            >
+              {content.sections.projects.description}
+            </p>
+          </div>
         </motion.div>
+      </div>
 
-        {/* Projects Grid */}
-        <div
-          className="mt-12 sm:mt-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-6"
-          role="list"
-        >
-          {projects.map((project, index) => (
+      {/* ── PROJECT ROWS ────────────────────────────── */}
+      <div>
+        {projects.map((project, index) => {
+          const isEven = index % 2 === 0;
+          const isExpanded = expandedId === project.id;
+
+          return (
             <motion.article
               key={project.id}
-              initial={{ opacity: 0, y: 20 }}
-              animate={isLoaded ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.45, delay: index * 0.08, ease: "easeOut" }}
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true, margin: "-60px" }}
+              transition={{ duration: 0.6, delay: index * 0.05, ease: spring }}
               role="listitem"
-              className="group cursor-pointer h-full"
+              className="relative transition-colors duration-500"
+              style={{
+                borderTop: "1px solid var(--border)",
+                background: isExpanded && !isMobile ? "var(--bg-elevated)" : "transparent",
+              }}
             >
-              <button
-                onClick={() => setSelectedId(project.id)}
-                className="w-full h-full text-left"
-                aria-label={`View details for ${project.title}`}
-              >
-                <div className="bg-white dark:bg-zinc-900 h-full rounded-2xl overflow-hidden border border-slate-200 dark:border-zinc-700/60 shadow-sm dark:shadow-black/30 hover:shadow-lg dark:hover:shadow-black/50 hover:-translate-y-1.5 transition-all duration-300 will-change-transform flex flex-col">
-
-                  {/* Card Image */}
-                  <div className="relative w-full h-40 sm:h-48 overflow-hidden bg-slate-100 dark:bg-zinc-800">
-                    <Image
-                      src={project.imageUrl}
-                      alt={`${project.title} project screenshot`}
-                      fill
-                      className="object-cover group-hover:scale-105 transition-transform duration-500 will-change-transform"
-                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
-                    />
-                    <div className="absolute inset-0 bg-blue-600/0 group-hover:bg-blue-600/10 transition-colors duration-300" />
-                    <div className="absolute top-3 right-3 px-2.5 py-1 bg-white/90 dark:bg-zinc-900/90 rounded-full shadow text-[10px] font-bold text-blue-600 dark:text-blue-400 opacity-0 group-hover:opacity-100 translate-y-1 group-hover:translate-y-0 transition-all duration-300">
-                      View Details
+              {/* ── Main Row ── */}
+              <div className="max-w-7xl mx-auto px-6 sm:px-10 md:px-16 lg:px-24 py-14 md:py-20">
+                <div
+                  className={`grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-16 lg:gap-24 items-center ${
+                    !isEven ? "md:[direction:rtl]" : ""
+                  }`}
+                >
+                  {/* Image */}
+                  <motion.div
+                    className="relative"
+                    style={{ direction: "ltr" }}
+                    whileHover="hovered"
+                  >
+                    <div
+                      className="relative overflow-hidden"
+                      style={{
+                        borderRadius: "1.5rem",
+                        aspectRatio: "4 / 3",
+                        background: "var(--bg-subtle)",
+                      }}
+                    >
+                      <motion.div
+                        className="absolute inset-0"
+                        variants={{ hovered: { scale: 1.04 } }}
+                        transition={{ duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
+                      >
+                        <Image
+                          src={project.imageUrl}
+                          alt={project.title}
+                          fill
+                          className="object-cover"
+                          sizes="(max-width: 768px) 100vw, 50vw"
+                        />
+                      </motion.div>
                     </div>
-                  </div>
 
-                  {/* Card Content */}
-                  <div className="p-4 sm:p-5 flex flex-col flex-grow">
-                    <div className="flex items-start justify-between gap-2">
-                      <h3 className="text-base sm:text-lg font-semibold text-slate-900 dark:text-zinc-100 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-200 leading-snug">
-                        {project.title}
-                      </h3>
-                      <ArrowUpRight className="w-4 h-4 text-slate-300 dark:text-zinc-600 group-hover:text-blue-500 dark:group-hover:text-blue-400 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all duration-200 flex-shrink-0 mt-0.5" />
+                    {/* Index badge */}
+                    <div
+                      className="absolute -bottom-3 -right-3 w-11 h-11 rounded-full flex items-center justify-center text-[10px] font-semibold tabular-nums border"
+                      style={{
+                        background: "var(--bg)",
+                        borderColor: "var(--border)",
+                        color: "var(--text-muted)",
+                      }}
+                    >
+                      {String(index + 1).padStart(2, "0")}
                     </div>
-                    <p className="mt-2 text-slate-500 dark:text-zinc-400 text-xs sm:text-sm line-clamp-2 leading-relaxed">
-                      {project.description}
-                    </p>
-                    <div className="mt-auto pt-4 flex flex-wrap gap-1.5">
+                  </motion.div>
+
+                  {/* Content */}
+                  <div style={{ direction: "ltr" }} className="flex flex-col gap-5">
+                    <div className="flex flex-wrap gap-2">
                       {project.tags.slice(0, 3).map((tag: string) => (
                         <span
                           key={tag}
-                          className="text-[10px] font-semibold px-2 py-1 bg-slate-100 dark:bg-zinc-800 text-slate-500 dark:text-zinc-400 rounded-md uppercase tracking-wide"
+                          className="text-[10px] font-semibold uppercase tracking-widest px-3 py-1.5 rounded-md border"
+                          style={{
+                            background: "var(--bg-subtle)",
+                            color: "var(--text-secondary)",
+                            borderColor: "var(--border)",
+                          }}
                         >
                           {tag}
                         </span>
                       ))}
                     </div>
-                  </div>
 
+                    <h3
+                      className="text-3xl sm:text-4xl lg:text-[2.5rem] font-semibold tracking-[-0.025em] leading-[1.1]"
+                      style={{ color: "var(--text-primary)" }}
+                    >
+                      {project.title}
+                    </h3>
+
+                    <p
+                      className="text-[15px] md:text-[16px] leading-[1.75]"
+                      style={{ color: "var(--text-secondary)" }}
+                    >
+                      {project.description}
+                    </p>
+
+                    <div className="flex flex-wrap items-center gap-3 pt-1">
+                      <button
+                        onClick={() => toggle(project.id)}
+                        className="group/btn inline-flex items-center gap-2 text-[14px] font-semibold px-6 py-3.5 rounded-full transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
+                        style={
+                          isExpanded
+                            ? {
+                                background: "var(--bg-subtle)",
+                                color: "var(--text-primary)",
+                                border: "1px solid var(--border-strong)",
+                              }
+                            : {
+                                background: "var(--text-primary)",
+                                color: "var(--bg)",
+                                border: "1px solid transparent",
+                              }
+                        }
+                      >
+                        {isExpanded && !isMobile ? (
+                          <>Show Less <ChevronUp size={14} /></>
+                        ) : (
+                          <>
+                            Learn More
+                            <ArrowUpRight
+                              size={14}
+                              className="transition-transform duration-200 group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5"
+                            />
+                          </>
+                        )}
+                      </button>
+
+                      <a
+                        href={project.githubUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-2 text-[14px] font-medium px-6 py-3.5 rounded-full transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] border"
+                        style={{
+                          background: "transparent",
+                          color: "var(--text-primary)",
+                          borderColor: "var(--border-strong)",
+                        }}
+                      >
+                        <SiGithub size={14} /> Source
+                      </a>
+                    </div>
+                  </div>
                 </div>
-              </button>
+              </div>
+
+              {/* ── DESKTOP: Inline Expand Panel ── */}
+              {!isMobile && (
+                <AnimatePresence>
+                  {isExpanded && (
+                    <motion.div
+                      ref={(el) => { expandRefs.current[project.id] = el; }}
+                      key="detail"
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: "auto" }}
+                      exit={{ opacity: 0, height: 0 }}
+                      transition={{ duration: 0.45, ease: spring }}
+                      style={{ overflow: "hidden" }}
+                    >
+                      <div
+                        className="max-w-7xl mx-auto px-6 sm:px-10 md:px-16 lg:px-24 pb-16"
+                        style={{ borderTop: "1px solid var(--border)" }}
+                      >
+                        <div className="grid grid-cols-2 gap-16 lg:gap-24 pt-12">
+
+                          {/* Left: About + Stack */}
+                          <div className="flex flex-col gap-10">
+                            <div className="flex flex-col gap-4">
+                              <h4
+                                className="text-[13px] font-semibold uppercase tracking-[0.2em]"
+                                style={{ color: "var(--text-muted)" }}
+                              >
+                                About
+                              </h4>
+                              <p
+                                className="text-[16px] leading-[1.8]"
+                                style={{ color: "var(--text-secondary)" }}
+                              >
+                                {project.longDescription}
+                              </p>
+                            </div>
+
+                            <div className="flex flex-col gap-4">
+                              <h4
+                                className="text-[13px] font-semibold uppercase tracking-[0.2em]"
+                                style={{ color: "var(--text-muted)" }}
+                              >
+                                Stack
+                              </h4>
+                              <div className="flex flex-wrap gap-2">
+                                {project.tags.map((tag: string) => (
+                                  <span
+                                    key={tag}
+                                    className="text-[12px] font-semibold uppercase tracking-wider px-3.5 py-2 rounded-lg border"
+                                    style={{
+                                      background: "var(--bg-subtle)",
+                                      color: "var(--text-secondary)",
+                                      borderColor: "var(--border)",
+                                    }}
+                                  >
+                                    {tag}
+                                  </span>
+                                ))}
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Right: Links */}
+                          <div className="flex flex-col gap-4">
+                            <h4
+                              className="text-[13px] font-semibold uppercase tracking-[0.2em]"
+                              style={{ color: "var(--text-muted)" }}
+                            >
+                              Links
+                            </h4>
+
+                            <a
+                              href={project.projectUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="group/link flex items-center justify-between px-6 py-5 rounded-2xl border transition-all duration-200 hover:-translate-y-0.5"
+                              style={{
+                                background: "var(--bg)",
+                                borderColor: "var(--border)",
+                              }}
+                            >
+                              <div className="flex flex-col gap-1">
+                                <span
+                                  className="text-[16px] font-semibold"
+                                  style={{ color: "var(--text-primary)" }}
+                                >
+                                  Live Project
+                                </span>
+                                <span
+                                  className="text-[13px]"
+                                  style={{ color: "var(--text-muted)" }}
+                                >
+                                  View deployed site
+                                </span>
+                              </div>
+                              <ArrowUpRight
+                                size={20}
+                                className="transition-transform duration-200 group-hover/link:translate-x-0.5 group-hover/link:-translate-y-0.5"
+                                style={{ color: "var(--text-muted)" }}
+                              />
+                            </a>
+
+                            <a
+                              href={project.githubUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="group/link flex items-center justify-between px-6 py-5 rounded-2xl border transition-all duration-200 hover:-translate-y-0.5"
+                              style={{
+                                background: "var(--bg)",
+                                borderColor: "var(--border)",
+                              }}
+                            >
+                              <div className="flex flex-col gap-1">
+                                <span
+                                  className="text-[16px] font-semibold"
+                                  style={{ color: "var(--text-primary)" }}
+                                >
+                                  Source Code
+                                </span>
+                                <span
+                                  className="text-[13px]"
+                                  style={{ color: "var(--text-muted)" }}
+                                >
+                                  GitHub repository
+                                </span>
+                              </div>
+                              <SiGithub size={18} style={{ color: "var(--text-muted)" }} />
+                            </a>
+                          </div>
+
+                        </div>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              )}
             </motion.article>
-          ))}
-        </div>
+          );
+        })}
+
+        <div style={{ borderTop: "1px solid var(--border)" }} />
       </div>
 
-      {/* Modal */}
+      {/* ── MOBILE: Bottom Drawer ─────────────────────── */}
       <AnimatePresence>
-        {selectedId && selectedProject && (
-          <div
-            className="fixed inset-0 z-[999] flex items-center justify-center p-4 sm:p-6"
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="modal-title"
-          >
+        {isMobile && expandedId !== null && selectedProject && (
+          <>
             {/* Backdrop */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              transition={{ duration: 0.25 }}
-              className="absolute inset-0 bg-slate-900/70 dark:bg-black/80 backdrop-blur-sm"
-              onClick={() => setSelectedId(null)}
+              transition={{ duration: 0.3 }}
+              className="fixed inset-0 z-40 backdrop-blur-sm"
+              style={{ background: "rgba(0,0,0,0.5)" }}
+              onClick={() => setExpandedId(null)}
               aria-hidden="true"
             />
 
-            {/* Modal Card */}
+            {/* Drawer */}
             <motion.div
-              ref={modalRef}
-              initial={{ opacity: 0, scale: 0.97, y: 16 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.97, y: 16 }}
-              transition={{ duration: 0.3, ease: "easeOut" }}
-              className="relative w-full max-w-2xl bg-white dark:bg-zinc-900 rounded-3xl overflow-hidden shadow-2xl dark:shadow-black/60 z-10 flex flex-col max-h-[90vh] ring-1 ring-inset ring-white/5 dark:ring-white/10"
-              tabIndex={-1}
+              initial={{ y: "100%" }}
+              animate={{ y: 0 }}
+              exit={{ y: "100%" }}
+              transition={{ duration: 0.4, ease: spring }}
+              className="fixed bottom-0 left-0 right-0 z-50 flex flex-col"
+              style={{
+                background: "var(--bg-elevated)",
+                borderRadius: "2rem 2rem 0 0",
+                border: "1px solid var(--border-strong)",
+                borderBottom: "none",
+                maxHeight: "88dvh",
+              }}
+              role="dialog"
+              aria-modal="true"
+              aria-label={`${selectedProject.title} details`}
             >
-              {/* Close Button */}
-              <button
-                onClick={() => setSelectedId(null)}
-                className="absolute top-4 right-4 z-20 p-2 bg-white/90 dark:bg-zinc-800/90 hover:bg-white dark:hover:bg-zinc-700 text-slate-700 dark:text-zinc-300 hover:text-slate-900 dark:hover:text-zinc-100 rounded-full shadow-md backdrop-blur-md transition-all duration-200 hover:scale-105"
-                aria-label="Close project details"
-              >
-                <X size={18} />
-              </button>
-
-              {/* Modal Image */}
-              <div className="relative w-full h-56 sm:h-72 shrink-0 bg-slate-100 dark:bg-zinc-800">
-                <Image
-                  src={selectedProject.imageUrl}
-                  alt={`${selectedProject.title} detailed view`}
-                  fill
-                  className="object-cover"
-                  priority
-                  sizes="(max-width: 768px) 100vw, 800px"
+              {/* Drag handle */}
+              <div className="flex justify-center pt-4 pb-2 shrink-0">
+                <div
+                  className="w-10 h-1 rounded-full"
+                  style={{ background: "var(--border-strong)" }}
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
+              </div>
 
-                {/* Title overlaid on image */}
-                <div className="absolute bottom-0 left-0 right-0 p-6">
+              {/* Header */}
+              <div
+                className="flex items-center justify-between px-6 pt-2 pb-5 shrink-0"
+                style={{ borderBottom: "1px solid var(--border)" }}
+              >
+                <div className="flex flex-col gap-1">
+                  <p
+                    className="text-[11px] font-semibold uppercase tracking-[0.2em]"
+                    style={{ color: "var(--text-muted)" }}
+                  >
+                    {String(projects.findIndex(p => p.id === expandedId) + 1).padStart(2, "0")} / Project
+                  </p>
                   <h3
-                    id="modal-title"
-                    className="text-2xl sm:text-3xl font-bold text-white drop-shadow-md leading-tight"
+                    className="text-[22px] font-semibold tracking-tight leading-snug"
+                    style={{ color: "var(--text-primary)" }}
                   >
                     {selectedProject.title}
                   </h3>
                 </div>
+                <button
+                  onClick={() => setExpandedId(null)}
+                  className="p-2.5 rounded-full border shrink-0 transition-all hover:scale-105 active:scale-95"
+                  style={{
+                    background: "var(--bg-subtle)",
+                    borderColor: "var(--border-strong)",
+                    color: "var(--text-primary)",
+                  }}
+                  aria-label="Close"
+                >
+                  <X size={16} strokeWidth={2} />
+                </button>
               </div>
 
-              {/* Modal Body */}
+              {/* Scrollable body */}
               <div
-                className="flex flex-col overflow-y-auto"
-                style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+                className="flex-1 overflow-y-auto px-6 py-6 flex flex-col gap-8"
+                style={{ scrollbarWidth: "none" }}
               >
-                {/* Tags Row */}
-                <div className="flex flex-wrap gap-2 px-6 pt-5">
-                  {selectedProject.tags.map((tag: string) => (
-                    <span
-                      key={tag}
-                      className="px-3 py-1 text-xs font-semibold bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 rounded-full border border-indigo-100 dark:border-indigo-800/50"
-                    >
-                      {tag}
-                    </span>
-                  ))}
+                {/* About */}
+                <div className="flex flex-col gap-3">
+                  <h4
+                    className="text-[13px] font-semibold uppercase tracking-[0.2em]"
+                    style={{ color: "var(--text-muted)" }}
+                  >
+                    About
+                  </h4>
+                  <p
+                    className="text-[15px] leading-[1.8]"
+                    style={{ color: "var(--text-secondary)" }}
+                  >
+                    {selectedProject.longDescription}
+                  </p>
                 </div>
 
-                {/* Description */}
-                <p className="mt-4 px-6 text-slate-600 dark:text-zinc-400 text-sm sm:text-base leading-relaxed">
-                  {selectedProject.longDescription}
-                </p>
+                {/* Stack */}
+                <div className="flex flex-col gap-3">
+                  <h4
+                    className="text-[13px] font-semibold uppercase tracking-[0.2em]"
+                    style={{ color: "var(--text-muted)" }}
+                  >
+                    Stack
+                  </h4>
+                  <div className="flex flex-wrap gap-2">
+                    {selectedProject.tags.map((tag: string) => (
+                      <span
+                        key={tag}
+                        className="text-[12px] font-semibold uppercase tracking-wider px-3.5 py-2 rounded-lg border"
+                        style={{
+                          background: "var(--bg-subtle)",
+                          color: "var(--text-secondary)",
+                          borderColor: "var(--border)",
+                        }}
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                </div>
 
-                {/* Action Buttons */}
-                <div className="flex flex-col sm:flex-row gap-3 px-6 py-6 mt-2 border-t border-slate-100 dark:border-zinc-800">
+                {/* Links */}
+                <div className="flex flex-col gap-3">
+                  <h4
+                    className="text-[13px] font-semibold uppercase tracking-[0.2em]"
+                    style={{ color: "var(--text-muted)" }}
+                  >
+                    Links
+                  </h4>
+
                   <a
                     href={selectedProject.projectUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex-1 flex justify-center items-center gap-2 px-5 py-3 bg-blue-600 text-white rounded-xl text-sm font-semibold hover:bg-blue-700 transition-all duration-200 shadow-md shadow-blue-600/20 hover:shadow-blue-600/30 hover:-translate-y-0.5"
-                    aria-label={`View ${selectedProject.title} live project`}
+                    className="flex items-center justify-between px-5 py-4 rounded-2xl border"
+                    style={{
+                      background: "var(--bg)",
+                      borderColor: "var(--border)",
+                    }}
                   >
-                    View Project <ArrowUpRight size={16} />
+                    <div className="flex flex-col gap-0.5">
+                      <span className="text-[15px] font-semibold" style={{ color: "var(--text-primary)" }}>
+                        Live Project
+                      </span>
+                      <span className="text-[12px]" style={{ color: "var(--text-muted)" }}>
+                        View deployed site
+                      </span>
+                    </div>
+                    <ArrowUpRight size={18} style={{ color: "var(--text-muted)" }} />
                   </a>
 
                   <a
                     href={selectedProject.githubUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex-1 flex justify-center items-center gap-2 px-5 py-3 bg-slate-900 dark:bg-zinc-700 text-white rounded-xl text-sm font-semibold hover:bg-slate-800 dark:hover:bg-zinc-600 transition-all duration-200 shadow-md dark:shadow-black/30 hover:shadow-lg hover:-translate-y-0.5"
-                    aria-label={`View ${selectedProject.title} source code on GitHub`}
+                    className="flex items-center justify-between px-5 py-4 rounded-2xl border"
+                    style={{
+                      background: "var(--bg)",
+                      borderColor: "var(--border)",
+                    }}
                   >
-                    <SiGithub size={16} /> Source Code
+                    <div className="flex flex-col gap-0.5">
+                      <span className="text-[15px] font-semibold" style={{ color: "var(--text-primary)" }}>
+                        Source Code
+                      </span>
+                      <span className="text-[12px]" style={{ color: "var(--text-muted)" }}>
+                        GitHub repository
+                      </span>
+                    </div>
+                    <SiGithub size={16} style={{ color: "var(--text-muted)" }} />
                   </a>
                 </div>
-
               </div>
             </motion.div>
-          </div>
+          </>
         )}
       </AnimatePresence>
-
     </section>
   );
 };

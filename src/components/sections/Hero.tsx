@@ -13,80 +13,58 @@ interface HeroProps {
   onContactClick: () => void;
 }
 
-const getStatusColors = (state: string) => {
-  switch (state?.toLowerCase()) {
-    case "available":
-    case "open to work":
-      return { ping: "bg-green-400", dot: "bg-green-500" };
-    case "busy":
-    case "employed":
-      return { ping: "bg-red-400",   dot: "bg-red-500" };
-    case "away":
-    case "learning":
-      return { ping: "bg-yellow-400", dot: "bg-yellow-500" };
-    default:
-      return { ping: "bg-blue-400",  dot: "bg-blue-500" };
-  }
-};
+const premiumEase = [0.16, 1, 0.3, 1] as const;
 
 const SocialLinks = () => (
-  <>
-    <a href={siteConfig.social.twitter} target="_blank" rel="noopener noreferrer" aria-label="Twitter Profile">
-      <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6 stroke-1 transition-all duration-200 hover:stroke-2"
-        style={{ color: "var(--text-muted)" }}
-        onMouseEnter={(e) => (e.currentTarget.style.color = "var(--text-primary)")}
-        onMouseLeave={(e) => (e.currentTarget.style.color = "var(--text-muted)")}
-        viewBox="0 0 24 24" fill="none" stroke="currentColor">
-        <path d="M4 4l11.733 16h4.267l-11.733 -16z" />
-        <path d="M4 20l6.768 -6.768m2.46 -2.46l6.772 -6.772" />
-      </svg>
-    </a>
-    <a href={siteConfig.social.github} target="_blank" rel="noopener noreferrer" aria-label="GitHub Profile">
-      <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6 stroke-1 transition-all duration-200 hover:stroke-2"
-        style={{ color: "var(--text-muted)" }}
-        onMouseEnter={(e) => (e.currentTarget.style.color = "var(--text-primary)")}
-        onMouseLeave={(e) => (e.currentTarget.style.color = "var(--text-muted)")}
-        viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5" />
-      </svg>
-    </a>
-    <a href={siteConfig.social.linkedin} target="_blank" rel="noopener noreferrer" aria-label="LinkedIn Profile">
-      <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6 stroke-1 transition-all duration-200 hover:stroke-2"
-        style={{ color: "var(--text-muted)" }}
-        onMouseEnter={(e) => (e.currentTarget.style.color = "var(--accent)")}
-        onMouseLeave={(e) => (e.currentTarget.style.color = "var(--text-muted)")}
-        viewBox="0 0 24 24" fill="none" stroke="currentColor">
-        <path d="M4 4m0 2a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2z" />
-        <path d="M8 11l0 5" /><path d="M8 8l0 .01" />
-        <path d="M12 16l0 -5" /><path d="M16 16v-3a2 2 0 0 0 -4 0" />
-      </svg>
-    </a>
-  </>
+  <div className="flex items-center gap-3">
+    {[
+      { href: siteConfig.social.twitter, label: "Twitter", path: "M4 4l11.733 16h4.267l-11.733 -16z M4 20l6.768 -6.768m2.46 -2.46l6.772 -6.772" },
+      { href: siteConfig.social.github, label: "GitHub", path: "M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5" },
+      { href: siteConfig.social.linkedin, label: "LinkedIn", path: "M4 4m0 2a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2z M8 11l0 5 M8 8l0 .01 M12 16l0 -5 M16 16v-3a2 2 0 0 0 -4 0" },
+    ].map((social, idx) => (
+      <a
+        key={idx}
+        href={social.href}
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label={social.label}
+        className="text-zinc-500 dark:text-zinc-400 hover:text-black dark:hover:text-white transition-colors duration-300"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" className="w-[24px] h-[24px] stroke-[1.5]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round">
+          <path d={social.path} />
+        </svg>
+      </a>
+    ))}
+  </div>
+);
+
+const Divider = () => (
+  <div className="w-px h-4 bg-[var(--border-strong)]" />
 );
 
 const Hero: React.FC<HeroProps> = ({ onContactClick }) => {
   const [time, setTime] = useState<Date | null>(null);
-  const [currentLanguageIndex, setCurrentLanguageIndex] = useState(0);
   const [titleIndex, setTitleIndex] = useState(0);
 
-  const { firstName } = siteConfig.owner;
-  const { languages, titles, cta, status = { text: "Open to work", state: "available", emoji: "👨‍💻" } } = content.hero as any;
+  const { lastName } = siteConfig.owner;
+  const { titles, cta } = content.hero as any;
+  // Language cycle state
+  const [langIndex, setLangIndex] = useState(0);
+
+  const cycleLanguage = () => {
+    setLangIndex((prev) => (prev + 1) % content.hero.languages.length);
+  };
+
+  useEffect(() => {
+    const id = setInterval(() => setTitleIndex((i) => (i + 1) % titles.length), 3500);
+    return () => clearInterval(id);
+  }, [titles.length]);
 
   useEffect(() => {
     setTime(new Date());
     const id = setInterval(() => setTime(new Date()), 60000);
     return () => clearInterval(id);
   }, []);
-
-  useEffect(() => {
-    const id = setInterval(() => setCurrentLanguageIndex((i) => (i + 1) % languages.length), 4000);
-    return () => clearInterval(id);
-  }, [languages.length]);
-
-  useEffect(() => {
-    const id = setInterval(() => setTitleIndex((i) => (i + 1) % titles.length), 3000);
-    return () => clearInterval(id);
-  }, [titles.length]);
 
   const formattedTime = time ? (() => {
     const timeStr = time.toLocaleTimeString("en-US", {
@@ -101,154 +79,153 @@ const Hero: React.FC<HeroProps> = ({ onContactClick }) => {
     return { timeValue, ampm, dateString };
   })() : null;
 
-  const badgeColors = getStatusColors(status.state);
-
   return (
     <section
       id="home"
-      className="w-full min-h-screen flex flex-col items-center relative isolate overflow-hidden transition-colors duration-300"
+      className="w-full min-h-screen flex flex-col relative isolate transition-colors duration-300 px-4 sm:px-12 md:px-20 lg:px-32 overflow-hidden"
       style={{ background: "var(--bg)" }}
     >
+      {/* Background */}
       <div className="absolute inset-0 -z-10 grid-bg animate-custom-pulse" />
       <div
-        className="absolute inset-0 -z-10"
-        style={{ background: "radial-gradient(ellipse 80% 60% at 50% -10%, rgba(37,99,235,0.07), transparent)" }}
+        className="absolute inset-0 -z-10 opacity-40 dark:opacity-20"
+        style={{ background: "radial-gradient(ellipse 80% 50% at 50% -20%, var(--border-strong), transparent)" }}
       />
 
-      <nav className="flex justify-between p-4 items-center sm:px-16 sm:py-12 w-full">
-        <div className="flex items-center group cursor-default gap-2 relative">
+      {/* ── NAVIGATION ── */}
+      <nav className="flex justify-between items-center py-6 md:py-8 w-full z-10">
+
+        {/* Left: Greeting */}
+        <div className="flex items-center gap-2.5">
           <Image
-            src="/image/Waving_Hand.png" alt="Waving Hand Emoji"
-            width={48} height={48} priority
-            className="w-9 h-9 sm:w-12 sm:h-12 group-hover:scale-90 transition-all ease-in-out duration-300 group-hover:rotate-12"
+            src="/image/Waving_Hand.png"
+            alt="Waving Hand"
+            width={36} height={36} priority
+            className="w-8 h-8 md:w-9 md:h-9 transition-transform duration-300 hover:rotate-12"
           />
-          <div className="text-2xl font-semibold tracking-wider text-[#FBC138] group-hover:tracking-widest transition-all ease-in-out duration-300 flex">
+          <span className="text-xl md:text-2xl font-semibold tracking-wider text-[#FBC138]">
             {content.hero.greeting}
-            <p className="w-0 overflow-hidden group-hover:w-[7.5rem] transition-all ease-in-out duration-300">ooooooo</p>!
-          </div>
+          </span>
         </div>
 
-        <div className="hidden sm:flex items-center gap-8">
-          <div className="flex items-center gap-6">
-            <SocialLinks />
-            <div className="w-px h-5" style={{ background: "var(--border-strong)" }} />
-            <ThemeToggle />
-          </div>
+        {/* Right: Desktop — SocialLinks | ThemeToggle | Clock (rightmost) */}
+        <div className="hidden md:flex items-center gap-4">
+          <SocialLinks />
+          <Divider />
+          <ThemeToggle />
           {formattedTime && (
-            <div className="flex items-center justify-end gap-1.5">
-              <span className="text-3xl font-semibold" style={{ color: "var(--text-primary)" }}>{formattedTime.timeValue}</span>
-              <div className="text-left text-xs font-semibold">
-                <span className="block" style={{ color: "var(--text-secondary)" }}>{formattedTime.ampm.toLowerCase()}</span>
-                <span className="block" style={{ color: "var(--text-muted)" }}>{formattedTime.dateString}</span>
+            <>
+              <Divider />
+              <div className="flex items-center gap-2">
+                <span className="text-3xl font-semibold tabular-nums leading-none text-[var(--text-primary)]">
+                  {formattedTime.timeValue}
+                </span>
+                <div className="flex flex-col leading-tight">
+                  <span className="text-[11px] font-semibold text-[var(--text-secondary)]">{formattedTime.ampm.toLowerCase()}</span>
+                  <span className="text-[11px] font-medium text-[var(--text-muted)]">{formattedTime.dateString}</span>
+                </div>
               </div>
-            </div>
+            </>
           )}
         </div>
 
-        <div className="flex sm:hidden items-center gap-4">
+        {/* Right: Mobile */}
+        <div className="flex md:hidden items-center gap-3">
           <SocialLinks />
-          <div className="w-px h-5" style={{ background: "var(--border-strong)" }} />
+          <Divider />
           <ThemeToggle />
         </div>
       </nav>
 
-      <div className="flex-grow w-full grid grid-cols-1 md:grid-cols-2 items-center px-4 sm:px-16 md:-mt-16">
-        <div className="flex flex-col items-center md:items-start text-center md:text-left">
-          <h1 className="font-semibold tracking-tight uppercase select-none cursor-default">
-            <div
-              className="flex text-6xl sm:text-7xl md:text-8xl lg:text-9xl transition-all duration-300 hover:tracking-widest"
-              style={{ color: "var(--text-primary)" }}
-            >
-              {firstName.split("").map((letter: string, index: number) => (
-                <motion.span key={index} className="inline-block"
-                  whileHover={{ y: -12 }} transition={{ duration: 0.3, ease: "easeOut" }}>
-                  {letter}
-                </motion.span>
-              ))}
-            </div>
+      {/* ── MAIN CONTENT ── */}
+      <div className="flex-grow w-full grid grid-cols-1 lg:grid-cols-12 gap-8 items-center py-12 lg:py-0">
 
-            <div
-              className="flex text-5xl sm:text-6xl md:text-7xl lg:text-8xl h-28 sm:h-32 relative flex justify-center md:justify-start items-center transition-all duration-300 hover:tracking-widest"
-              style={{ color: "var(--text-disabled)" }}
-            >
-              <AnimatePresence mode="wait">
-                <motion.span key={currentLanguageIndex} className="absolute"
-                  initial={{ opacity: 0, filter: "blur(5px)" }}
-                  animate={{ opacity: 1, filter: "blur(0px)" }}
-                  exit={{ opacity: 0, filter: "blur(5px)" }}
-                  transition={{ duration: 0.5 }}>
-                  {languages[currentLanguageIndex].name}
-                </motion.span>
-              </AnimatePresence>
-            </div>
-          </h1>
-
-          <div
-            className="text-xl md:text-2xl leading-8 mt-4 flex flex-col md:flex-row items-center md:items-start gap-1 md:gap-2 overflow-hidden"
-            style={{ color: "var(--text-secondary)" }}
-          >
-            <span className="inline">I am a</span>
-            <div className="relative h-8 w-64 sm:w-72 text-center md:text-left">
-              <AnimatePresence mode="wait">
-                <motion.span key={titleIndex}
-                  initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: -20, opacity: 0 }}
-                  transition={{ duration: 0.5, ease: "easeOut" }}
-                  className="absolute inset-0 flex items-center justify-center md:justify-start font-semibold whitespace-nowrap leading-8"
-                  style={{ color: "var(--accent-text)" }}>
-                  {titles[titleIndex]}
-                </motion.span>
-              </AnimatePresence>
-            </div>
+        {/* LEFT COLUMN */}
+        <motion.div
+          className="lg:col-span-7 flex flex-col items-start text-left z-10"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: premiumEase }}
+        >
+          <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-[5.5rem] font-semibold tracking-tighter leading-[1.05] text-[var(--text-primary)] mb-4 select-none">
+  <span className="whitespace-nowrap">
+    Hi, I&apos;m{" "}
+    <motion.span
+      key={langIndex}
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -10 }}
+      transition={{ duration: 0.3, ease: premiumEase }}
+      onClick={cycleLanguage}
+      /* 👇 FLAT TECH HOVER 👇 */
+      className="cursor-pointer inline-block transition-colors duration-200 
+                 hover:text-cyan-500 dark:hover:text-cyan-400 
+                 active:scale-95"
+      title="Click to change language"
+    >
+      {content.hero.languages[langIndex].name}
+    </motion.span>.
+  </span>
+  <br />
+  <span className="text-[var(--text-muted)]">I am a</span>
+</h1>
+          {/* Carousel */}
+          <div className="h-14 sm:h-16 md:h-20 overflow-hidden relative w-full mb-6">
+            <AnimatePresence mode="popLayout">
+              <motion.span
+                key={titleIndex}
+                initial={{ y: 40, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                exit={{ y: -40, opacity: 0 }}
+                transition={{ duration: 0.5, ease: premiumEase }}
+                className="absolute inset-0 flex items-center text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-semibold tracking-tighter text-[var(--text-primary)]"
+              >
+                {titles[titleIndex]}.
+              </motion.span>
+            </AnimatePresence>
           </div>
 
-          <div className="flex flex-col sm:flex-row items-center gap-4 mt-8 relative">
-            <DynamicResumeButton />
+          <p className="text-base md:text-lg leading-relaxed text-[var(--text-secondary)] max-w-lg mb-2">
+            A software engineer specializing in building exceptional, high-performance digital experiences. Currently focused on mastering modern web architectures.
+          </p>
+
+          {/* CTA Row */}
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full sm:w-auto">
+            {/* Scaled down on desktop only */}
+            <div className="md:scale-[0.82] md:origin-left">
+              <DynamicResumeButton />
+            </div>
             <button
               onClick={onContactClick}
-              className="w-full sm:w-auto flex sm:hidden items-center justify-center gap-2 px-8 py-4 rounded-full font-semibold text-base text-white shadow-lg transition-colors"
-              style={{ background: "var(--accent)" }}
-              onMouseEnter={(e) => (e.currentTarget.style.background = "var(--accent-hover)")}
-              onMouseLeave={(e) => (e.currentTarget.style.background = "var(--accent)")}
+              className="md:hidden group flex items-center justify-center gap-2 px-6 py-3 rounded-full font-medium text-[14px] border border-[var(--border-strong)] bg-[var(--bg-elevated)] text-[var(--text-primary)] hover:border-[var(--text-primary)] transition-all duration-300 whitespace-nowrap"
             >
-              <Mail size={18} />
+              <Mail className="w-4 h-4 transition-transform group-hover:scale-110" />
               {cta.secondary}
             </button>
           </div>
-        </div>
+        </motion.div>
 
-        <div className="hidden md:flex justify-center items-center">
-          <motion.div
-            className="relative p-1.5 bg-[conic-gradient(from_90deg,#4285F4_0_25%,#EA4335_25%_50%,#FBBC05_50%_75%,#34A853_75%_100%)] rounded-full shadow-2xl -translate-y-12 translate-x-6"
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }}
-          >
+        {/* RIGHT COLUMN: Profile */}
+        <motion.div
+          className="hidden md:flex lg:col-span-5 justify-center lg:justify-end translate-x-4 lg:translate-x-8 -translate-y-10 z-10"
+          initial={{ opacity: 0, filter: "blur(10px)", scale: 0.95 }}
+          animate={{ opacity: 1, filter: "blur(0px)", scale: 1 }}
+          transition={{ duration: 1, ease: premiumEase, delay: 0.1 }}
+        >
+          <div className="relative w-[280px] h-[280px] lg:w-[460px] lg:h-[460px]">
+            <div className="absolute inset-0 rounded-full border border-[var(--border-strong)] shadow-[0_8px_30px_rgb(0,0,0,0.08)] scale-105" />
             <Image
               src="/image/ProfilePicture.jpeg"
-              alt={`${firstName} ${siteConfig.owner.lastName} - Profile Picture`}
-              width={500} height={500} priority
-              className="rounded-full object-cover object-[50%_20%] border-4 border-white dark:border-[#0a0a0a] relative z-0"
+              alt={`${lastName} - Profile`}
+              fill
+              priority
+              className="rounded-full object-cover object-[50%_20%] shadow-inner"
+              sizes="(max-width: 1024px) 280px, 460px"
             />
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.8, type: "spring", stiffness: 200 }}
-              className="absolute bottom-2 right-4 px-5 py-3 rounded-full shadow-xl z-10 border"
-              style={{ background: "var(--bg-elevated)", borderColor: "var(--border-strong)" }}
-            >
-              <div className="flex items-center gap-2.5">
-                <span className="relative flex h-3 w-3">
-                  <span className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${badgeColors.ping}`} />
-                  <span className={`relative inline-flex rounded-full h-3 w-3 ${badgeColors.dot}`} />
-                </span>
-                <span className="text-sm font-bold tracking-wide select-none flex items-center gap-1.5" style={{ color: "var(--text-primary)" }}>
-                  {status.emoji && <span className="text-base leading-none">{status.emoji}</span>}
-                  {status.text}
-                </span>
-              </div>
-            </motion.div>
-          </motion.div>
-        </div>
+            <div className="absolute inset-0 rounded-full bg-[var(--text-primary)] opacity-[0.02] blur-xl -z-10" />
+          </div>
+        </motion.div>
+
       </div>
     </section>
   );
