@@ -2,15 +2,23 @@
 
 import React from "react";
 import { motion } from "framer-motion";
-import { SiC, SiCplusplus, SiLinux, SiJavascript, SiHtml5, SiCss3, SiGit, SiPython, SiMysql, SiFigma, SiGoogleappsscript } from "react-icons/si";
-import { FaJava, FaCode } from "react-icons/fa";
-import { IconType } from "react-icons";
 import { skills } from "@/data/professional";
 import { content } from "@/data/content";
 
-const iconRegistry: Record<string, IconType> = {
-  SiPython, SiC, SiCplusplus, SiJavascript, FaJava, SiGoogleappsscript,
-  SiHtml5, SiCss3, SiMysql, SiLinux, SiGit, SiFigma,
+// Map your existing skill.icon strings to the official full-color SVG logos
+const logoRegistry: Record<string, string> = {
+  SiPython: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/python/python-original.svg",
+  SiC: "https://upload.wikimedia.org/wikipedia/commons/1/18/C_Programming_Language.svg",
+  SiCplusplus: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/cplusplus/cplusplus-original.svg",
+  SiJavascript: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/javascript/javascript-original.svg",
+  FaJava: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/java/java-original.svg",
+  SiGoogleappsscript: "https://www.gstatic.com/images/branding/product/2x/apps_script_48dp.png",
+  SiHtml5: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/html5/html5-original.svg",
+  SiCss3: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/css3/css3-original.svg",
+  SiMysql: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/mysql/mysql-original.svg",
+  SiLinux: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/linux/linux-original.svg",
+  SiGit: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/git/git-original.svg",
+  SiFigma: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/figma/figma-original.svg",
 };
 
 // Fortune 500 easing: deliberate, smooth, no bounce.
@@ -26,14 +34,10 @@ const Skills: React.FC = () => {
     >
       {/* * =======================================
         * The "Liquid Glass" Sheet: SHIFTED DOWN
-        * =======================================
-        * We created a dedicated element and forced the radial glow to the bottom.
-        * This creates the premium "Apple" depth effect without overlapping content.
-        */}
+        * ======================================= */}
       <div
         className="absolute inset-0 -z-10 opacity-30 dark:opacity-15 backdrop-blur-xl pointer-events-none"
         style={{
-          /* 👇 Gradient shifted drastically to the bottom (85%) 👇 */
           background: "radial-gradient(ellipse 70% 30% at 50% 85%, var(--border-strong), transparent)",
         }}
       />
@@ -80,7 +84,8 @@ const Skills: React.FC = () => {
           role="list"
         >
           {skills.map((skill) => {
-            const IconComponent = iconRegistry[skill.icon] || FaCode;
+            // Grab the actual logo URL based on the old icon string
+            const logoUrl = logoRegistry[skill.icon];
             
             return (
               <motion.li 
@@ -103,7 +108,18 @@ const Skills: React.FC = () => {
                     style={{ background: "var(--bg-subtle)", borderColor: "var(--border-strong)" }}
                     aria-hidden="true"
                   >
-                    <IconComponent size={20} style={{ color: skill.color }} className="md:w-6 md:h-6" />
+                    {/* Render actual full-color SVG logo */}
+                    {logoUrl ? (
+                      <img 
+                        src={logoUrl} 
+                        alt={`${skill.name} logo`} 
+                        className="w-6 h-6 md:w-8 md:h-8 object-contain"
+                        loading="lazy"
+                      />
+                    ) : (
+                      // Fallback just in case a new skill is added without a mapped URL
+                      <div className="w-5 h-5 md:w-6 md:h-6 bg-[var(--border-strong)] rounded-full" />
+                    )}
                   </div>
                   
                   {/* Skill Text */}
