@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
+import { Mail, Copy, ArrowRight, X, Check } from "lucide-react";
 import { siteConfig } from "@/data/site.config";
 
 interface ContactModalProps {
@@ -13,6 +14,8 @@ interface ContactModalProps {
   formHref?: string;
 }
 
+const premiumEase = [0.16, 1, 0.3, 1] as const;
+
 /* ============================================
  * SECURITY: Email Obfuscation
  * ============================================ */
@@ -20,9 +23,7 @@ const obfuscateEmail = (email: string): string =>
   email.replace("@", "[at]").replace(".", "[dot]");
 
 /* ============================================
- * SURVIVAL TOAST: Injected into the DOM so it 
- * doesn't get destroyed when the modal unmounts,
- * but styled to perfectly match your Toast.tsx!
+ * SURVIVAL TOAST: Restored to original top/green style
  * ============================================ */
 const fireToast = (message: string) => {
   // Remove existing toast to avoid stacking
@@ -90,6 +91,7 @@ const ContactModal: React.FC<ContactModalProps> = ({
   formHref = "/contact",
 }) => {
   const [isProcessing, setIsProcessing] = useState(false);
+  const [copied, setCopied] = useState(false);
   const email = siteConfig.owner.email;
 
   const handleCopyEmail = async () => {
@@ -98,12 +100,10 @@ const ContactModal: React.FC<ContactModalProps> = ({
 
     try {
       await navigator.clipboard.writeText(email);
-      onEmailCopied?.();
-      onClose(); 
-      fireToast("Email copied to clipboard"); 
+      handleSuccess();
     } catch (err) {
       console.error("Clipboard write failed:", err);
-      // Fallback copy logic
+      // Fallback
       const textArea = document.createElement("textarea");
       textArea.value = email;
       textArea.style.position = "fixed";
@@ -112,9 +112,7 @@ const ContactModal: React.FC<ContactModalProps> = ({
       textArea.select();
       try {
         document.execCommand("copy");
-        onEmailCopied?.();
-        onClose();
-        fireToast("Email copied to clipboard");
+        handleSuccess();
       } catch (copyErr) {
         console.error("Fallback copy failed:", copyErr);
       } finally {
@@ -125,62 +123,98 @@ const ContactModal: React.FC<ContactModalProps> = ({
     }
   };
 
+  const handleSuccess = () => {
+    setCopied(true);
+    fireToast("Email copied to clipboard");
+    onEmailCopied?.();
+    // Slight delay before closing so user sees the checkmark
+    setTimeout(() => {
+      onClose();
+      setCopied(false);
+    }, 600); 
+  };
+
   return (
     <AnimatePresence>
       {isOpen && (
         <motion.div
-          className="fixed inset-0 backdrop-blur-sm flex items-center justify-center z-50 p-4"
-          style={{ background: "rgba(0,0,0,0.6)" }}
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 backdrop-blur-md"
+          style={{ background: "rgba(0,0,0,0.4)" }}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
+          transition={{ duration: 0.3 }}
           onClick={onClose}
           role="dialog"
           aria-modal="true"
         >
           <motion.div
-            className="rounded-2xl shadow-2xl max-w-sm w-full p-6 border"
+            className="relative w-full max-w-[400px] p-8 rounded-[2rem] shadow-[0_20px_60px_-15px_rgba(0,0,0,0.2)] border flex flex-col items-center text-center overflow-hidden"
             style={{ background: "var(--bg-elevated)", borderColor: "var(--border-strong)" }}
-            initial={{ scale: 0.95, opacity: 0, y: 20 }}
+            /* High-end spring physics for the modal entrance */
+            initial={{ scale: 0.9, opacity: 0, y: 20 }}
             animate={{ scale: 1, opacity: 1, y: 0 }}
-            exit={{ scale: 0.95, opacity: 0, y: 20 }}
-            transition={{ duration: 0.3, ease: "easeOut" }}
+            exit={{ scale: 0.9, opacity: 0, y: 20 }}
+            transition={{ type: "spring", damping: 25, stiffness: 300 }}
             onClick={(e) => e.stopPropagation()}
           >
-            <h2 className="text-xl font-semibold mb-3" style={{ color: "var(--text-primary)" }}>
+            {/* Close Button (X) */}
+            <button
+              onClick={onClose}
+              className="absolute top-5 right-5 p-2 rounded-full transition-colors hover:bg-[var(--bg-subtle)] group"
+              aria-label="Close modal"
+            >
+              <X size={20} className="text-[var(--text-muted)] group-hover:text-[var(--text-primary)] transition-colors" />
+            </button>
+
+            {/* Icon Badge */}
+            <div 
+              className="w-14 h-14 mb-6 rounded-full flex items-center justify-center border"
+              style={{ background: "var(--bg-subtle)", borderColor: "var(--border)" }}
+            >
+              <Mail size={24} style={{ color: "var(--text-primary)" }} />
+            </div>
+
+            <h2 className="text-2xl font-semibold mb-3 tracking-tight" style={{ color: "var(--text-primary)" }}>
               Let&apos;s Talk
             </h2>
-            <p className="text-sm leading-relaxed mb-6" style={{ color: "var(--text-secondary)" }}>
-              Please use email for professional inquiries or potential offers.
-              For other queries, feel free to use my social media handles. Thanks!
+            
+            <p className="text-[15px] leading-relaxed mb-8 max-w-[280px]" style={{ color: "var(--text-secondary)" }}>
+              Please use email for professional inquiries. For quick chats, hit me up on social media!
             </p>
 
             <p className="sr-only">
               Email: {obfuscateEmail(email)}
             </p>
 
-            <div className="space-y-3 flex flex-col">
+            {/* Actions Container */}
+            <div className="flex flex-col gap-3 w-full">
+              {/* Solid Primary Button */}
               <button
                 type="button"
                 onClick={handleCopyEmail}
                 disabled={isProcessing}
-                className="btn-primary w-full"
+                className="group flex items-center justify-center gap-2.5 w-full py-3.5 rounded-full font-medium text-[15px] transition-all duration-300 hover:scale-[1.02] active:scale-95 border border-transparent disabled:opacity-70 disabled:hover:scale-100"
+                style={{ background: "var(--text-primary)", color: "var(--bg)" }}
               >
-                {isProcessing ? "Copying…" : "Copy Email Address"}
+                {copied ? <Check size={18} /> : <Copy size={18} className="transition-transform group-hover:scale-110" />}
+                {copied ? "Copied!" : "Copy Email Address"}
               </button>
               
-              {/* Changed from a <button> to a Next.js <Link> */}
+              {/* Ghost Outline Button */}
               <Link
                 href={formHref}
                 onClick={onClose}
-                className="btn-outline w-full flex items-center justify-center"
+                className="group flex items-center justify-center gap-2 w-full py-3.5 rounded-full font-medium text-[15px] transition-all duration-300 border hover:bg-[var(--bg-subtle)] active:scale-95"
+                style={{ borderColor: "var(--border-strong)", color: "var(--text-primary)" }}
               >
                 Go to Contact Form
+                <ArrowRight size={16} className="transition-transform group-hover:translate-x-1" />
               </Link>
             </div>
 
-            <p className="text-xs mt-4 leading-relaxed" style={{ color: "var(--text-muted)" }}>
-              I had to use this pop-up to avoid spam bots. Sorry for the extra step!
+            <p className="text-[12px] mt-6 leading-relaxed" style={{ color: "var(--text-muted)" }}>
+              Protected by this pop-up to avoid spam bots.
             </p>
           </motion.div>
         </motion.div>

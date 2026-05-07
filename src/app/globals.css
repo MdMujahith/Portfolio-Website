@@ -11,30 +11,36 @@
     --font-sans: 'Google Sans Flex', system-ui, sans-serif;
     --font-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular, monospace;
 
-    --bg:          #ffffff;
-    --bg-subtle:   #f5f5f7;
-    --bg-elevated: #ffffff;
+    /* 
+     * THE "STUDIO MATTE" LIGHT MODE 
+     * Kills 100% of screen glare by using a cool, engineered silver-gray.
+     */
+    --bg:          #f2f2f7; /* Apple's native system background. Zero glare. */
+    --bg-subtle:   #e5e5ea; /* Slightly deeper for input fields and hover states */
+    --bg-elevated: #ffffff; /* Pure white reserved ONLY for floating cards and navs */
 
-    --text-primary:   #111111;
-    --text-secondary: #444444;
-    --text-muted:     #6b6b6b;
-    --text-disabled:  #aaaaaa;
+    /* Text tuned to perfectly match the silver background */
+    --text-primary:   #1c1c1e; /* Deep charcoal, avoids the vibrating effect of pure black */
+    --text-secondary: #3c3c43; /* Smooth reading gray */
+    --text-muted:     #8e8e93; 
+    --text-disabled:  #c7c7cc; 
 
-    --accent:        #2563eb;
-    --accent-hover:  #1d4ed8;
-    --accent-subtle: #eff6ff;
-    --accent-text:   #2563eb;
+    --accent:        #0066cc; /* Adjusted to a deeper Apple-style blue to contrast the gray */
+    --accent-hover:  #004c99;
+    --accent-subtle: #e0f0ff;
+    --accent-text:   #0066cc;
 
-    --border:        rgba(0, 0, 0, 0.08);
-    --border-strong: rgba(0, 0, 0, 0.14);
+    /* Borders made incredibly subtle so they don't look muddy against the gray */
+    --border:        rgba(0, 0, 0, 0.04);
+    --border-strong: rgba(0, 0, 0, 0.08);
 
-    --success: #16a34a;
-    --warning: #d97706;
-    --error:   #dc2626;
+    --success: #34c759;
+    --warning: #ff9500;
+    --error:   #ff3b30;
 
-    /* Crisp neutral grid for light mode */
-    --grid-color: rgba(0, 0, 0, 0.08); 
-    --dot-color:  rgba(0, 0, 0, 0.08);
+    /* Grid and dots lowered to barely-there opacities */
+    --grid-color: rgba(0, 0, 0, 0.03); 
+    --dot-color:  rgba(0, 0, 0, 0.04);
   }
 
   .dark {

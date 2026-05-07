@@ -15,28 +15,89 @@ interface HeroProps {
 
 const premiumEase = [0.16, 1, 0.3, 1] as const;
 
-const SocialLinks = () => (
-  <div className="flex items-center gap-3">
-    {[
-      { href: siteConfig.social.twitter, label: "Twitter", path: "M4 4l11.733 16h4.267l-11.733 -16z M4 20l6.768 -6.768m2.46 -2.46l6.772 -6.772" },
-      { href: siteConfig.social.github, label: "GitHub", path: "M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5" },
-      { href: siteConfig.social.linkedin, label: "LinkedIn", path: "M4 4m0 2a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2z M8 11l0 5 M8 8l0 .01 M12 16l0 -5 M16 16v-3a2 2 0 0 0 -4 0" },
-    ].map((social, idx) => (
-      <a
-        key={idx}
-        href={social.href}
-        target="_blank"
-        rel="noopener noreferrer"
-        aria-label={social.label}
-        className="text-zinc-500 dark:text-zinc-400 hover:text-black dark:hover:text-white transition-colors duration-300"
-      >
-        <svg xmlns="http://www.w3.org/2000/svg" className="w-[24px] h-[24px] stroke-[1.5]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round">
-          <path d={social.path} />
-        </svg>
-      </a>
-    ))}
-  </div>
-);
+const SocialLinks = () => {
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+
+  const links = [
+    { href: siteConfig.social.twitter, label: "Twitter", path: "M4 4l11.733 16h4.267l-11.733 -16z M4 20l6.768 -6.768m2.46 -2.46l6.772 -6.772" },
+    { href: siteConfig.social.github, label: "GitHub", path: "M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5" },
+    { href: siteConfig.social.linkedin, label: "LinkedIn", path: "M4 4m0 2a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2z M8 11l0 5 M8 8l0 .01 M12 16l0 -5 M16 16v-3a2 2 0 0 0 -4 0" },
+  ];
+
+  return (
+    <div className="flex items-center gap-3">
+      {links.map((social, idx) => (
+        <div 
+          key={idx} 
+          className="relative flex items-center justify-center"
+          onMouseEnter={() => setHoveredIndex(idx)}
+          onMouseLeave={() => setHoveredIndex(null)}
+        >
+          <motion.a
+            href={social.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={social.label}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            className="group flex items-center justify-center w-10 h-10 rounded-full border transition-colors duration-300"
+            style={{ 
+              background: "var(--bg-subtle)", 
+              borderColor: "var(--border)",
+            }}
+            /* Pure CSS hover color inversion for maximum performance */
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = "var(--text-primary)";
+              e.currentTarget.style.borderColor = "var(--text-primary)";
+              const svg = e.currentTarget.querySelector('svg');
+              if (svg) svg.style.color = "var(--bg)";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = "var(--bg-subtle)";
+              e.currentTarget.style.borderColor = "var(--border)";
+              const svg = e.currentTarget.querySelector('svg');
+              if (svg) svg.style.color = "var(--text-secondary)";
+            }}
+          >
+            <svg 
+              xmlns="http://www.w3.org/2000/svg" 
+              className="w-[22px] h-[22px] transition-colors duration-300" 
+              style={{ color: "var(--text-secondary)" }}
+              viewBox="0 0 24 24" 
+              fill="none" 
+              stroke="currentColor" 
+              strokeLinecap="round" 
+              strokeLinejoin="round"
+              strokeWidth="2"
+            >
+              <path d={social.path} />
+            </svg>
+          </motion.a>
+
+          {/* Tooltip */}
+          <AnimatePresence>
+            {hoveredIndex === idx && (
+              <motion.div
+                initial={{ opacity: 0, y: 5, scale: 0.95 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: 2, scale: 0.95 }}
+                transition={{ duration: 0.15, ease: "easeOut" }}
+                className="absolute top-full mt-2 px-2.5 py-1 rounded-md text-[11px] font-medium tracking-wide whitespace-nowrap pointer-events-none shadow-lg border"
+                style={{
+                  background: "var(--bg-elevated)",
+                  borderColor: "var(--border-strong)",
+                  color: "var(--text-primary)"
+                }}
+              >
+                {social.label}
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+      ))}
+    </div>
+  );
+};
 
 const Divider = () => (
   <div className="w-px h-4 bg-[var(--border-strong)]" />
@@ -186,8 +247,8 @@ const Hero: React.FC<HeroProps> = ({ onContactClick }) => {
           </div>
 
           <p className="text-base md:text-lg leading-relaxed text-[var(--text-secondary)] max-w-lg mb-2">
-            A software engineer specializing in building exceptional, high-performance digital experiences. Currently focused on mastering modern web architectures.
-          </p>
+    {content.hero.description}
+  </p>
 
           {/* CTA Row */}
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full sm:w-auto">

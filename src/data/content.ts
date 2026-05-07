@@ -11,6 +11,7 @@ export interface ContentConfig {
   hero: {
     greeting: string;
     languages: { name: string; lang: string }[];
+    description: string;
     titles: string[];
     cta: {
       primary: string;
@@ -85,9 +86,10 @@ export const content: ContentConfig = {
     ],
     titles: [
       "Python Developer",
-      "Open Source Enthusiast",
+      "AI Enthusiast",
       "Full Stack Engineer",
     ],
+    description: "A software engineer specializing in building exceptional, high-performance digital experiences. Currently focused on mastering modern Software Architectures.",
     cta: {
       primary: "Download CV",
       secondary: "Contact Me",

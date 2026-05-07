@@ -3,7 +3,6 @@
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 import { Moon, Sun } from "lucide-react";
-import { motion } from "framer-motion";
 
 export default function ThemeToggle() {
   const { resolvedTheme, setTheme } = useTheme();
@@ -11,7 +10,6 @@ export default function ThemeToggle() {
 
   useEffect(() => setMounted(true), []);
   
-  // Maintain the exact dimensions of the toggle to prevent layout shift during load
   if (!mounted) return <div className="w-14 h-8" aria-hidden="true" />;
 
   const isDark = resolvedTheme === "dark";
@@ -20,42 +18,57 @@ export default function ThemeToggle() {
     <button
       onClick={() => setTheme(isDark ? "light" : "dark")}
       aria-label={`Switch to ${isDark ? "light" : "dark"} theme`}
-      className="relative flex items-center w-14 h-8 rounded-full p-1 transition-all duration-300 border shadow-inner active:scale-95"
+      className="relative flex items-center w-14 h-8 rounded-full p-1 transition-colors duration-500 focus:outline-none"
       style={{ 
-        background: "var(--bg-elevated)", 
-        borderColor: "var(--border-strong)" 
+        // The Track: Keeps the stealthy look to let the thumb pop
+        background: isDark ? "#111111" : "#e5e5e5", 
+        border: isDark ? "1px solid #2a2a2a" : "1px solid #d4d4d4",
+        boxShadow: "inset 0 2px 4px rgba(0,0,0,0.05)"
       }}
     >
-      {/* Background Track Icons (Subtle) */}
-      <div className="absolute inset-0 w-full flex items-center justify-between px-2 pointer-events-none">
-        <Sun size={12} className="opacity-40" style={{ color: "var(--text-primary)" }} />
-        <Moon size={12} className="opacity-40" style={{ color: "var(--text-primary)" }} />
+      {/* =======================================
+        * THE TRACK ICONS 
+        * ======================================= */}
+      <div className="absolute inset-0 w-full flex items-center justify-between px-2.5 pointer-events-none">
+        <Sun 
+          size={12} 
+          strokeWidth={2.5}
+          className="transition-opacity duration-300" 
+          style={{ color: "#888", opacity: isDark ? 0.5 : 0 }} 
+        />
+        <Moon 
+          size={12} 
+          strokeWidth={2.5}
+          className="transition-opacity duration-300" 
+          style={{ color: "#888", opacity: isDark ? 0 : 0.5 }} 
+        />
       </div>
 
-      {/* The Sliding Thumb */}
-      <motion.div
-        layout
-        // High-end spring physics: fast but heavily damped so it doesn't bounce wildly
-        transition={{ type: "spring", stiffness: 500, damping: 30 }}
-        className="z-10 flex items-center justify-center w-6 h-6 rounded-full shadow-[0_2px_8px_rgba(0,0,0,0.15)]"
-        style={{ background: "var(--text-primary)" }}
-        // Moves exactly 24px to the right when dark mode is active
-        animate={{ x: isDark ? 24 : 0 }}
+      {/* =======================================
+        * THE HIGH-CONTRAST THUMB
+        * ======================================= */}
+      <div
+        className="z-10 flex items-center justify-center w-6 h-6 rounded-full transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]"
+        style={{ 
+          // 👇 THE FLIP: Pure white in Dark Mode, Carbon Black in Light Mode
+          background: isDark ? "#ffffff" : "#18181b",
+          
+          // Shadows dynamically flip so the black thumb has an inner Apple-glow, and white thumb drops a shadow
+          boxShadow: isDark 
+            ? "0 2px 6px rgba(0,0,0,0.15), 0 1px 2px rgba(0,0,0,0.05)" 
+            : "inset 0 1px 1px rgba(255,255,255,0.15), 0 2px 4px rgba(0,0,0,0.3)",
+            
+          border: isDark ? "1px solid #e5e5e5" : "1px solid #27272a",
+          transform: `translateX(${isDark ? '24px' : '0px'})`
+        }}
       >
-        {/* Active Icon inside the thumb */}
-        <motion.div
-          initial={{ opacity: 0, rotate: -45 }}
-          animate={{ opacity: 1, rotate: 0 }}
-          exit={{ opacity: 0, rotate: 45 }}
-          transition={{ duration: 0.2 }}
-        >
-          {isDark ? (
-            <Moon size={12} style={{ color: "var(--bg)", fill: "var(--bg)" }} />
-          ) : (
-            <Sun size={12} style={{ color: "var(--bg)", fill: "var(--bg)" }} />
-          )}
-        </motion.div>
-      </motion.div>
+        {/* 👇 THE ICONS FLIP TOO: Dark icon on White thumb, White icon on Dark thumb */}
+        {isDark ? (
+          <Moon size={12} strokeWidth={2.5} style={{ color: "#18181b", fill: "#18181b" }} />
+        ) : (
+          <Sun size={12} strokeWidth={2.5} style={{ color: "#ffffff", fill: "#ffffff" }} />
+        )}
+      </div>
     </button>
   );
 }
