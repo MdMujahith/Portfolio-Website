@@ -4,6 +4,7 @@ import React from "react";
 import { motion } from "framer-motion";
 import { skills } from "@/data/professional";
 import { content } from "@/data/content";
+import BackgroundFX from "@/components/ui/BackgroundFX"; // <-- Import the new component
 
 // Map your existing skill.icon strings to the official full-color SVG logos
 const logoRegistry: Record<string, string> = {
@@ -29,24 +30,20 @@ const Skills: React.FC = () => {
     <section
       id="skills"
       /* Perfectly matched responsive spacing */
-      className="w-full pt-12 pb-20 md:pt-20 md:pb-32 lg:pt-24 lg:pb-40 relative z-10 transition-colors duration-300"
+      className="w-full py-20 md:py-28 relative z-10 transition-colors duration-300 overflow-hidden"
       aria-labelledby="skills-heading"
     >
-      {/* * =======================================
-        * The "Liquid Glass" Sheet: SHIFTED DOWN
-        * ======================================= */}
-      <div
-        className="absolute inset-0 -z-10 opacity-30 dark:opacity-15 backdrop-blur-xl pointer-events-none"
-        style={{
-          background: "radial-gradient(ellipse 70% 30% at 50% 85%, var(--border-strong), transparent)",
-        }}
+      {/* ── AMBIENT LIGHTING & TEXTURE (The Proper Way) ── */}
+      <BackgroundFX 
+        bloomColor="accent" 
+        bloomPosition="top-[20%] right-[-10%] w-[60%] h-[60%]"
+        pattern="grid"
+        textureOpacity="light"
       />
 
       <div className="max-w-7xl mx-auto px-6 sm:px-12 md:px-20 lg:px-32 relative z-20">
         
-        {/* =======================================
-          * HEADER: Editorial Style
-          * ======================================= */}
+        {/* ── HEADER: Editorial Style ── */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -66,9 +63,7 @@ const Skills: React.FC = () => {
           </h2>
         </motion.div>
 
-        {/* =======================================
-          * GRID: Apple-Style Soft Cards
-          * ======================================= */}
+        {/* ── GRID: Apple-Style Soft Cards ── */}
         <motion.ul
           className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-5 w-full"
           initial="hidden"
@@ -84,7 +79,6 @@ const Skills: React.FC = () => {
           role="list"
         >
           {skills.map((skill) => {
-            // Grab the actual logo URL based on the old icon string
             const logoUrl = logoRegistry[skill.icon];
             
             return (
@@ -108,7 +102,6 @@ const Skills: React.FC = () => {
                     style={{ background: "var(--bg-subtle)", borderColor: "var(--border-strong)" }}
                     aria-hidden="true"
                   >
-                    {/* Render actual full-color SVG logo */}
                     {logoUrl ? (
                       <img 
                         src={logoUrl} 
@@ -117,7 +110,6 @@ const Skills: React.FC = () => {
                         loading="lazy"
                       />
                     ) : (
-                      // Fallback just in case a new skill is added without a mapped URL
                       <div className="w-5 h-5 md:w-6 md:h-6 bg-[var(--border-strong)] rounded-full" />
                     )}
                   </div>

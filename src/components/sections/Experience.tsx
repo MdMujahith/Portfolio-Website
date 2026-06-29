@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 import { experience } from "@/data/professional";
 import { content } from "@/data/content";
+import BackgroundFX from "@/components/ui/BackgroundFX"; 
 
 interface ExperienceItem {
   id: number | string;
@@ -25,11 +26,19 @@ const Experience: React.FC = () => {
     <section
       id="experience"
       /* Perfectly matched responsive spacing */
-      className="w-full pt-12 pb-20 md:pt-20 md:pb-32 lg:pt-24 lg:pb-40 transition-colors duration-300 relative z-10"
+      className="w-full pt-12 pb-20 md:pt-20 md:pb-32 lg:pt-24 lg:pb-40 transition-colors duration-300 relative z-10 overflow-hidden"
       style={{ background: "var(--bg)" }}
       aria-labelledby="experience-heading"
     >
-      <div className="max-w-7xl mx-auto px-6 sm:px-12 md:px-20 lg:px-32">
+      {/* ── AMBIENT LIGHTING (No Grid) ── */}
+      {/* Vertical light bloom on the left to highlight the timeline numbers, pattern turned off */}
+      <BackgroundFX 
+        bloomColor="primary" 
+        bloomPosition="top-1/2 left-[-5%] -translate-y-1/2 w-[40%] h-[80%]"
+        pattern="none"
+      />
+
+      <div className="max-w-7xl mx-auto px-6 sm:px-12 md:px-20 lg:px-32 relative z-10">
 
         {/* =======================================
           * HEADER: Editorial Style

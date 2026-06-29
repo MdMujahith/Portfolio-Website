@@ -39,27 +39,14 @@ export interface Experience {
 
 export const skills: Skill[] = [
   { name: "Python", icon: "SiPython", color: "#3776AB", category: "language" },
-  { name: "C", icon: "SiC", color: "#00599C", category: "language" },
   { name: "C++", icon: "SiCplusplus", color: "#00599C", category: "language" },
-  {
-    name: "JavaScript",
-    icon: "SiJavascript",
-    color: "#F7DF1E",
-    category: "language",
-  },
-  { name: "Java", icon: "FaJava", color: "#007396", category: "language" },
-  {
-    name: "AppScript",
-    icon: "SiGoogleappsscript",
-    color: "#4285F4",
-    category: "language",
-  },
+  { name: "FastAPI", icon: "SiFastapi", color: "#009688", category: "framework" },
   { name: "HTML5", icon: "SiHtml5", color: "#E34F26", category: "language" },
   { name: "CSS3", icon: "SiCss3", color: "#1572B6", category: "language" },
   { name: "MySQL", icon: "SiMysql", color: "#4479A1", category: "tool" },
   { name: "Linux", icon: "SiLinux", color: "#FCC624", category: "tool" },
   { name: "Git", icon: "SiGit", color: "#F05032", category: "tool" },
-  { name: "Figma", icon: "SiFigma", color: "#F24E1E", category: "tool" },
+  { name: "AWS", icon: "SiAmazonaws", color: "#FF9900", category: "tool" }, 
 ];
 
 export const projects: Project[] = [
@@ -152,38 +139,5 @@ export const experience: Experience[] = [
       "Learned and contributed to open-source projects while improving coding and collaboration skills.",
     bgImageUrl: "/image/experience/Opensource_Exp.png",
     skills: ["Git", "Collaboration"],
-  },
-];
-
-export interface ResumeVersion {
-  id: string;
-  label: string;
-  sub: string;
-  icon: string; // Stored as a string name!
-  file: string;
-}
-
-// Add this array to the bottom of professional.ts
-export const resumeVersions: ResumeVersion[] = [
-  {
-    id: "full",
-    label: "Full Resume",
-    sub: "For general roles",
-    icon: "FileText",
-    file: "/pdf/Mujahith_Resume.pdf",
-  },
-  {
-    id: "frontend",
-    label: "Frontend Developer",
-    sub: "React, Next.js, UI/UX",
-    icon: "Code",
-    file: "/pdf/Mujahith_Frontend.pdf",
-  },
-  {
-    id: "backend",
-    label: "Backend & AI",
-    sub: "Python, Node, ML",
-    icon: "Cpu",
-    file: "/pdf/Mujahith_Backend.pdf",
   },
 ];

@@ -60,9 +60,9 @@ export const siteConfig: SiteConfig = {
   },
 
   social: {
-    twitter: "https://twitter.com/VishwaGauravIn",
+    twitter: "https://twitter.com/",
     github: "https://github.com/MdMujahith",
-    linkedin: "https://linkedin.com/in/mohamedmujahith03",
+    linkedin: "https://linkedin.com/in/mdmujahith03",
   },
 
   resumes: [

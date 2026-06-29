@@ -17,7 +17,6 @@ export interface ContentConfig {
       primary: string;
       secondary: string;
     };
-    // FIX: Added the status block here!
     status?: {
       text: string;
       state: string;
@@ -27,13 +26,15 @@ export interface ContentConfig {
 
   intro: {
     headline: string;
-    subheadline: string;
+    headlineHighlight: string;
+    headlineSuffix: string;
     description: string;
     cta: string;
-    cards: {
-      title: string;
-      description: string;
-      icon: string; // lucide-react icon name
+    specSheet: {
+      label: string;
+      value: string;
+      sub?: string;
+      badge?: { text: string };
     }[];
   };
 
@@ -96,35 +97,42 @@ export const content: ContentConfig = {
     },
     status: {
       text: "Open to work",
-      state: "available", // Green dot
-      emoji: ""         // Renders: [dot] 🚀 Open to work
+      state: "available",
+      emoji: "" 
     },
   },
 
   intro: {
-    headline: "Developer.\nStrategist.\nInnovator.",
-    subheadline: "Hi, I'm Mohamed Mujahith.",
+    headline: "I build things",
+    headlineHighlight: "that run in the",
+    headlineSuffix: "background.",
     description:
-      "As a recent B.Tech in Computer Science graduate and a current MBA candidate, I'm passionate about the intersection of technology and business. I am building a unique skill set to not only engineer powerful software but also to understand the market dynamics that make a product successful.",
-    cta: "Get in Touch",
-    cards: [
+      "Backend-focused developer who enjoys working close to the metal — from managing databases and APIs to understanding the exact address layout of dynamic arrays in memory. Passionate about writing code that is simple, secure, and maintainable.",
+    cta: "Let's talk",
+    specSheet: [
       {
-        title: "Technical Skills",
-        description:
-          "Equipped with a strong foundation in modern web development, including hands-on experience with React, Next.js, and TypeScript to build responsive and efficient applications.",
-        icon: "Code",
+        label: "Role",
+        value: "Backend Developer",
+        sub: "Entry level",
       },
       {
-        title: "Strategic Mindset",
-        description:
-          "My MBA studies are providing me with a robust framework for market analysis, product management, and strategic decision-making, ensuring technology aligns with business goals.",
-        icon: "Briefcase",
+        label: "Status",
+        value: "Open to work",
+        badge: { text: "Available now" },
       },
       {
-        title: "Eager to Innovate",
-        description:
-          "I am driven to apply my combined skills to create innovative products. I am actively seeking opportunities to contribute to challenging projects and grow within a forward-thinking team.",
-        icon: "Zap",
+        label: "Focus",
+        value: "Systems & APIs",
+        sub: "Python · C++ · PostgreSQL",
+      },
+      {
+        label: "Currently",
+        value: "Mastering core algorithms",
+        sub: "& low-level memory mechanics",
+      },
+      {
+        label: "Based in",
+        value: "Tamil Nadu, India",
       },
     ],
   },
