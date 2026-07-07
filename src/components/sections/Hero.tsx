@@ -5,7 +5,6 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Mail } from "lucide-react";
 import Image from "next/image";
 import ThemeToggle from "@/components/ui/ThemeToggle";
-import Terminal from "@/components/ui/Terminal";
 import { siteConfig } from "@/data/site.config";
 import { content } from "@/data/content";
 
@@ -32,8 +31,18 @@ const SocialLinks = () => {
             aria-label={social.label} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}
             className="group flex items-center justify-center w-10 h-10 rounded-full border transition-colors duration-300"
             style={{ background: "var(--bg-subtle)", borderColor: "var(--border)" }}
-            onMouseEnter={e => { e.currentTarget.style.background="var(--text-primary)"; e.currentTarget.style.borderColor="var(--text-primary)"; const s=e.currentTarget.querySelector("svg"); if(s)(s as HTMLElement).style.color="var(--bg)"; }}
-            onMouseLeave={e => { e.currentTarget.style.background="var(--bg-subtle)"; e.currentTarget.style.borderColor="var(--border)"; const s=e.currentTarget.querySelector("svg"); if(s)(s as HTMLElement).style.color="var(--text-secondary)"; }}>
+            onMouseEnter={e => {
+  e.currentTarget.style.background = "var(--text-primary)";
+  e.currentTarget.style.borderColor = "var(--text-primary)";
+  const s = e.currentTarget.querySelector("svg");
+  if (s) (s as SVGSVGElement).style.color = "var(--bg)";
+}}
+onMouseLeave={e => {
+  e.currentTarget.style.background = "var(--bg-subtle)";
+  e.currentTarget.style.borderColor = "var(--border)";
+  const s = e.currentTarget.querySelector("svg");
+  if (s) (s as SVGSVGElement).style.color = "var(--text-secondary)";
+}}>
             <svg xmlns="http://www.w3.org/2000/svg" className="w-[22px] h-[22px] transition-colors duration-300"
               style={{ color: "var(--text-secondary)" }} viewBox="0 0 24 24" fill="none"
               stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2">
@@ -163,12 +172,6 @@ const Hero: React.FC<HeroProps> = ({ onContactClick }) => {
             </button>
           </div>
         </motion.div>
-
-        {/* RIGHT 
-        <div className="hidden lg:flex lg:col-span-6 items-center justify-center h-[520px] w-full">
-          <Terminal />
-        </div>*/}
-
       </div>
     </section>
   );

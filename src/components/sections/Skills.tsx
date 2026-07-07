@@ -20,8 +20,9 @@ const logoRegistry: Record<string, string> = {
   SiLinux: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/linux/linux-original.svg",
   SiGit: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/git/git-original.svg",
   SiFigma: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/figma/figma-original.svg",
+  SiFastapi: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/fastapi/fastapi-original.svg",
+  SiAmazonaws: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/amazonwebservices/amazonwebservices-original-wordmark.svg",
 };
-
 // Fortune 500 easing: deliberate, smooth, no bounce.
 const premiumEase = [0.16, 1, 0.3, 1] as const;
 

@@ -35,7 +35,6 @@ const Experience: React.FC = () => {
       <BackgroundFX 
         bloomColor="primary" 
         bloomPosition="top-1/2 left-[-5%] -translate-y-1/2 w-[40%] h-[80%]"
-        pattern="none"
       />
 
       <div className="max-w-7xl mx-auto px-6 sm:px-12 md:px-20 lg:px-32 relative z-10">
