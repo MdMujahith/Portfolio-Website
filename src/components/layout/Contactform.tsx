@@ -4,6 +4,8 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import Toast from "@/components/ui/Toast";
+import { content } from "@/data/content";
+import { siteConfig } from "@/data/site.config";
 
 type Status = "idle" | "sending" | "sent" | "error";
 
@@ -13,13 +15,15 @@ interface ToastState {
 }
 
 const appleSpring = { type: "spring", damping: 25, stiffness: 200 } as const;
-const fadeSpring  = { type: "spring", damping: 30, stiffness: 150 } as const;
+const fadeSpring = { type: "spring", damping: 30, stiffness: 150 } as const;
 
 const ContactForm: React.FC = () => {
-  const [form,   setForm]   = useState({ name: "", email: "", subject: "", message: "" });
+  const [form, setForm] = useState({ name: "", email: "", subject: "", message: "" });
   const [status, setStatus] = useState<Status>("idle");
-  const [toast,  setToast]  = useState<ToastState | null>(null);
-  const [time,   setTime]   = useState<Date | null>(null);
+  const [toast, setToast] = useState<ToastState | null>(null);
+  const [time, setTime] = useState<Date | null>(null);
+
+  const { contactPage } = content;
 
   useEffect(() => {
     setTime(new Date());
@@ -33,20 +37,17 @@ const ContactForm: React.FC = () => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
 
-  // ── FIXED handleSubmit ──────────────────────────────────────
-  // Posts to your own Next.js API route (/api/contact).
-  // That route calls Apps Script server-side — no CORS ever.
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setStatus("sending");
 
     try {
       const res = await fetch("/api/contact", {
-        method:  "POST",
+        method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          name:    form.name,
-          email:   form.email,
+          name: form.name,
+          email: form.email,
           subject: form.subject,
           message: form.message,
         }),
@@ -59,7 +60,6 @@ const ContactForm: React.FC = () => {
       }
 
       setStatus("sent");
-
     } catch (err: unknown) {
       setStatus("error");
       const msg = err instanceof Error ? err.message : "Something went wrong. Please try again.";
@@ -67,9 +67,7 @@ const ContactForm: React.FC = () => {
     }
   };
 
-  /* ============================================
-   * SUCCESS STATE
-   * ============================================ */
+  /* ── Success State ── */
   if (status === "sent") {
     return (
       <motion.div
@@ -91,10 +89,10 @@ const ContactForm: React.FC = () => {
         </motion.div>
 
         <h2 className="text-2xl sm:text-4xl font-semibold tracking-tight mb-2 md:mb-3 text-[var(--text-primary)]">
-          Message Sent
+          {contactPage.successHeadline}
         </h2>
         <p className="text-[15px] md:text-[17px] text-[var(--text-secondary)] max-w-sm mb-8 md:mb-10 leading-relaxed">
-          Thanks for reaching out. I&apos;ll review your message and get back to you shortly.
+          {contactPage.successMessage}
         </p>
 
         <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
@@ -103,22 +101,20 @@ const ContactForm: React.FC = () => {
             className="flex items-center justify-center px-8 py-3.5 md:py-4 rounded-full font-medium text-[15px] transition-all hover:scale-[1.02] active:scale-[0.98] shadow-[0_4px_14px_0_rgb(0,0,0,0.1)] hover:shadow-[0_6px_20px_rgba(0,0,0,0.15)]"
             style={{ background: "var(--text-primary)", color: "var(--bg)" }}
           >
-            Back to Home
+            {contactPage.backToHome}
           </Link>
           <button
             onClick={() => { setForm({ name: "", email: "", subject: "", message: "" }); setStatus("idle"); }}
             className="flex items-center justify-center px-8 py-3.5 md:py-4 rounded-full font-medium text-[15px] transition-all hover:scale-[1.02] active:scale-[0.98] border border-[var(--border-strong)] bg-[var(--bg-elevated)] text-[var(--text-primary)] shadow-[0_2px_10px_rgb(0,0,0,0.04)]"
           >
-            Send Another
+            {contactPage.sendAnother}
           </button>
         </div>
       </motion.div>
     );
   }
 
-  /* ============================================
-   * SPLIT LAYOUT FORM
-   * ============================================ */
+  /* ── Form Layout ── */
   return (
     <>
       <section className="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-2 pb-12 md:pt-4 md:pb-20">
@@ -135,7 +131,7 @@ const ContactForm: React.FC = () => {
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-20">
 
-          {/* LEFT COLUMN */}
+          {/* Left Column */}
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
@@ -143,10 +139,11 @@ const ContactForm: React.FC = () => {
             className="flex flex-col h-full"
           >
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-semibold tracking-tight text-[var(--text-primary)] mb-4 leading-tight">
-              Let&apos;s start a <br className="hidden sm:block" /> conversation.
+              {contactPage.headline} <br className="hidden sm:block" />
+              {contactPage.headlineHighlight}
             </h1>
             <p className="text-[16px] md:text-[17px] text-[var(--text-secondary)] max-w-md leading-relaxed mb-8 md:mb-10">
-              I&apos;m currently open to new opportunities. Whether it&apos;s a full-stack role, a freelance project, or just a quick chat—my inbox is open.
+              {contactPage.description}
             </p>
 
             <div className="grid grid-cols-2 gap-4 mt-auto">
@@ -167,7 +164,7 @@ const ContactForm: React.FC = () => {
                   </span>
                 </div>
                 <p className="text-[14px] md:text-[15px] font-medium text-[var(--text-primary)] leading-snug">
-                  Actively seeking full-stack &amp; React roles.
+                  {contactPage.availabilityStatus}
                 </p>
               </motion.div>
 
@@ -192,10 +189,16 @@ const ContactForm: React.FC = () => {
 
                 <div className="relative z-10">
                   <p className="text-2xl md:text-3xl font-semibold text-[var(--bg)] tracking-tight">
-                    {time ? time.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" }) : "••:••"}
+                    {time
+                      ? time.toLocaleTimeString("en-US", {
+                          timeZone: siteConfig.owner.location.timezone,
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        })
+                      : "••:••"}
                   </p>
                   <p className="text-[13px] md:text-[14px] text-[var(--bg)] opacity-80 mt-1 font-medium">
-                    India (IST)
+                    {contactPage.timezoneName}
                   </p>
                 </div>
               </motion.div>
@@ -203,7 +206,7 @@ const ContactForm: React.FC = () => {
             </div>
           </motion.div>
 
-          {/* RIGHT COLUMN: Form */}
+          {/* Right Column: Form */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -261,7 +264,7 @@ const ContactForm: React.FC = () => {
                       className="w-5 h-5 border-2 border-[var(--bg)] border-t-transparent rounded-full"
                     />
                   ) : (
-                    "Send Message"
+                    contactPage.cta
                   )}
                 </button>
               </div>

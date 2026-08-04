@@ -12,20 +12,10 @@ import {
   useReducedMotion,
 } from "framer-motion";
 import { ChevronRight } from "lucide-react";
-import { experience } from "@/data/professional";
+import { experience, type Experience } from "@/data/experience";
 import { content } from "@/data/content";
 import BackgroundFX from "@/components/ui/BackgroundFX";
-
-interface ExperienceItem {
-  id: number | string;
-  company: string;
-  role: string;
-  tenure: string;
-  description: string;
-  tags?: string[];
-}
-
-const premiumEase = [0.16, 1, 0.3, 1] as const;
+import { springSmooth, springSnappy, fadeInUp } from "@/lib/motion";
 
 // Single source of truth for the rail column
 const RAIL_COL = "w-8 md:w-16";
@@ -86,12 +76,14 @@ const MagneticNode = memo(function MagneticNode({
           animate={{
             scale: isActive ? 1.2 : 1,
             background: isActive ? "var(--text-primary)" : "var(--bg-subtle)",
-            borderColor: isActive ? "var(--text-primary)" : "var(--border-strong)",
+            borderColor: isActive
+              ? "var(--text-primary)"
+              : "var(--border-strong)",
             boxShadow: isActive
               ? "0 0 4px 1px rgba(255,255,255,0.7), 0 0 20px 5px rgba(255,255,255,0.45)"
               : "0 1px 2px rgba(0,0,0,0.15)",
           }}
-          transition={{ duration: 0.4, ease: premiumEase }}
+          transition={springSmooth}
           className="w-3 h-3 rounded-full border-2"
         />
       </motion.div>
@@ -100,7 +92,13 @@ const MagneticNode = memo(function MagneticNode({
 });
 
 // ── Tag Component ──
-const TagList = memo(function TagList({ tags, reduceMotion }: { tags: string[]; reduceMotion?: boolean }) {
+const TagList = memo(function TagList({
+  tags,
+  reduceMotion,
+}: {
+  tags: string[];
+  reduceMotion?: boolean;
+}) {
   return (
     <div className="flex flex-wrap gap-2 mt-6 relative z-20">
       {tags.map((tag, i) => (
@@ -108,13 +106,10 @@ const TagList = memo(function TagList({ tags, reduceMotion }: { tags: string[]; 
           key={tag}
           initial={reduceMotion ? false : { opacity: 0, y: 6 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.3, delay: reduceMotion ? 0 : 0.05 * i, ease: premiumEase }}
-          className="text-[11px] sm:text-[12px] font-medium uppercase tracking-wider px-3 py-1.5 rounded-full transition-all duration-300 hover:text-white hover:bg-white/10 cursor-default"
-          style={{
-            background: "var(--bg-subtle)",
-            color: "var(--text-secondary)",
-            border: "1px solid var(--border-strong)",
-          }}
+          transition={
+            reduceMotion ? { duration: 0 } : { ...springSnappy, delay: 0.03 * i }
+          }
+          className="text-xs rounded-full bg-black/5 dark:bg-white/10 px-3 py-1 font-medium text-[var(--text-secondary)] transition-colors duration-300 hover:text-[var(--text-primary)] cursor-default"
         >
           {tag}
         </motion.span>
@@ -131,10 +126,10 @@ const ExperienceRow = memo(function ExperienceRow({
   onToggle,
   isMobile,
 }: {
-  exp: ExperienceItem;
+  exp: Experience;
   index: number;
   isActive: boolean;
-  onToggle: (id: number | string) => void;
+  onToggle: (id: string) => void;
   isMobile: boolean;
 }) {
   const panelId = `experience-panel-${exp.id}`;
@@ -148,7 +143,7 @@ const ExperienceRow = memo(function ExperienceRow({
       mouseX.set(clientX - left);
       mouseY.set(clientY - top);
     },
-    [mouseX, mouseY]
+    [mouseX, mouseY],
   );
 
   const spotlightBackground = useMotionTemplate`radial-gradient(600px circle at ${mouseX}px ${mouseY}px, rgba(255,255,255,0.04), transparent 50%)`;
@@ -158,44 +153,42 @@ const ExperienceRow = memo(function ExperienceRow({
       initial={reduceMotion ? false : { opacity: 0, y: 24 }}
       whileInView={reduceMotion ? undefined : { opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-10%" }}
-      transition={{ duration: 0.6, delay: Math.min(index * 0.05, 0.3), ease: premiumEase }}
-      className="relative flex gap-4 md:gap-8 py-3 md:py-4 transition-opacity duration-500 hover:!opacity-100 group/item group-hover/list:opacity-40"
+      transition={
+        reduceMotion
+          ? { duration: 0 }
+          : { ...springSmooth, delay: Math.min(index * 0.08, 0.3) }
+      }
+      className="relative flex gap-4 md:gap-8 py-3 md:py-4 transition-all duration-500 hover:!opacity-100 hover:-translate-y-1 group/item group-hover/list:opacity-40"
     >
       {/* Rail column — perfectly aligned with the inner padding of the card */}
-      <div className={`relative flex flex-col items-center shrink-0 mt-5 md:mt-8 ${RAIL_COL}`}>
-        <MagneticNode isActive={isActive} isMobile={isMobile} reduceMotion={reduceMotion} />
+      <div
+        className={`relative flex flex-col items-center shrink-0 mt-5 md:mt-8 ${RAIL_COL}`}
+      >
+        <MagneticNode
+          isActive={isActive}
+          isMobile={isMobile}
+          reduceMotion={reduceMotion}
+        />
       </div>
 
-      <motion.div
+      <div
         onMouseMove={isMobile ? undefined : handleMouseMove}
-        animate={{ x: isActive && !isMobile ? 8 : 0 }}
-        transition={{ duration: 0.5, ease: premiumEase }}
-        className="relative flex-1 min-w-0 rounded-2xl group/card"
+        className="relative flex-1 min-w-0 rounded-3xl transition-all duration-300 ease-out hover:-translate-y-1 group/card"
       >
         <div
           aria-hidden="true"
-          className={`absolute inset-x-4 top-0 h-[2px] origin-left transition-transform duration-500 ${
+          className={`absolute inset-x-6 top-0 h-[2px] origin-left transition-transform duration-500 z-20 pointer-events-none ${
             isActive ? "scale-x-100" : "scale-x-0"
           }`}
-          style={{ background: "linear-gradient(to right, var(--text-primary), var(--text-primary) 40%, transparent 90%)" }}
+          style={{
+            background:
+              "linear-gradient(to right, var(--text-primary), var(--text-primary) 40%, transparent 90%)",
+          }}
         />
 
         <div
-          className="relative w-full rounded-2xl overflow-hidden transition-[background-color,box-shadow] duration-500"
-          style={{
-            background: isActive ? "var(--bg-elevated)" : "var(--bg-subtle)",
-            boxShadow: isActive
-              ? "inset 0 1px 0 rgba(255,255,255,0.14), 0 0 0 1px rgba(255,255,255,0.06), 0 24px 48px -12px rgba(0,0,0,0.4)"
-              : "0 1px 3px rgba(0,0,0,0.1)",
-          }}
+          className="relative w-full rounded-3xl p-6 md:p-8 overflow-hidden bg-[var(--card-bg)] border border-[var(--border)] shadow-[inset_0_1px_0_rgba(0,0,0,0.05)] dark:shadow-[inset_0_1px_0_rgba(255,255,255,0.05)] hover:shadow-xl hover:shadow-[inset_0_1px_0_rgba(0,0,0,0.1)] dark:hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.15)] transition-all duration-300 ease-out"
         >
-          <div
-            className="absolute inset-0 rounded-2xl border pointer-events-none transition-colors duration-300"
-            style={{
-              borderColor: isActive ? "var(--text-primary)" : "var(--border-strong)",
-              opacity: isActive ? 0.5 : 0.7,
-            }}
-          />
           {!isMobile && (
             <motion.div
               className="pointer-events-none absolute inset-0 opacity-0 transition duration-500 group-hover/card:opacity-100"
@@ -208,19 +201,17 @@ const ExperienceRow = memo(function ExperienceRow({
             onClick={() => onToggle(exp.id)}
             aria-expanded={isActive}
             aria-controls={panelId}
-            className="w-full text-left p-5 md:p-8 outline-none cursor-pointer group/btn relative z-10 rounded-2xl focus-visible:ring-2 focus-visible:ring-white/20"
+            className="w-full text-left outline-none cursor-pointer group/btn relative z-10 rounded-3xl focus-visible:ring-2 focus-visible:ring-[var(--focus-ring)]"
           >
-            <div className="flex items-start justify-between gap-4 md:gap-8 transition-transform duration-500 ease-out group-hover/btn:translate-x-1">
-              
-              {/* Flex Container for Number & Role Title */}
+            <div className="flex items-start justify-between gap-4 md:gap-8">
               <div className="flex gap-4 sm:gap-6 min-w-0 items-start">
-                
-                {/* ── MOVED NUMBERS: Now positioned cleanly inside the card next to the title ── */}
-                <span 
+                <span
                   className="text-lg sm:text-xl md:text-2xl font-mono tracking-wider mt-0.5 transition-colors duration-300"
-                  style={{ 
-                    color: isActive ? "var(--text-primary)" : "var(--text-muted)", 
-                    opacity: isActive ? 0.9 : 0.5 
+                  style={{
+                    color: isActive
+                      ? "var(--text-primary)"
+                      : "var(--text-muted)",
+                    opacity: isActive ? 0.9 : 0.5,
                   }}
                 >
                   {String(index + 1).padStart(2, "0")}
@@ -228,17 +219,17 @@ const ExperienceRow = memo(function ExperienceRow({
 
                 <div className="flex flex-col gap-2 min-w-0">
                   <h3
-                    className="text-xl sm:text-2xl md:text-3xl font-semibold tracking-tight transition-colors duration-300"
-                    style={{ color: isActive ? "var(--text-primary)" : "var(--text-secondary)" }}
+                    className="text-xl sm:text-2xl md:text-3xl font-bold font-sans tracking-tight text-[var(--text-primary)] transition-colors duration-300"
+                    style={{ fontVariationSettings: "'wght' 700" }}
                   >
                     {exp.role}
                   </h3>
                   <div className="flex flex-wrap items-center gap-2 sm:gap-3">
-                    <span className="text-[15px] font-medium text-[var(--text-primary)]">
+                    <span className="text-[15px] font-semibold text-[var(--text-primary)]">
                       {exp.company}
                     </span>
                     <span className="w-1 h-1 rounded-full bg-[var(--border-strong)] hidden sm:block" />
-                    <span className="text-[13px] font-medium text-[var(--text-muted)] tracking-wide bg-[var(--bg-subtle)] px-2.5 py-1 rounded-md border border-[var(--border-strong)]">
+                    <span className="text-xs font-medium text-[var(--text-muted)] tracking-wide bg-[var(--bg-subtle)] px-2.5 py-1 rounded-md border border-[var(--border)]">
                       {exp.tenure}
                     </span>
                   </div>
@@ -247,55 +238,58 @@ const ExperienceRow = memo(function ExperienceRow({
 
               <motion.div
                 animate={{
-                  background: isActive ? "var(--text-primary)" : "var(--bg-subtle)",
+                  background: isActive
+                    ? "var(--text-primary)"
+                    : "var(--bg-subtle)",
                   color: isActive ? "var(--bg)" : "var(--text-primary)",
                   rotate: isActive ? 90 : 0,
                 }}
-                transition={{ duration: 0.5, ease: premiumEase }}
-                className="flex items-center justify-center w-8 h-8 md:w-10 md:h-10 rounded-full shrink-0 shadow-sm border mt-1"
-                style={{ borderColor: isActive ? "transparent" : "var(--border-strong)" }}
+                transition={springSmooth}
+                className="flex items-center justify-center min-w-[36px] min-h-[36px] w-9 h-9 md:w-10 md:h-10 rounded-full shrink-0 shadow-sm border mt-1"
+                style={{
+                  borderColor: isActive
+                    ? "transparent"
+                    : "var(--border-strong)",
+                }}
               >
                 <ChevronRight className="w-4 h-4 md:w-[18px] md:h-[18px]" />
               </motion.div>
             </div>
 
-            <AnimatePresence initial={false}>
-              {isActive && (
-                <motion.div
-                  id={panelId}
-                  initial={reduceMotion ? false : { height: 0, opacity: 0 }}
-                  animate={{ height: "auto", opacity: 1 }}
-                  exit={reduceMotion ? { opacity: 0 } : { height: 0, opacity: 0 }}
-                  transition={{ duration: 0.5, ease: premiumEase }}
-                  className="overflow-hidden"
+            <div
+              id={panelId}
+              className={`grid transition-[grid-template-rows,opacity] duration-300 ease-out ${
+                isActive ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0 pointer-events-none"
+              }`}
+            >
+              <div className="overflow-hidden">
+                <div
+                  className="pt-6 md:pt-8 mt-6 md:mt-8 border-t border-[var(--border-strong)] cursor-default relative z-20"
+                  onClick={(e) => e.stopPropagation()}
                 >
-                  <div
-                    className="pt-6 md:pt-8 mt-6 md:mt-8 border-t border-[var(--border-strong)] cursor-default relative z-20"
-                    onClick={(e) => e.stopPropagation()}
+                  <motion.p
+                    initial={reduceMotion ? false : { opacity: 0, y: 10 }}
+                    animate={isActive ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }}
+                    transition={reduceMotion ? { duration: 0 } : springSmooth}
+                    className="text-sm sm:text-base leading-relaxed max-w-3xl font-normal text-[var(--text-secondary)]"
                   >
-                    <motion.p
-                      initial={reduceMotion ? false : { opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.4, delay: reduceMotion ? 0 : 0.1, ease: premiumEase }}
-                      className="text-[15px] sm:text-[16px] leading-relaxed max-w-3xl font-normal"
-                      style={{ color: "var(--text-secondary)" }}
-                    >
-                      {exp.description}
-                    </motion.p>
-                    {exp.tags && exp.tags.length > 0 && <TagList tags={exp.tags} reduceMotion={reduceMotion} />}
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
+                    {exp.description}
+                  </motion.p>
+                  {exp.tags && exp.tags.length > 0 && (
+                    <TagList tags={exp.tags} reduceMotion={reduceMotion} />
+                  )}
+                </div>
+              </div>
+            </div>
           </button>
         </div>
-      </motion.div>
+      </div>
     </motion.div>
   );
 });
 
 const Experience: React.FC = () => {
-  const [activeId, setActiveId] = useState<number | string | null>(null);
+  const [activeId, setActiveId] = useState<string | null>(null);
   const [isMobile, setIsMobile] = useState(false);
   const reduceMotion = !!useReducedMotion();
 
@@ -305,10 +299,6 @@ const Experience: React.FC = () => {
     offset: ["start center", "end center"],
   });
 
-  // ── BUG FIX: Smooth the scroll calculation ──
-  // By running scrollYProgress through a spring, it absorbs the sudden 
-  // container height changes caused by opening/closing accordion items. 
-  // The scroll line now glides smoothly to its new position instead of jump-glitching.
   const springScroll = useSpring(scrollYProgress, {
     stiffness: 100,
     damping: 30,
@@ -325,15 +315,14 @@ const Experience: React.FC = () => {
     return () => mql.removeEventListener("change", check);
   }, []);
 
-  const handleToggle = useCallback((id: number | string) => {
+  const handleToggle = useCallback((id: string) => {
     setActiveId((current) => (current === id ? null : id));
   }, []);
 
   return (
     <section
       id="experience"
-      className="w-full py-16 md:py-24 lg:py-32 relative z-10 overflow-hidden transition-colors duration-300"
-      style={{ background: "var(--bg)" }}
+      className="w-full py-12 md:py-16 lg:py-20 relative z-10 overflow-hidden transition-colors duration-300 bg-[var(--bg)]"
       aria-labelledby="experience-heading"
     >
       <BackgroundFX
@@ -343,19 +332,18 @@ const Experience: React.FC = () => {
 
       <div className="max-w-7xl mx-auto px-6 sm:px-12 md:px-20 lg:px-32 relative z-10">
         <motion.div
-          initial={reduceMotion ? false : { opacity: 0, y: 20 }}
-          whileInView={reduceMotion ? undefined : { opacity: 1, y: 0 }}
+          initial="hidden"
+          whileInView="visible"
           viewport={{ once: true, margin: "-10%" }}
-          transition={{ duration: 0.8, ease: premiumEase }}
+          variants={fadeInUp}
           className="mb-12 md:mb-16 text-left"
         >
           <p className="text-[12px] md:text-sm font-semibold uppercase tracking-widest text-[var(--text-muted)] mb-3 sm:mb-4">
-            04 // Professional Timeline
+            {content.sections.experience.label}
           </p>
           <h2
             id="experience-heading"
-            className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight leading-[1.05]"
-            style={{ color: "var(--text-primary)" }}
+            className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-semibold tracking-tight leading-[1.05] text-[var(--text-primary)]"
           >
             {content.sections.experience.title}
           </h2>
@@ -367,18 +355,21 @@ const Experience: React.FC = () => {
         className="max-w-5xl mx-auto px-6 sm:px-12 md:px-20 lg:px-32 relative z-10 mt-8 md:mt-12"
       >
         <div className="relative group/list">
-          <div className={`absolute ${RAIL_CENTER} top-10 md:top-14 bottom-10 md:bottom-14 w-px bg-[var(--border-strong)] opacity-40`} />
+          <div
+            className={`absolute ${RAIL_CENTER} top-10 md:top-14 bottom-10 md:bottom-14 w-px bg-[var(--border-strong)] opacity-40`}
+          />
           <motion.div
             className={`absolute ${RAIL_CENTER} top-10 md:top-14 bottom-10 md:bottom-14 w-px origin-top`}
             style={{
-              background: "linear-gradient(to bottom, transparent, var(--text-primary) 15%, var(--text-primary) 85%, transparent)",
+              background:
+                "linear-gradient(to bottom, transparent, var(--text-primary) 15%, var(--text-primary) 85%, transparent)",
               scaleY: reduceMotion ? 1 : lineHeight,
               boxShadow: "0 0 8px 0 rgba(255,255,255,0.15)",
             }}
           />
 
-          <div className="flex flex-col gap-3">
-            {(experience as ExperienceItem[]).map((exp, i) => (
+          <div className="flex flex-col gap-4">
+            {experience.map((exp, i) => (
               <ExperienceRow
                 key={exp.id}
                 exp={exp}

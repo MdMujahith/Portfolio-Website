@@ -14,8 +14,6 @@ interface ContactModalProps {
   formHref?: string;
 }
 
-const premiumEase = [0.16, 1, 0.3, 1] as const;
-
 /* ============================================
  * SECURITY: Email Obfuscation
  * ============================================ */

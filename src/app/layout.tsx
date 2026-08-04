@@ -3,12 +3,18 @@ import { siteConfig } from "@/data/site.config";
 import "./globals.css";
 import { ThemeProvider } from "@/components/providers/ThemeProvider";
 import NetworkMonitor from "@/components/ui/NetworkMonitor";
+
 /* ============================================
  * SEO CONFIGURATION
  * ============================================
  * Centralized from site.config.ts
  */
+const twitterHandle = siteConfig.social.twitter.match(
+  /(?:https?:\/\/)?(?:www\.)?(?:twitter\.com|x\.com)\/([^/?#]+)/i,
+)?.[1];
+
 export const metadata: Metadata = {
+  metadataBase: new URL("https://mdmujahith.vercel.app"),
   title: siteConfig.seo.title,
   description: siteConfig.seo.description,
   keywords: siteConfig.seo.keywords,
@@ -18,7 +24,7 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_US",
     url: "https://mdmujahith.vercel.app",
-    
+
     title: siteConfig.seo.title,
     description: siteConfig.seo.description,
     siteName: siteConfig.seo.title,
@@ -36,7 +42,7 @@ export const metadata: Metadata = {
     title: siteConfig.seo.title,
     description: siteConfig.seo.description,
     images: [siteConfig.seo.ogImage],
-    creator: "@VishwaGauravIn",
+    ...(twitterHandle ? { creator: `@${twitterHandle}` } : {}),
   },
   robots: {
     index: true,
@@ -49,9 +55,6 @@ export const metadata: Metadata = {
       "max-snippet": -1,
     },
   },
-  verification: {
-    google: "your-google-verification-code", // TODO: Add your Google Search Console verification
-  },
 };
 
 export default function RootLayout({
@@ -62,34 +65,16 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        {/* ============================================
-         * FONT OPTIMIZATION
-         * ============================================
-         * Preconnect to Google Fonts for faster loading
-         */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link
-          rel="preconnect"
-          href="https://fonts.gstatic.com"
-          crossOrigin="anonymous"
-        />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,wght@6..144,1..1000&display=swap"
-          rel="stylesheet"
-        />
-
-        {/* ============================================
-         * SECURITY HEADERS
-         * ============================================
-         * Prevent clickjacking, XSS, and other attacks
-         */}
-        <meta name="referrer" content="strict-origin-when-cross-origin" />
-        <meta httpEquiv="X-Content-Type-Options" content="nosniff" />
-        <meta httpEquiv="X-Frame-Options" content="DENY" />
-        <meta httpEquiv="X-XSS-Protection" content="1; mode=block" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,wght@6..144,1..1000&family=JetBrains+Mono:wght@500;600;700&family=Orbitron:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
       </head>
-
-      <body className="antialiased"><ThemeProvider><NetworkMonitor />{children}</ThemeProvider></body>
+      <body className="antialiased font-sans">
+        <ThemeProvider>
+          <NetworkMonitor />
+          {children}
+        </ThemeProvider>
+      </body>
     </html>
   );
 }

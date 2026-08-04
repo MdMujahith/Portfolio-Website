@@ -1,15 +1,21 @@
 /**
  * SITE CONFIGURATION
  * ===================
- * Central hub for all site-wide settings, contact information, and metadata.
- * 
+ * Central hub for site-wide settings: personal info, social links, resume files,
+ * navigation, and SEO metadata.
+ *
  * HOW TO EDIT:
  * - Update your email, social links, and resume files here
+ * - Add/remove nav links in the `navLinks` array (order determines display order)
  * - Changes reflect across the entire site automatically
+ *
+ * NOTE: Skills, projects, experience, certifications, and testimonials each have
+ * their own dedicated file in this data/ directory.
  */
 
 export interface SiteConfig {
-  // Personal Information
+  yearsCoding: number;
+  resumeUrl: string;
   owner: {
     firstName: string;
     lastName: string;
@@ -21,23 +27,25 @@ export interface SiteConfig {
     };
   };
 
-  // Social Media Links
   social: {
     twitter: string;
     github: string;
     linkedin: string;
   };
 
-  // Resume Versions
+  navLinks: {
+    label: string;
+    href: string;
+  }[];
+
   resumes: {
     id: string;
     label: string;
     description: string;
-    icon: string; // Icon name from lucide-react
-    fileName: string; // File in /public/pdf/
+    icon: string;
+    fileName: string;
   }[];
 
-  // SEO & Metadata
   seo: {
     title: string;
     description: string;
@@ -48,6 +56,9 @@ export interface SiteConfig {
 }
 
 export const siteConfig: SiteConfig = {
+  yearsCoding: 4,
+  resumeUrl: "/resume.pdf",
+
   owner: {
     firstName: "Mohamed",
     lastName: "Mujahith",
@@ -64,6 +75,15 @@ export const siteConfig: SiteConfig = {
     github: "https://github.com/MdMujahith",
     linkedin: "https://linkedin.com/in/mdmujahith03",
   },
+
+  navLinks: [
+    { label: "About", href: "#about" },
+    { label: "Skills", href: "#skills" },
+    { label: "Certifications", href: "#certifications" },
+    { label: "Projects", href: "#projects" },
+    { label: "Experience", href: "#experience" },
+    { label: "Testimonials", href: "#testimonials" },
+  ],
 
   resumes: [
     {
@@ -90,7 +110,7 @@ export const siteConfig: SiteConfig = {
   ],
 
   seo: {
-    title: "Mohamed Mujahith - Full Stack Developer & MBA Candidate",
+    title: "Mohamed Mujahith - Python Developer",
     description:
       "Portfolio of Mohamed Mujahith - B.Tech in Computer Science graduate and MBA candidate specializing in full-stack development, AI, and business strategy.",
     keywords: [

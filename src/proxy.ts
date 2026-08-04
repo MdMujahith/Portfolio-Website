@@ -1,13 +1,12 @@
 import { NextResponse } from "next/server";
-import type { NextRequest } from "next/server";
 
 /* ============================================
- * SECURITY MIDDLEWARE
+ * SECURITY & EDGE PROXY (Next.js 16 Proxy Convention)
  * ============================================
- * Adds security headers and implements rate limiting
+ * Adds security headers and implements network rules
  */
 
-export function proxy(request: NextRequest) {
+export function proxy() {
   const response = NextResponse.next();
 
   /* ============================================
@@ -34,16 +33,17 @@ export function proxy(request: NextRequest) {
     "camera=(), microphone=(), geolocation=(), interest-cohort=()"
   );
 
-  // Content Security Policy
+  // Content Security Policy (Updated to permit Spline 3D Scene network connectivity & web workers)
   response.headers.set(
     "Content-Security-Policy",
     [
       "default-src 'self'",
-      "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://fonts.googleapis.com",
+      "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://fonts.googleapis.com https://*.spline.design https://*.spline.tech",
       "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
       "font-src 'self' https://fonts.gstatic.com",
       "img-src 'self' data: https: blob:",
-      "connect-src 'self' https://fonts.googleapis.com https://fonts.gstatic.com",
+      "worker-src 'self' blob:",
+      "connect-src 'self' https://fonts.googleapis.com https://fonts.gstatic.com https://*.spline.design https://*.spline.tech https://*.spline.com https://*.splinetool.com data: blob:",
       "frame-ancestors 'none'",
     ].join("; ")
   );
@@ -52,7 +52,7 @@ export function proxy(request: NextRequest) {
 }
 
 /* ============================================
- * MIDDLEWARE CONFIGURATION
+ * PROXY CONFIGURATION
  * ============================================
  * Apply to all routes except static assets
  */

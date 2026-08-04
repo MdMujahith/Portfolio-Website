@@ -1,12 +1,24 @@
 "use client";
 
-import React, { useState, useRef, useEffect, useCallback, useMemo, memo } from "react";
+import React, {
+  useState,
+  useRef,
+  useEffect,
+  useCallback,
+  useMemo,
+  memo,
+} from "react";
+import Link from "next/link";
 import { createPortal } from "react-dom";
-import { ArrowUpRight, ChevronUp, X, Sparkles } from "lucide-react";
-import { SiGithub } from "react-icons/si";
+import { ArrowUpRight, ChevronUp, X, Sparkles, Github } from "lucide-react";
 import Image from "next/image";
-import { motion, AnimatePresence, useReducedMotion, PanInfo } from "framer-motion";
-import { projects } from "@/data/professional";
+import {
+  motion,
+  AnimatePresence,
+  useReducedMotion,
+  PanInfo,
+} from "framer-motion";
+import { projects } from "@/data/projects";
 import { content } from "@/data/content";
 import BackgroundFX from "@/components/ui/BackgroundFX";
 
@@ -15,10 +27,38 @@ const premiumEase = [0.16, 1, 0.3, 1] as const;
 type Project = (typeof projects)[number];
 
 const CORNER_BRACKETS = [
-  { pos: "top-3 left-3", style: { borderTop: "1.5px solid rgba(255,255,255,0.8)", borderLeft: "1.5px solid rgba(255,255,255,0.8)" }, delay: "0ms" },
-  { pos: "top-3 right-3", style: { borderTop: "1.5px solid rgba(255,255,255,0.8)", borderRight: "1.5px solid rgba(255,255,255,0.8)" }, delay: "30ms" },
-  { pos: "bottom-3 left-3", style: { borderBottom: "1.5px solid rgba(255,255,255,0.8)", borderLeft: "1.5px solid rgba(255,255,255,0.8)" }, delay: "60ms" },
-  { pos: "bottom-3 right-3", style: { borderBottom: "1.5px solid rgba(255,255,255,0.8)", borderRight: "1.5px solid rgba(255,255,255,0.8)" }, delay: "90ms" },
+  {
+    pos: "top-3 left-3",
+    style: {
+      borderTop: "1.5px solid rgba(255,255,255,0.8)",
+      borderLeft: "1.5px solid rgba(255,255,255,0.8)",
+    },
+    delay: "0ms",
+  },
+  {
+    pos: "top-3 right-3",
+    style: {
+      borderTop: "1.5px solid rgba(255,255,255,0.8)",
+      borderRight: "1.5px solid rgba(255,255,255,0.8)",
+    },
+    delay: "30ms",
+  },
+  {
+    pos: "bottom-3 left-3",
+    style: {
+      borderBottom: "1.5px solid rgba(255,255,255,0.8)",
+      borderLeft: "1.5px solid rgba(255,255,255,0.8)",
+    },
+    delay: "60ms",
+  },
+  {
+    pos: "bottom-3 right-3",
+    style: {
+      borderBottom: "1.5px solid rgba(255,255,255,0.8)",
+      borderRight: "1.5px solid rgba(255,255,255,0.8)",
+    },
+    delay: "90ms",
+  },
 ] as const;
 
 // ── Link Card ──
@@ -39,10 +79,15 @@ const LinkCard = memo(function LinkCard({
       target="_blank"
       rel="noopener noreferrer"
       className="group/link flex items-center justify-between p-4 rounded-xl transition-all duration-500 hover:-translate-y-1 shadow-sm hover:shadow-md"
-      style={{ background: "var(--bg-elevated)", border: "1px solid var(--border-strong)" }}
+      style={{
+        background: "var(--bg-elevated)",
+        border: "1px solid var(--border-strong)",
+      }}
     >
       <div className="flex flex-col gap-0.5">
-        <span className="text-[14px] font-semibold text-[var(--text-primary)]">{label}</span>
+        <span className="text-[14px] font-semibold text-[var(--text-primary)]">
+          {label}
+        </span>
         <span className="text-[12px] text-[var(--text-muted)] group-hover/link:text-[var(--text-secondary)] transition-colors duration-300">
           {sub}
         </span>
@@ -55,25 +100,25 @@ const LinkCard = memo(function LinkCard({
 });
 
 // ── Tag Chips ──
-const TagList = memo(function TagList({ tags, full }: { tags: string[]; full?: boolean }) {
+export const TagList = memo(function TagList({
+  tags,
+  full,
+}: {
+  tags: string[];
+  full?: boolean;
+}) {
   return (
     <div className="flex flex-wrap items-center gap-2">
       {(full ? tags : tags.slice(0, 3)).map((tag) => (
         <span
           key={tag}
-          className="inline-flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-widest px-2.5 py-1 rounded-md transition-colors duration-300 hover:text-[var(--text-primary)]"
-          style={{
-            background: "var(--bg-subtle)",
-            color: "var(--text-secondary)",
-            border: "1px solid var(--border-strong)",
-          }}
+          className="text-xs rounded-full bg-black/5 dark:bg-white/10 px-3 py-1 font-medium text-[var(--text-secondary)] transition-colors duration-300 hover:text-[var(--text-primary)]"
         >
-          <span className="w-1 h-1 rounded-full shrink-0" style={{ background: "var(--text-muted)" }} />
           {tag}
         </span>
       ))}
       {!full && tags.length > 3 && (
-        <span className="text-[10px] font-semibold text-[var(--text-muted)] px-1">
+        <span className="text-xs font-semibold text-[var(--text-muted)] px-1">
           +{tags.length - 3}
         </span>
       )}
@@ -100,6 +145,17 @@ const ProjectRow = memo(function ProjectRow({
   const isFeatured = index === 0;
   const panelId = `project-panel-${project.id}`;
   const reduceMotion = useReducedMotion();
+  const spotlightRef = useRef<HTMLDivElement | null>(null);
+
+  const handleSpotlightMove = (event: React.MouseEvent<HTMLDivElement>) => {
+    const container = spotlightRef.current;
+    if (!container) return;
+    const rect = container.getBoundingClientRect();
+    const x = ((event.clientX - rect.left) / rect.width) * 100;
+    const y = ((event.clientY - rect.top) / rect.height) * 100;
+    container.style.setProperty("--spot-x", `${x}%`);
+    container.style.setProperty("--spot-y", `${y}%`);
+  };
 
   return (
     <motion.article
@@ -108,11 +164,10 @@ const ProjectRow = memo(function ProjectRow({
       whileInView={reduceMotion ? undefined : { opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-10%" }}
       transition={{ duration: 0.55, ease: premiumEase }}
-      className="relative py-10 md:py-14 border-t border-[var(--border-strong)] first:border-t-0 transition-opacity duration-500 hover:!opacity-100 group-hover/list:opacity-40"
+      className="relative my-6 first:mt-0 transition-all duration-300 ease-out hover:-translate-y-1 group/card"
     >
       <div
-        className="relative rounded-2xl p-5 md:p-8 overflow-hidden transition-colors duration-500"
-        style={{ background: "var(--bg-elevated)", border: "1px solid var(--border-strong)" }}
+        className="relative rounded-3xl p-6 sm:p-8 overflow-hidden bg-[var(--card-bg)] border border-[var(--border)] shadow-[inset_0_1px_0_rgba(0,0,0,0.05)] dark:shadow-[inset_0_1px_0_rgba(255,255,255,0.05)] hover:shadow-xl hover:shadow-[inset_0_1px_0_rgba(0,0,0,0.1)] dark:hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.15)] transition-all duration-300 ease-out"
       >
         <span
           aria-hidden="true"
@@ -134,58 +189,124 @@ const ProjectRow = memo(function ProjectRow({
 
         <div className="relative z-10 flex flex-col lg:flex-row items-center gap-8 lg:gap-12">
           <div className="w-full lg:w-1/2 relative group">
-            <button
-              type="button"
-              onClick={() => onToggle(project.id)}
-              aria-expanded={isExpanded}
-              aria-controls={panelId}
-              aria-label={`${isExpanded ? "Collapse" : "Expand"} details for ${project.title}`}
-              className="block w-full text-left cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-[var(--text-primary)] rounded-[1rem]"
-            >
-              <div
-                className="relative overflow-hidden shadow-[0_8px_30px_rgb(0,0,0,0.04)] group-hover:shadow-[0_20px_50px_rgb(0,0,0,0.16)] transition-shadow duration-700"
-                style={{
-                  borderRadius: "1rem",
-                  aspectRatio: "16/10",
-                  background: "var(--bg-subtle)",
-                  border: "1px solid var(--border-strong)",
-                }}
+            {isMobile ? (
+              <button
+                type="button"
+                onClick={() => onToggle(project.id)}
+                aria-expanded={isExpanded}
+                aria-controls={panelId}
+                aria-label={`${isExpanded ? "Collapse" : "Expand"} details for ${project.title}`}
+                className="block w-full text-left cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-[var(--text-primary)] rounded-[1rem]"
               >
-                <div className="absolute inset-0 transition-transform duration-700 ease-out group-hover:scale-[1.06]">
-                  <Image
-                    src={project.imageUrl}
-                    alt={`Screenshot of ${project.title}`}
-                    fill
-                    priority={index === 0}
-                    loading={index === 0 ? undefined : "lazy"}
-                    className="object-cover"
-                    sizes="(max-width: 1024px) 100vw, 50vw"
-                  />
-                </div>
+                <div
+                  ref={spotlightRef}
+                  onMouseMove={handleSpotlightMove}
+                  className="relative overflow-hidden shadow-[0_8px_30px_rgb(0,0,0,0.04)] group-hover:shadow-[0_20px_50px_rgb(0,0,0,0.16)] transition-shadow duration-700"
+                  style={{
+                    borderRadius: "1rem",
+                    aspectRatio: "16/10",
+                    background: "var(--bg-subtle)",
+                    border: "1px solid var(--border-strong)",
+                  }}
+                >
+                  <div className="absolute inset-0 transition-transform duration-700 ease-out group-hover:scale-[1.06]">
+                    <Image
+                      src={project.imageUrl}
+                      alt={`Screenshot of ${project.title}`}
+                      fill
+                      priority={index === 0}
+                      loading={index === 0 ? undefined : "lazy"}
+                      className="object-cover"
+                      sizes="(max-width: 1024px) 100vw, 50vw"
+                    />
+                  </div>
 
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                <div className="absolute bottom-4 left-4 flex items-center gap-2 text-white text-[13px] font-medium opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500">
-                  {isExpanded ? "Hide details" : "View details"}
-                  <ArrowUpRight size={14} />
-                </div>
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                  <div className="absolute bottom-4 left-4 flex items-center gap-2 text-white text-[13px] font-medium opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500">
+                    {isExpanded ? "Hide details" : "View details"}
+                    <ArrowUpRight size={14} />
+                  </div>
 
-                {CORNER_BRACKETS.map(({ pos, style, delay }) => (
-                  <span
-                    key={pos}
-                    aria-hidden="true"
-                    className={`absolute ${pos} w-4 h-4 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300`}
-                    style={{ ...style, transitionDelay: delay }}
+                  <div
+                    className="absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+                    style={{
+                      background:
+                        "radial-gradient(circle at var(--spot-x, 50%) var(--spot-y, 50%), rgba(255,255,255,0.08), transparent 40%)",
+                    }}
                   />
-                ))}
-              </div>
-            </button>
+                  {CORNER_BRACKETS.map(({ pos, style, delay }) => (
+                    <span
+                      key={pos}
+                      aria-hidden="true"
+                      className={`absolute ${pos} w-4 h-4 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300`}
+                      style={{ ...style, transitionDelay: delay }}
+                    />
+                  ))}
+                </div>
+              </button>
+            ) : (
+              <Link
+                href={`/projects/${project.slug}`}
+                className="block w-full text-left cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-[var(--text-primary)] rounded-[1rem]"
+              >
+                <div
+                  ref={spotlightRef}
+                  onMouseMove={handleSpotlightMove}
+                  className="relative overflow-hidden shadow-[0_8px_30px_rgb(0,0,0,0.04)] group-hover:shadow-[0_20px_50px_rgb(0,0,0,0.16)] transition-shadow duration-700"
+                  style={{
+                    borderRadius: "1rem",
+                    aspectRatio: "16/10",
+                    background: "var(--bg-subtle)",
+                    border: "1px solid var(--border-strong)",
+                  }}
+                >
+                  <div className="absolute inset-0 transition-transform duration-700 ease-out group-hover:scale-[1.06]">
+                    <Image
+                      src={project.imageUrl}
+                      alt={`Screenshot of ${project.title}`}
+                      fill
+                      priority={index === 0}
+                      loading={index === 0 ? undefined : "lazy"}
+                      className="object-cover"
+                      sizes="(max-width: 1024px) 100vw, 50vw"
+                    />
+                  </div>
+
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                  <div className="absolute bottom-4 left-4 flex items-center gap-2 text-white text-[13px] font-medium opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500">
+                    Open case study
+                    <ArrowUpRight size={14} />
+                  </div>
+
+                  <div
+                    className="absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+                    style={{
+                      background:
+                        "radial-gradient(circle at var(--spot-x, 50%) var(--spot-y, 50%), rgba(255,255,255,0.08), transparent 40%)",
+                    }}
+                  />
+                  {CORNER_BRACKETS.map(({ pos, style, delay }) => (
+                    <span
+                      key={pos}
+                      aria-hidden="true"
+                      className={`absolute ${pos} w-4 h-4 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300`}
+                      style={{ ...style, transitionDelay: delay }}
+                    />
+                  ))}
+                </div>
+              </Link>
+            )}
           </div>
 
           <div className="w-full lg:w-1/2 flex flex-col gap-4 md:gap-5">
             <div className="flex items-center gap-3">
               <span
                 className="text-[11px] font-bold tabular-nums px-2 py-0.5 rounded-md"
-                style={{ background: "var(--bg-subtle)", color: "var(--text-muted)", border: "1px solid var(--border-strong)" }}
+                style={{
+                  background: "var(--bg-subtle)",
+                  color: "var(--text-muted)",
+                  border: "1px solid var(--border-strong)",
+                }}
               >
                 {String(index + 1).padStart(2, "0")}
               </span>
@@ -194,66 +315,110 @@ const ProjectRow = memo(function ProjectRow({
 
             <div>
               <h3
-                className="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight leading-[1.1] mb-2.5"
-                style={{ color: "var(--text-primary)" }}
+                className="text-2xl sm:text-3xl lg:text-4xl font-bold font-sans tracking-tight leading-[1.15] mb-3 text-[var(--text-primary)]"
+                style={{ fontVariationSettings: "'wght' 700" }}
               >
                 {project.title}
               </h3>
-              <p className="text-[14px] sm:text-[15px] leading-[1.6]" style={{ color: "var(--text-secondary)" }}>
+              <p
+                className="text-sm sm:text-base leading-relaxed text-[var(--text-secondary)] font-normal"
+              >
                 {project.description}
               </p>
             </div>
 
             <div className="flex flex-wrap items-center gap-3 pt-1">
-              <button
-                type="button"
-                onClick={() => onToggle(project.id)}
-                aria-expanded={isExpanded}
-                aria-controls={panelId}
-                className="group/btn inline-flex items-center gap-2 text-[13px] font-medium px-5 py-2.5 rounded-full transition-all duration-500 hover:opacity-80 active:scale-95"
-                style={
-                  isExpanded
-                    ? { background: "var(--bg-subtle)", color: "var(--text-primary)", border: "1px solid var(--border-strong)" }
-                    : { background: "var(--text-primary)", color: "var(--bg)", border: "1px solid transparent" }
-                }
-              >
-                {isExpanded ? (
-                  <>Show Less <ChevronUp size={14} className="transition-transform duration-300" /></>
-                ) : (
-                  <>
-                    Learn More
-                    <ArrowUpRight size={14} className="transition-transform duration-500 group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5" />
-                  </>
-                )}
-              </button>
+              {isMobile ? (
+                <button
+                  type="button"
+                  onClick={() => onToggle(project.id)}
+                  aria-expanded={isExpanded}
+                  aria-controls={panelId}
+                  className="group/btn inline-flex items-center gap-2 text-[13px] font-medium px-5 py-2.5 rounded-full transition-all duration-500 hover:opacity-80 active:scale-95"
+                  style={
+                    isExpanded
+                      ? {
+                          background: "var(--bg-subtle)",
+                          color: "var(--text-primary)",
+                          border: "1px solid var(--border-strong)",
+                        }
+                      : {
+                          background: "var(--text-primary)",
+                          color: "var(--bg)",
+                          border: "1px solid transparent",
+                        }
+                  }
+                >
+                  {isExpanded ? (
+                    <>
+                      Show Less{" "}
+                      <ChevronUp
+                        size={14}
+                        className="transition-transform duration-300"
+                      />
+                    </>
+                  ) : (
+                    <>
+                      Learn More
+                      <ArrowUpRight
+                        size={14}
+                        className="transition-transform duration-500 group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5"
+                      />
+                    </>
+                  )}
+                </button>
+              ) : (
+                <Link
+                  href={`/projects/${project.slug}`}
+                  className="group/btn inline-flex items-center gap-2 text-[13px] font-medium px-5 py-2.5 rounded-full transition-all duration-500 hover:opacity-80 active:scale-95"
+                  style={{
+                    background: "var(--text-primary)",
+                    color: "var(--bg)",
+                    border: "1px solid transparent",
+                  }}
+                >
+                  View case study
+                  <ArrowUpRight
+                    size={14}
+                    className="transition-transform duration-500 group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5"
+                  />
+                </Link>
+              )}
 
               <a
                 href={project.githubUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 text-[13px] font-medium px-5 py-2.5 rounded-full transition-all duration-500 hover:bg-[var(--bg-subtle)] active:scale-95"
-                style={{ background: "transparent", color: "var(--text-primary)", border: "1px solid var(--border-strong)" }}
+                style={{
+                  background: "transparent",
+                  color: "var(--text-primary)",
+                  border: "1px solid var(--border-strong)",
+                }}
               >
-                <SiGithub size={14} /> Source
+                <Github className="w-3.5 h-3.5" /> Source
               </a>
             </div>
           </div>
         </div>
 
         {!isMobile && (
-          <AnimatePresence>
-            {isExpanded && (
-              <motion.div
-                id={panelId}
-                key="detail"
-                initial={reduceMotion ? false : { opacity: 0, height: 0, marginTop: 0 }}
-                animate={{ opacity: 1, height: "auto", marginTop: 24 }}
-                exit={reduceMotion ? { opacity: 0 } : { opacity: 0, height: 0, marginTop: 0 }}
-                transition={{ duration: 0.45, ease: premiumEase }}
-                style={{ overflow: "hidden" }}
-                className="relative z-10"
-              >
-                <div className="p-6 md:p-8 rounded-xl" style={{ background: "var(--bg-subtle)", border: "1px solid var(--border-strong)" }}>
+          <div
+            id={panelId}
+            className={`grid transition-[grid-template-rows,opacity,margin] duration-300 ease-out relative z-10 ${
+              isExpanded
+                ? "grid-rows-[1fr] opacity-100 mt-6"
+                : "grid-rows-[0fr] opacity-0 mt-0 pointer-events-none"
+            }`}
+          >
+            <div className="overflow-hidden">
+                <div
+                  className="p-6 md:p-8 rounded-xl"
+                  style={{
+                    background: "var(--bg-subtle)",
+                    border: "1px solid var(--border-strong)",
+                  }}
+                >
                   <div className="grid grid-cols-12 gap-8">
                     <div className="col-span-12 lg:col-span-8 flex flex-col gap-8">
                       <div className="flex flex-col gap-3">
@@ -276,14 +441,32 @@ const ProjectRow = memo(function ProjectRow({
                       <h4 className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[var(--text-muted)] mb-1">
                         Project Links
                       </h4>
-                      <LinkCard href={project.projectUrl} label="Live Project" sub="View production" icon={<ArrowUpRight size={18} className="text-[var(--text-muted)] transition-colors duration-300 group-hover/link:text-[var(--text-primary)]" />} />
-                      <LinkCard href={project.githubUrl} label="Source Code" sub="View repository" icon={<SiGithub size={16} className="text-[var(--text-muted)] transition-colors duration-300 group-hover/link:text-[var(--text-primary)]" />} />
+                      <LinkCard
+                        href={project.projectUrl}
+                        label="Live Project"
+                        sub="View production"
+                        icon={
+                          <ArrowUpRight
+                            size={18}
+                            className="text-[var(--text-muted)] transition-colors duration-300 group-hover/link:text-[var(--text-primary)]"
+                          />
+                        }
+                      />
+                      <LinkCard
+                        href={project.githubUrl}
+                        label="Source Code"
+                        sub="View repository"
+                        icon={
+                          <Github
+                            className="w-4 h-4 text-[var(--text-muted)] transition-colors duration-300 group-hover/link:text-[var(--text-primary)]"
+                          />
+                        }
+                      />
                     </div>
                   </div>
                 </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
+            </div>
+          </div>
         )}
       </div>
     </motion.article>
@@ -302,7 +485,7 @@ const MobileDrawer = memo(function MobileDrawer({
     (_: unknown, info: PanInfo) => {
       if (info.offset.y > 120 || info.velocity.y > 600) onClose();
     },
-    [onClose]
+    [onClose],
   );
 
   return (
@@ -345,9 +528,18 @@ const MobileDrawer = memo(function MobileDrawer({
         <div className="flex items-center gap-3 px-5 pb-4 shrink-0 border-b border-[var(--border-strong)]">
           <div
             className="relative w-14 h-14 rounded-xl overflow-hidden shrink-0"
-            style={{ background: "var(--bg-subtle)", border: "1px solid var(--border-strong)" }}
+            style={{
+              background: "var(--bg-subtle)",
+              border: "1px solid var(--border-strong)",
+            }}
           >
-            <Image src={project.imageUrl} alt="" fill className="object-cover" sizes="56px" />
+            <Image
+              src={project.imageUrl}
+              alt=""
+              fill
+              className="object-cover"
+              sizes="56px"
+            />
           </div>
           <div className="flex flex-col gap-0.5 min-w-0">
             <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[var(--text-muted)]">
@@ -372,11 +564,17 @@ const MobileDrawer = memo(function MobileDrawer({
           style={{ scrollbarWidth: "none" }}
         >
           <div className="flex flex-col gap-2">
-            <h4 className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[var(--text-muted)]">About</h4>
-            <p className="text-[14px] leading-[1.7] text-[var(--text-secondary)]">{project.longDescription}</p>
+            <h4 className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[var(--text-muted)]">
+              About
+            </h4>
+            <p className="text-[14px] leading-[1.7] text-[var(--text-secondary)]">
+              {project.longDescription}
+            </p>
           </div>
           <div className="flex flex-col gap-2 pb-2">
-            <h4 className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[var(--text-muted)]">Stack</h4>
+            <h4 className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[var(--text-muted)]">
+              Stack
+            </h4>
             <TagList tags={project.tags} full />
           </div>
         </div>
@@ -403,9 +601,13 @@ const MobileDrawer = memo(function MobileDrawer({
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center justify-center gap-2 text-[13px] font-semibold px-4 py-3 rounded-full active:scale-95 transition-transform duration-300"
-            style={{ background: "var(--bg-subtle)", color: "var(--text-primary)", border: "1px solid var(--border-strong)" }}
+            style={{
+              background: "var(--bg-subtle)",
+              color: "var(--text-primary)",
+              border: "1px solid var(--border-strong)",
+            }}
           >
-            <SiGithub size={14} /> Source
+            <Github className="w-3.5 h-3.5" /> Source
           </a>
         </div>
       </motion.div>
@@ -430,13 +632,17 @@ const Projects: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    document.body.style.overflow = isMobile && expandedId !== null ? "hidden" : "unset";
-    return () => { document.body.style.overflow = "unset"; };
+    document.body.style.overflow =
+      isMobile && expandedId !== null ? "hidden" : "unset";
+    return () => {
+      document.body.style.overflow = "unset";
+    };
   }, [expandedId, isMobile]);
 
   useEffect(() => {
     if (expandedId === null) return;
-    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setExpandedId(null);
+    const onKey = (e: KeyboardEvent) =>
+      e.key === "Escape" && setExpandedId(null);
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, [expandedId]);
@@ -464,13 +670,13 @@ const Projects: React.FC = () => {
 
   const selectedProject = useMemo(
     () => projects.find((p) => p.id === expandedId),
-    [expandedId]
+    [expandedId],
   );
 
   return (
     <section
       id="projects"
-      className="w-full py-12 md:py-20 relative z-10 overflow-hidden"
+      className="w-full py-12 md:py-16 lg:py-20 relative z-10 overflow-hidden"
       style={{ background: "var(--bg)" }}
       aria-labelledby="projects-heading"
     >
@@ -491,7 +697,7 @@ const Projects: React.FC = () => {
         >
           <div>
             <p className="text-[11px] md:text-xs font-semibold uppercase tracking-[0.2em] text-[var(--text-muted)] mb-3 md:mb-4">
-              03 // Selected Works
+              {content.sections.projects.label}
             </p>
             <h2
               id="projects-heading"
@@ -528,10 +734,13 @@ const Projects: React.FC = () => {
         createPortal(
           <AnimatePresence>
             {isMobile && expandedId !== null && selectedProject && (
-              <MobileDrawer project={selectedProject} onClose={() => setExpandedId(null)} />
+              <MobileDrawer
+                project={selectedProject}
+                onClose={() => setExpandedId(null)}
+              />
             )}
           </AnimatePresence>,
-          document.body
+          document.body,
         )}
     </section>
   );

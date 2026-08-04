@@ -2,7 +2,7 @@
  * TESTIMONIALS DATA
  * ==================
  * Client testimonials and recommendations.
- * 
+ *
  * HOW TO EDIT:
  * - Add new testimonials by copying the structure below
  * - Remove testimonials by deleting objects from the array
@@ -16,6 +16,7 @@ export interface Testimonial {
   title: string;
   company?: string;
   avatarUrl?: string;
+  companyLogoUrl?: string;
   featured?: boolean;
 }
 
