@@ -220,7 +220,8 @@
 @layer base {
   body {
     font-family: var(--font-sans);
-    font-variation-settings: 'opsz' 16, 'wght' var(--weight-regular), 'GRAD' var(--font-grad), 'wdth' var(--font-wdth);
+    font-weight: var(--weight-regular);
+    font-variation-settings: 'opsz' 16, 'GRAD' var(--font-grad), 'wdth' var(--font-wdth);
     background: var(--bg);
     color: var(--text-primary);
     font-size: var(--text-base);

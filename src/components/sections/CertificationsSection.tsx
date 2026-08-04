@@ -4,13 +4,11 @@
 import React from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
+import { ArrowUpRight, BadgeCheck } from "lucide-react";
 import { certifications, type Certification } from "@/data/certifications";
 import { content } from "@/data/content";
 import BackgroundFX from "@/components/ui/BackgroundFX";
-import { fadeInUp, staggerContainer, springSnappy } from "@/lib/motion";
-
-const cardHover =
-  "transition-[border-color,box-shadow,background-color] duration-300 hover:border-[var(--text-muted)] hover:shadow-[0_8px_30px_rgba(0,0,0,0.4)]";
+import { fadeInUp, springSnappy } from "@/lib/motion";
 
 const formatMonthYear = (value: string): string => {
   const [year, month] = value.split("-").map(Number);
@@ -28,89 +26,110 @@ const isExpired = (expiry?: string): boolean => {
   return new Date(year, month) < new Date();
 };
 
-const CertificationCard: React.FC<{ cert: Certification }> = ({ cert }) => {
+const StatusBadge: React.FC<{ expired: boolean }> = ({ expired }) => (
+  <span
+    className={`inline-flex items-center justify-center px-3.5 py-1 rounded-full text-xs font-semibold shrink-0 transition-colors duration-300 ${
+      expired
+        ? "bg-red-500/15 text-red-600 dark:bg-red-500/20 dark:text-red-400"
+        : "bg-emerald-500/15 text-emerald-700 dark:bg-emerald-500/20 dark:text-emerald-400"
+    }`}
+  >
+    {expired ? "Expired" : "Active"}
+  </span>
+);
+
+const CertificationCard: React.FC<{ cert: Certification; index: number }> = ({ cert, index }) => {
   const expired = isExpired(cert.expiryDate);
 
-  const Card = (
-    <motion.div
-      variants={fadeInUp}
-      whileHover={{ y: -3, scale: 1.015 }}
-      transition={springSnappy}
-      className={`surface-card p-5 md:p-6 rounded-[1.5rem] border border-[var(--border-strong)] bg-[var(--bg-elevated)] flex items-start gap-4 group relative ${cardHover} ${
-        cert.credentialUrl ? "cursor-pointer" : ""
-      }`}
-    >
-      <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-[1.5rem] pointer-events-none" />
-
-      {cert.issuerLogo ? (
-        <div className="shrink-0 w-12 h-12 rounded-[var(--radius-md)] bg-[var(--bg-subtle)] border border-[var(--border-strong)] flex items-center justify-center overflow-hidden transition-transform duration-300 group-hover:scale-105">
-          <Image
-            src={cert.issuerLogo}
-            alt={`${cert.issuer} logo`}
-            width={32}
-            height={32}
-            className="object-contain"
-          />
-        </div>
-      ) : (
-        <div className="shrink-0 w-12 h-12 rounded-[var(--radius-md)] bg-[var(--bg-subtle)] border border-[var(--border-strong)] flex items-center justify-center transition-transform duration-300 group-hover:scale-105">
-          <span className="text-[11px] font-semibold uppercase text-[var(--text-muted)]">
-            {cert.issuer.slice(0, 2)}
-          </span>
-        </div>
-      )}
-
-      <div className="flex-1 min-w-0">
-        <div className="flex items-start justify-between gap-2">
-          <h4 className="text-sm md:text-base font-semibold text-[var(--text-primary)] leading-snug transition-colors group-hover:text-cyan-400 dark:group-hover:text-cyan-300">
-            {cert.title}
-          </h4>
-          {cert.credentialUrl && (
-            <svg
-              className="w-4 h-4 text-[var(--text-muted)] shrink-0 mt-0.5 opacity-60 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all duration-300"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+  const innerContent = (
+    <>
+      {/* Top Header Row: Emblem, Title, Verified Check & External Link Action */}
+      <div className="flex items-start justify-between gap-4">
+        <div className="flex items-center gap-4 min-w-0">
+          <div className="relative shrink-0 w-14 h-14 rounded-2xl bg-[var(--bg-subtle)] border border-[var(--border-strong)] flex items-center justify-center overflow-hidden transition-transform duration-300 group-hover:scale-105 p-2.5">
+            {cert.issuerLogo ? (
+              <Image
+                src={cert.issuerLogo}
+                alt={`${cert.issuer} logo`}
+                width={36}
+                height={36}
+                className="object-contain"
               />
-            </svg>
-          )}
+            ) : (
+              <span className="text-xs font-mono font-bold uppercase text-[var(--text-secondary)]">
+                {cert.issuer.slice(0, 2)}
+              </span>
+            )}
+          </div>
+
+          <div className="min-w-0">
+            <div className="flex items-center gap-2 min-w-0">
+              <h4 className="text-lg md:text-xl font-bold tracking-tight text-[var(--text-primary)] leading-snug truncate group-hover:text-[var(--text-primary)] transition-colors duration-300">
+                {cert.title}
+              </h4>
+              {cert.credentialUrl && (
+                <span
+                  title="Verified Credential (Official Link)"
+                  className="shrink-0 inline-flex items-center justify-center drop-shadow-sm transition-transform duration-300 group-hover:scale-110"
+                >
+                  <BadgeCheck className="w-5 h-5 text-white dark:text-zinc-950 fill-emerald-500 dark:fill-emerald-400" />
+                </span>
+              )}
+            </div>
+            <p className="text-xs md:text-sm font-medium text-[var(--text-secondary)] mt-1">
+              {cert.issuer}
+            </p>
+          </div>
         </div>
 
-        <p className="text-xs text-[var(--text-secondary)] mt-1">
-          {cert.issuer}
-        </p>
-
-        <div className="flex items-center gap-2 mt-3">
-          <span className="text-[10px] uppercase tracking-widest text-[var(--text-muted)] font-medium">
-            {formatMonthYear(cert.issueDate)}
-            {cert.expiryDate && ` – ${formatMonthYear(cert.expiryDate)}`}
-          </span>
-          {expired && (
-            <span className="badge badge-error text-[9px]">EXPIRED</span>
-          )}
-        </div>
+        {cert.credentialUrl && (
+          <div className="w-9 h-9 rounded-full bg-[var(--bg-subtle)] border border-[var(--border-strong)] flex items-center justify-center shrink-0 text-[var(--text-muted)] group-hover:text-[var(--text-primary)] group-hover:border-[var(--text-muted)] transition-all duration-300">
+            <ArrowUpRight size={17} className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+          </div>
+        )}
       </div>
-    </motion.div>
+
+      {/* Bottom Row: Timestamp & Active/Expired Status Badge */}
+      <div className="mt-8 pt-4 border-t border-[var(--border)] flex flex-wrap items-center justify-between gap-3 text-xs">
+        <div className="font-mono text-[11px] font-medium text-[var(--text-muted)] tracking-wider">
+          <span>Issued {formatMonthYear(cert.issueDate)}</span>
+          {cert.expiryDate && <span> \u2192 {expired ? "Expired" : "Valid until"} {formatMonthYear(cert.expiryDate)}</span>}
+        </div>
+
+        <StatusBadge expired={expired} />
+      </div>
+    </>
   );
 
-  if (!cert.credentialUrl) return Card;
+  const containerClasses = `group relative rounded-[1.5rem] p-6 md:p-7 transition-all duration-500 border bg-[var(--bg-elevated)] border-[var(--border-strong)] hover:border-[var(--text-muted)] shadow-[0_4px_20px_rgba(0,0,0,0.06)] dark:shadow-[0_4px_20px_rgba(0,0,0,0.25)] hover:shadow-[0_12px_36px_rgba(0,0,0,0.12)] dark:hover:shadow-[0_12px_36px_rgba(0,0,0,0.45)] flex flex-col justify-between h-full`;
+
+  const motionProps = {
+    initial: { opacity: 0, y: 20 },
+    whileInView: { opacity: 1, y: 0 },
+    viewport: { once: true },
+    whileHover: { y: -4 },
+    transition: { ...springSnappy, delay: index * 0.1 },
+  };
+
+  if (cert.credentialUrl) {
+    return (
+      <motion.a
+        {...motionProps}
+        href={cert.credentialUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        className={`${containerClasses} cursor-pointer block focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--text-muted)]`}
+        aria-label={`Verify ${cert.title} credential on ${cert.issuer} (opens in new tab)`}
+      >
+        {innerContent}
+      </motion.a>
+    );
+  }
 
   return (
-    <a
-      href={cert.credentialUrl}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="block focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--focus-ring)] rounded-[1.5rem]"
-      aria-label={`Verify ${cert.title} credential (opens in new tab)`}
-    >
-      {Card}
-    </a>
+    <motion.div {...motionProps} className={containerClasses}>
+      {innerContent}
+    </motion.div>
   );
 };
 
@@ -120,7 +139,7 @@ const CertificationsSection: React.FC = () => {
   return (
     <section
       id="certifications"
-      className="w-full py-12 md:py-16 lg:py-20 relative z-10 overflow-hidden transition-colors duration-300 bg-[var(--bg)]"
+      className="w-full py-16 md:py-24 lg:py-32 relative z-10 overflow-hidden transition-colors duration-300 bg-[var(--bg)]"
       aria-labelledby="certs-heading"
     >
       <BackgroundFX
@@ -137,40 +156,32 @@ const CertificationsSection: React.FC = () => {
           variants={fadeInUp}
           className="mb-12 md:mb-16 lg:mb-20 text-left"
         >
-          <p className="text-[11px] md:text-[12px] font-semibold uppercase tracking-[0.25em] text-[var(--text-muted)] mb-4 md:mb-6">
+          <p className="text-[11px] md:text-[12px] font-bold uppercase tracking-[0.25em] text-[var(--text-muted)] mb-4 md:mb-6">
             {content.sections.certifications.label}
           </p>
           <div className="flex flex-wrap items-end justify-between gap-4">
             <h2
               id="certs-heading"
-              className="text-4xl sm:text-5xl md:text-6xl font-semibold tracking-tighter leading-[1.1] text-[var(--text-primary)]"
+              className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tighter leading-[1.08] text-[var(--text-primary)]"
             >
               {content.sections.certifications.title}
             </h2>
-            <span className="text-[10px] sm:text-[11px] uppercase tracking-[0.24em] text-[var(--text-muted)] font-mono">
-              {certifications.length} credential
-              {certifications.length !== 1 ? "s" : ""}
+            <span className="text-xs uppercase tracking-[0.2em] text-[var(--text-muted)] font-mono font-semibold">
+              {certifications.length} Verified Credential{certifications.length !== 1 ? "s" : ""}
             </span>
           </div>
         </motion.div>
 
-        <motion.div
-          variants={staggerContainer(0.08)}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-50px" }}
-          className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6"
-        >
-          {certifications.map((cert) => (
-            <CertificationCard
-              key={`${cert.title}-${cert.issuer}`}
-              cert={cert}
-            />
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 items-stretch">
+          {certifications.map((cert, index) => (
+            <CertificationCard key={`${cert.title}-${cert.issuer}`} cert={cert} index={index} />
           ))}
-        </motion.div>
+        </div>
       </div>
     </section>
   );
 };
 
 export default CertificationsSection;
+
+

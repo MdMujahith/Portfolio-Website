@@ -39,4 +39,36 @@ export const certifications: Certification[] = [
     issueDate: "2023-11",
     credentialUrl: "https://coursera.org/verify/xxxx",
   },
+  {
+    title: "Google Cloud Professional DevOps Engineer (Dummy)",
+    issuer: "Google Cloud (Dummy)",
+    issueDate: "2020-05",
+    expiryDate: "2023-05",
+    credentialUrl: "https://www.credly.com/dummy-gcp",
+    credentialId: "GCP-DEV-DUMMY-001",
+  },
+  {
+    title: "Certified Kubernetes Administrator – CKA (Dummy)",
+    issuer: "Cloud Native Computing Foundation (Dummy)",
+    issueDate: "2021-01",
+    expiryDate: "2022-12",
+    credentialUrl: "https://www.credly.com/dummy-cka",
+    credentialId: "CKA-DUMMY-002",
+  },
+  {
+    title: "Microsoft Certified: Azure Developer Associate (Dummy)",
+    issuer: "Microsoft (Dummy)",
+    issueDate: "2024-01",
+    expiryDate: "2027-01",
+    credentialUrl: "https://www.credly.com/dummy-azure",
+    credentialId: "AZ-204-DUMMY-003",
+  },
+  {
+    title: "HashiCorp Certified: Terraform Associate (Dummy)",
+    issuer: "HashiCorp (Dummy)",
+    issueDate: "2019-09",
+    expiryDate: "2021-09",
+    credentialId: "TF-DUMMY-004",
+  },
 ];
+

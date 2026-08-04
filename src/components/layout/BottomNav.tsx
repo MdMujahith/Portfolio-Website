@@ -96,7 +96,8 @@ const BottomNav: React.FC<BottomNavProps> = ({
             <a
               key={item.label}
               href={item.href}
-              className="rounded-full min-h-[42px] py-2 px-3 lg:px-3.5 flex items-center justify-center whitespace-nowrap shrink-0 transition-all duration-200 text-[15px] lg:text-[16px] font-semibold tracking-tight font-space text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-black/5 dark:hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50"
+              style={{ fontVariationSettings: "'wght' 600, 'opsz' 20" }}
+              className="rounded-full min-h-[42px] py-2 px-3 lg:px-3.5 flex items-center justify-center whitespace-nowrap shrink-0 transition-all duration-200 text-[15px] lg:text-[16px] font-semibold tracking-tight font-sans text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-black/5 dark:hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50"
             >
               {item.label}
             </a>
@@ -105,7 +106,8 @@ const BottomNav: React.FC<BottomNavProps> = ({
 
         <MagneticButton
           onClick={onContactClick}
-          className="rounded-full min-h-[44px] shrink-0 flex items-center justify-center py-2.5 px-6 lg:px-7 gap-2 transition-transform duration-300 hover:scale-[1.02] active:scale-95 font-bold font-space text-[15px] tracking-tight ml-1 lg:ml-2 whitespace-nowrap bg-[var(--text-primary)] text-[var(--bg)] shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/80"
+          style={{ fontVariationSettings: "'wght' 700, 'opsz' 20" }}
+          className="rounded-full min-h-[44px] shrink-0 flex items-center justify-center py-2.5 px-6 lg:px-7 gap-2 transition-transform duration-300 hover:scale-[1.02] active:scale-95 font-bold font-sans text-[15px] tracking-tight ml-1 lg:ml-2 whitespace-nowrap bg-[var(--text-primary)] text-[var(--bg)] shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/80"
         >
           <span>{content.intro.cta}</span>
           <ArrowRight
