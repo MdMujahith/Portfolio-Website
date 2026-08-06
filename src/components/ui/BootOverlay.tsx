@@ -24,10 +24,10 @@ export const BootOverlay: React.FC = () => {
     // Mount after hydration on initial site boot
     setIsVisible(true);
 
-    // Hold visible for exactly 2.5 seconds, then gracefully transition out
+    // Hold visible for exactly 1 second, then gracefully transition out
     const timer = setTimeout(() => {
       setIsVisible(false);
-    }, 2500);
+    }, 1000);
 
     return () => clearTimeout(timer);
   }, []);

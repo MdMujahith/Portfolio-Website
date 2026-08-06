@@ -93,11 +93,19 @@ class SplineErrorBoundary extends React.Component<
   }
 }
 
+interface SplineApp {
+  stop?: () => void;
+  play?: () => void;
+}
+
 const SplineSceneInner: React.FC<SplineSceneProps> = ({ url, className = "" }) => {
   const [hasError, setHasError] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
   const [canRender, setCanRender] = useState(false);
+  const [shouldBoot, setShouldBoot] = useState(false);
+  const [isInViewport, setIsInViewport] = useState(true);
   const containerRef = useRef<HTMLDivElement>(null);
+  const splineAppRef = useRef<SplineApp | null>(null);
 
   useEffect(() => {
     // 1. Hydration safety & strict mobile GPU protection
@@ -112,39 +120,115 @@ const SplineSceneInner: React.FC<SplineSceneProps> = ({ url, className = "" }) =
   }, []);
 
   useEffect(() => {
-    if (!canRender || !url || isLoaded || hasError) return;
+    if (!canRender || !url) return;
 
-    // 2. Network Resilience Timeout: If remote .splinecode scene stalls or takes >8s, gracefully fall back
+    // 2. Asset Loading Optimization: Dynamically inject DNS prefetch & preconnect hints for remote Spline CDN
+    if (url.startsWith("http")) {
+      try {
+        const origin = new URL(url).origin;
+        if (!document.querySelector(`link[rel="preconnect"][href="${origin}"]`)) {
+          const preconnect = document.createElement("link");
+          preconnect.rel = "preconnect";
+          preconnect.href = origin;
+          preconnect.crossOrigin = "anonymous";
+          document.head.appendChild(preconnect);
+
+          const dnsPrefetch = document.createElement("link");
+          dnsPrefetch.rel = "dns-prefetch";
+          dnsPrefetch.href = origin;
+          document.head.appendChild(dnsPrefetch);
+        }
+      } catch {
+        // Ignore invalid URLs gracefully
+      }
+    }
+
+    // Schedule 3D WebGL runtime booting during idle browser time to protect Core Web Vitals (FCP/INP) & initial animation frames
+    const timer = setTimeout(() => {
+      if ("requestIdleCallback" in window) {
+        (window as unknown as { requestIdleCallback: (cb: () => void, opts?: { timeout: number }) => number }).requestIdleCallback(
+          () => setShouldBoot(true),
+          { timeout: 1500 }
+        );
+      } else {
+        setShouldBoot(true);
+      }
+    }, 150);
+
+    return () => clearTimeout(timer);
+  }, [canRender, url]);
+
+  useEffect(() => {
+    if (!shouldBoot || !url || isLoaded || hasError) return;
+
+    // 3. Network Resilience Timeout: If remote .splinecode scene stalls or takes >10s, gracefully fall back
     const timeoutId = setTimeout(() => {
       if (!isLoaded) {
-        console.warn("Spline asset download timed out after 8 seconds; switching to smooth InteractiveFallback.");
+        console.warn("Spline asset download timed out after 10 seconds; switching to smooth InteractiveFallback.");
         setHasError(true);
       }
-    }, 8000);
+    }, 10000);
 
     return () => clearTimeout(timeoutId);
-  }, [canRender, url, isLoaded, hasError]);
+  }, [shouldBoot, url, isLoaded, hasError]);
+
+  // 4. Smart Tracking & Render Loop Control: Pause WebGL execution and mouse tracking when off-screen or tab hidden
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container || !canRender) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const entry = entries[0];
+        const visible = entry.isIntersecting && entry.intersectionRatio >= 0.05;
+        setIsInViewport(visible);
+
+        // Immediately stop WebGL rendering & raycasting loop when offscreen to conserve GPU/CPU and eliminate background battery drain
+        if (splineAppRef.current) {
+          if (visible && !document.hidden) {
+            splineAppRef.current.play?.();
+          } else {
+            splineAppRef.current.stop?.();
+          }
+        }
+      },
+      { threshold: [0, 0.05, 0.1], rootMargin: "50px" }
+    );
+
+    observer.observe(container);
+
+    // Freeze animation loop instantly when user minimizes browser or switches tabs
+    const handleVisibilityChange = () => {
+      if (!splineAppRef.current) return;
+      if (document.hidden || !isInViewport) {
+        splineAppRef.current.stop?.();
+      } else {
+        splineAppRef.current.play?.();
+      }
+    };
+
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
+    return () => {
+      observer.disconnect();
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
+  }, [canRender, isInViewport]);
 
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
 
-    // 3. Prevent unintended 3D model manipulation (zooming on mouse wheel or drag-to-orbit/pan editing)
-    // Intercepting in capture phase stops events before reaching Spline canvas while letting hover (pointermove) work seamlessly!
-    const blockManipulations = (e: Event) => {
+    // 5. Block mouse-wheel zooming so scrolling the website over the canvas works smoothly,
+    // but permit all pointer, hover, and mouse tracking events to pass uninterrupted to WebGL!
+    const blockWheelZoom = (e: Event) => {
       e.stopPropagation();
     };
 
-    container.addEventListener("wheel", blockManipulations, { capture: true });
-    container.addEventListener("mousedown", blockManipulations, { capture: true });
-    container.addEventListener("pointerdown", blockManipulations, { capture: true });
-    container.addEventListener("touchstart", blockManipulations, { capture: true });
+    container.addEventListener("wheel", blockWheelZoom, { capture: true });
 
     return () => {
-      container.removeEventListener("wheel", blockManipulations, { capture: true });
-      container.removeEventListener("mousedown", blockManipulations, { capture: true });
-      container.removeEventListener("pointerdown", blockManipulations, { capture: true });
-      container.removeEventListener("touchstart", blockManipulations, { capture: true });
+      container.removeEventListener("wheel", blockWheelZoom, { capture: true });
     };
   }, [canRender]);
 
@@ -157,24 +241,44 @@ const SplineSceneInner: React.FC<SplineSceneProps> = ({ url, className = "" }) =
     return <InteractiveFallback />;
   }
 
+  // Ensure continuous, fluid cursor tracking whenever the model is visible on screen
+  const trackingEnabled = isLoaded && isInViewport;
+
   return (
     <div
       ref={containerRef}
       className={`relative w-full h-full min-h-[440px] flex items-center justify-center ${className}`}
-      style={{ touchAction: "pan-y" }}
+      style={{
+        touchAction: "pan-y",
+        pointerEvents: trackingEnabled ? "auto" : "none",
+      }}
     >
-      {!isLoaded && (
+      {(!isLoaded || !shouldBoot) && (
         <div className="absolute inset-0 flex items-center justify-center z-10 pointer-events-none transition-opacity duration-500">
           <SplineSkeletonLoader />
         </div>
       )}
-      <div className={`w-full h-full min-h-[440px] transition-opacity duration-700 ${isLoaded ? "opacity-100" : "opacity-0 pointer-events-none"}`}>
-        <Spline
-          scene={url}
-          onLoad={() => setIsLoaded(true)}
-          onError={() => setHasError(true)}
-          className="w-full h-full min-h-[440px] outline-none border-none"
-        />
+      <div
+        className={`w-full h-full min-h-[440px] transition-opacity duration-700 ${
+          isLoaded ? "opacity-100" : "opacity-0 pointer-events-none"
+        }`}
+      >
+        {shouldBoot && (
+          <Spline
+            scene={url}
+            onLoad={(app) => {
+              const splineApp = app as unknown as SplineApp;
+              splineAppRef.current = splineApp;
+              setIsLoaded(true);
+              // Immediately suspend if completed loading while in background tab or scrolled out of viewport
+              if (document.hidden || !isInViewport) {
+                splineApp.stop?.();
+              }
+            }}
+            onError={() => setHasError(true)}
+            className="w-full h-full min-h-[440px] outline-none border-none"
+          />
+        )}
       </div>
     </div>
   );

@@ -144,7 +144,7 @@ export const content: ContentConfig = {
       state: "available",
       emoji: "",
     },
-    splineUrl: "https://prod.spline.design/eNUbvlRcKVrgYUrt/scene.splinecode",
+    splineUrl: "https://prod.spline.design/KIT3AQgfYXafX1yT/scene.splinecode",
   },
 
   intro: {
